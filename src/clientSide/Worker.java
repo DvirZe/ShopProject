@@ -7,8 +7,9 @@ public class Worker extends Person {
 	private String bankAcc;
 	private String shop;
 	private String job;
+	private String password;
 	
-	public Worker(String id, String name, String phoneNr, String bankAcc, String shop, String job) {
+	public Worker(String id, String name, String phoneNr, String bankAcc, String shop, String job, String password) {
 		super(id, name, phoneNr);
 		workerID = workerCounter++;
 		this.bankAcc = bankAcc;
@@ -18,6 +19,8 @@ public class Worker extends Person {
 	
 	public int getWorkerId() { return workerID; }
 	public String getJob() { return job; }
+	public String getPassword() { return password; }
+	
 	public void setJob(String job) { this.job = job; }
 
 }
