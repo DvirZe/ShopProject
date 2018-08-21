@@ -8,6 +8,7 @@ public class Worker extends Person {
 	private String shop;
 	private String job;
 	private String password;
+	private boolean login;
 	
 	public Worker(String id, String name, String phoneNr, String bankAcc, String shop, String job, String password) {
 		super(id, name, phoneNr);
@@ -15,6 +16,7 @@ public class Worker extends Person {
 		this.bankAcc = bankAcc;
 		this.shop = shop;
 		this.job = job;
+		login = false;
 	}
 	
 	public int getWorkerId() { return workerID; }
@@ -22,5 +24,8 @@ public class Worker extends Person {
 	public String getPassword() { return password; }
 	
 	public void setJob(String job) { this.job = job; }
+	
+	public void changeLogin() { login = !login; }
+	public boolean isLogin() { return login; }
 
 }
