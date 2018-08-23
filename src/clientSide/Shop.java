@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.TreeMap;
 import java.util.Vector;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 
@@ -51,7 +52,12 @@ public class Shop {
 	
 	public void saveInfo() { 
 		JSONObject obj = new JSONObject();
-		obj.append("shopName", shopName);
+		try {
+			obj.append("shopName", shopName);
+		} catch (JSONException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		
 		try (FileWriter file = new FileWriter("c:\\employees.json")) {
 			 
