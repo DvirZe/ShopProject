@@ -12,14 +12,16 @@ import java.util.Vector;
 
 import javax.net.ssl.SSLSocketFactory;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.json.simple.JSONObject;
 
 
 public class Shop {
 	private String shopName;
 	private TreeMap<Integer, Vector<Integer>> Inventory;
 	private Cart shopCart; 
+	private CustomerType CustomerTypeNew;
+	private CustomerType CustomerTypeReturn;
+	private CustomerType CustomerTypeVip;
 	
 	public Shop(String name) {
 		shopName = name;
@@ -37,6 +39,9 @@ public class Shop {
 		Inventory.put(4, new Vector<Integer>()); //Pants 2
 		Inventory.get(4).add(10); //Inventory
 		Inventory.get(4).add(80); //price
+		CustomerTypeNew = new CustomerTypeNew();
+		CustomerTypeReturn = new CustomerTypeReturn(0.95);
+		CustomerTypeVip = new CustomerTypeVip(0.85);
 	}
 	
 	public String getShopName() { return shopName; }
@@ -58,13 +63,8 @@ public class Shop {
 	public int getInventory(int item) { return Inventory.get(item).get(0); }
 	
 	public void saveInfo(PrintWriter printWriter, BufferedReader socketBufferedReader) throws IOException { 
-		JSONObject obj = new JSONObject();
-		try {
-			obj.append("shopName", shopName);
-		} catch (JSONException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+		JSONObject obj = null;
+		obj.put("shopName", shopName);
 		printWriter.println(obj.toString());
 		System.out.println(socketBufferedReader.readLine());
 		/*
@@ -80,50 +80,20 @@ public class Shop {
 	}
 	
 	
-	public static void main(String[] args) throws UnknownHostException, IOException
+	public static void main(String[] args)
 	{
-		Shop sp = new Shop("Store 1");
-		System.setProperty("javax.net.ssl.trustStore", "sp.store");
-		Socket socket = ((SSLSocketFactory)SSLSocketFactory.getDefault()).createSocket("localhost", 7000);
-		BufferedReader socketBufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-		PrintWriter printWriter = new PrintWriter(socket.getOutputStream(),true);
-		BufferedReader commandBufferedReader = new BufferedReader(new InputStreamReader(System.in));
-		System.out.println("Enter test: ");
-		printWriter.println(commandBufferedReader.readLine());
-		String message = null;
-		sp.shopCart.addToCart(1);
-		sp.shopCart.addToCart(1);
-		sp.shopCart.addToCart(1);
-		sp.shopCart.addToCart(1);
-		sp.shopCart.addToCart(1);
-		//System.out.println(sp.getInventory(1));
-		sp.shopCart.addToCart(1);
-		sp.shopCart.addToCart(1);
-		sp.shopCart.addToCart(1);
-		sp.shopCart.addToCart(1);
-		sp.shopCart.addToCart(1);
-		sp.shopCart.deleteFromCart(1);
-		sp.endSell();
-		//System.out.println(sp.getInventory(1));
-		//Client c1 = new Client("54646465", "fdgfd", "0502133427", "R");
-		//System.out.println(c1.getId()+ " " + c1.getName()+ " " + c1.getPhoneNr() + " " + c1.getType());
-		sp.saveInfo(printWriter,socketBufferedReader);
-		while (true)
-		{
-			System.out.println("Enter message: ");
-			message = commandBufferedReader.readLine();
-			if (message.equals("end"))
-			{
-				printWriter.println(message);
-				socket.close();
-				break;
-			}
-			printWriter.println(message);
-			System.out.println("Replay from server: ");
-			System.out.println(socketBufferedReader.readLine());
-		}
-		
-		
+		JSONObject obj = null;
+		obj.put("ShopName", "shopName");
+		Shop sp = new Shop(obj.escape("ShopName"));
+		Customer c1 = new Customer("54646465", "fdgfd", "0502133427", sp.CustomerTypeReturn);
+		System.out.println(c1.getId()+ " " + c1.getName()+ " " + c1.getPhoneNr() + " " + c1.getType().getCustomerTypeDiscount());
+		Customer c2 = new Customer("54646465", "fdgfd", "0502133427", sp.CustomerTypeReturn);
+		System.out.println(c2.getId()+ " " + c2.getName()+ " " + c2.getPhoneNr() + " " + c2.getType().getCustomerTypeDiscount());
+		sp.CustomerTypeReturn.setCustomerTypeDiscount(0.90);
+		System.out.println(c1.getId()+ " " + c1.getName()+ " " + c1.getPhoneNr() + " " + c1.getType().getCustomerTypeDiscount());
+		System.out.println(c2.getId()+ " " + c2.getName()+ " " + c2.getPhoneNr() + " " + c2.getType().getCustomerTypeDiscount());
+		System.out.println(sp.shopName);
+
 	}
 	
 }
