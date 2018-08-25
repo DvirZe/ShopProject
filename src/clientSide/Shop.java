@@ -1,9 +1,16 @@
 package clientSide;
 
+import java.io.BufferedReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.TreeMap;
 import java.util.Vector;
+
+import javax.net.ssl.SSLSocketFactory;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -50,7 +57,7 @@ public class Shop {
 	
 	public int getInventory(int item) { return Inventory.get(item).get(0); }
 	
-	public void saveInfo() { 
+	public void saveInfo(PrintWriter printWriter, BufferedReader socketBufferedReader) throws IOException { 
 		JSONObject obj = new JSONObject();
 		try {
 			obj.append("shopName", shopName);
@@ -58,7 +65,9 @@ public class Shop {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		
+		printWriter.println(obj.toString());
+		System.out.println(socketBufferedReader.readLine());
+		/*
 		try (FileWriter file = new FileWriter("c:\\employees.json")) {
 			 
             file.write(obj.toString());
@@ -66,20 +75,28 @@ public class Shop {
  
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
 		
 	}
 	
 	
-	public static void main(String[] args)
+	public static void main(String[] args) throws UnknownHostException, IOException
 	{
 		Shop sp = new Shop("Store 1");
+		System.setProperty("javax.net.ssl.trustStore", "sp.store");
+		Socket socket = ((SSLSocketFactory)SSLSocketFactory.getDefault()).createSocket("localhost", 7000);
+		BufferedReader socketBufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+		PrintWriter printWriter = new PrintWriter(socket.getOutputStream(),true);
+		BufferedReader commandBufferedReader = new BufferedReader(new InputStreamReader(System.in));
+		System.out.println("Enter test: ");
+		printWriter.println(commandBufferedReader.readLine());
+		String message = null;
 		sp.shopCart.addToCart(1);
 		sp.shopCart.addToCart(1);
 		sp.shopCart.addToCart(1);
 		sp.shopCart.addToCart(1);
 		sp.shopCart.addToCart(1);
-		System.out.println(sp.getInventory(1));
+		//System.out.println(sp.getInventory(1));
 		sp.shopCart.addToCart(1);
 		sp.shopCart.addToCart(1);
 		sp.shopCart.addToCart(1);
@@ -87,10 +104,25 @@ public class Shop {
 		sp.shopCart.addToCart(1);
 		sp.shopCart.deleteFromCart(1);
 		sp.endSell();
-		System.out.println(sp.getInventory(1));
-		Client c1 = new Client("54646465", "fdgfd", "0502133427", "R");
-		System.out.println(c1.getId()+ " " + c1.getName()+ " " + c1.getPhoneNr() + " " + c1.getType());
-		sp.saveInfo();
+		//System.out.println(sp.getInventory(1));
+		//Client c1 = new Client("54646465", "fdgfd", "0502133427", "R");
+		//System.out.println(c1.getId()+ " " + c1.getName()+ " " + c1.getPhoneNr() + " " + c1.getType());
+		sp.saveInfo(printWriter,socketBufferedReader);
+		while (true)
+		{
+			System.out.println("Enter message: ");
+			message = commandBufferedReader.readLine();
+			if (message.equals("end"))
+			{
+				printWriter.println(message);
+				socket.close();
+				break;
+			}
+			printWriter.println(message);
+			System.out.println("Replay from server: ");
+			System.out.println(socketBufferedReader.readLine());
+		}
+		
 		
 	}
 	
