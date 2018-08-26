@@ -11,6 +11,8 @@ import java.net.UnknownHostException;
 import javax.net.ssl.SSLSocketFactory;
 
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 
 public class ClientSideConnection extends Thread {
@@ -43,10 +45,20 @@ public class ClientSideConnection extends Thread {
 		}
 		commandBufferedReader = new BufferedReader(new InputStreamReader(System.in));
 		// open Gui, Gui send to log in page
-		this.login();
+		try {
+			this.login();
+		} catch (ParseException | IOException e1) {
+			e1.printStackTrace();
+		}
+		/*while(true) { try {
+			System.out.println(socketBufferedReader.readLine());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} }*/
 	}
 	
-	public void login()
+	public void login() throws ParseException, IOException
 	{
 		//String username = "Admin", password = "Admin";
 		JSONObject json = new JSONObject();
@@ -54,6 +66,12 @@ public class ClientSideConnection extends Thread {
 		json.putIfAbsent("WorkerID", "1");
 		json.put("password", "ABC123!");
 		SendToServer(json);
+		String msg = socketBufferedReader.readLine();
+		System.out.println(msg);
+		JSONParser parser = new JSONParser();
+		json.clear();
+		json = (JSONObject)parser.parse(msg);
+		System.out.println(json.get("Status"));
 	}
 	
 	public void SendToServer(JSONObject json)

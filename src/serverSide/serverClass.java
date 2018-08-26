@@ -6,8 +6,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-//import java.io.PrintWriter;
-//import java.io.Reader;
+import java.io.PrintWriter;
 import java.net.Socket;
 
 import org.json.simple.JSONArray;
@@ -19,7 +18,6 @@ import org.json.simple.parser.ParseException;
 public class serverClass extends Thread {
 	private Socket socket;
 	private JSONObject workers;
-	
 	
 	public serverClass() {}
 	
@@ -48,7 +46,12 @@ public class serverClass extends Thread {
 		 workerDetails = (JSONArray) workers.get(json.get("WorkerID"));
 		 if ((!workerDetails.isEmpty()) && (workerDetails.get(5).equals(json.get("password"))))
 		 {
-			 System.out.println("Nice!");
+			 JSONObject answer = new JSONObject();
+			 answer.put("Status", 1);
+			 answer.put("Shop", workerDetails.get(3));
+			 answer.put("Job", workerDetails.get(4));
+			 System.out.println("Send ok to client!");
+			 sendToClient(answer);
 		 }
 		 else
 		 {
@@ -60,6 +63,12 @@ public class serverClass extends Thread {
 			System.out.println("Successfully Copied JSON Object to File...");
 			System.out.println("\nJSON Object: " + json);
 		}*/
+	}
+	
+	public void sendToClient(JSONObject json) throws IOException
+	{
+		PrintWriter printWriter = new PrintWriter(socket.getOutputStream(),true);
+		printWriter.println(json);
 	}
 	
 	public void run() {
