@@ -44,7 +44,6 @@ public class ClientSideConnection extends Thread {
 		commandBufferedReader = new BufferedReader(new InputStreamReader(System.in));
 		// open Gui, Gui send to log in page
 		this.login();
-		this.login2();
 	}
 	
 	public void login()
@@ -52,18 +51,8 @@ public class ClientSideConnection extends Thread {
 		//String username = "Admin", password = "Admin";
 		JSONObject json = new JSONObject();
 		json.put("Action",action.loginAction());
-		json.putIfAbsent("username", "User");
-		json.put("password", "pass");
-		SendToServer(json);
-	}
-	
-	public void login2()
-	{
-		//String username = "Admin", password = "Admin";
-		JSONObject json = new JSONObject();
-		json.put("Action",action.loginAction());
-		json.putIfAbsent("username", "User2");
-		json.put("password", "pass2");
+		json.putIfAbsent("WorkerID", "1");
+		json.put("password", "ABC123!");
 		SendToServer(json);
 	}
 	
