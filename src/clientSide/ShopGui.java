@@ -3,15 +3,21 @@ package clientSide;
 import java.util.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
+
 import javax.swing.*;
 import org.json.*;
 import java.awt.GridBagConstraints;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.ParseException;
+
 
 
 public class ShopGui extends JPanel{
+	JSONObject json;
 	
-	
-	public  ShopGui() {
+	public  ShopGui(ClientSideConnection clientSideConnection) {
+		json = new JSONObject();
 		Font font = new Font("Ariel",Font.PLAIN,20);
 		Font font2 = new Font("Ariel",Font.BOLD,20);
 		JFrame details = new JFrame();
@@ -38,7 +44,6 @@ public class ShopGui extends JPanel{
 		Ntext.addActionListener(new ActionListener(){
 			   public void actionPerformed(ActionEvent ae){
 			      //String user = Ntext.getText();
-			      
 			   }
 			});
 	
@@ -59,26 +64,36 @@ public class ShopGui extends JPanel{
 		JButton Enter = new JButton("Login");
 		Enter.setFont(font2);
 		Login.add(Enter, BorderLayout.CENTER);
-		String pass = "admin";
-		//String pass = new String (Ptext.getText());
-		Enter.addActionListener(new ActionListener() {
-			public void actionPerformed (ActionEvent ae) {
-				if (Ntext.getText().equals("admin") && pass.equals(new String ((Ptext.getPassword())))) {
-				details.dispose();
-				new MainMenu();}
-				else {
-					JOptionPane.showMessageDialog(null,"Wrong username or password!");
-					if (JOptionPane.OK_OPTION == 0) {
-					Ntext.setText("");
-					Ptext.setText("");}
-				}
-			}
-		});
+
 		
 		
 		details.add(Login);
 		details.pack();
 		details.setVisible(true);
+		
+		Enter.addActionListener(new ActionListener() {
+			public void actionPerformed (ActionEvent ae) {
+				try {
+					json = clientSideConnection.login(Ntext.getText(), ""+new String(Ptext.getPassword()));
+				} catch (ParseException | IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				if (Integer.parseInt(json.get("Status").toString()) == 1) {
+				details.dispose();
+				new MainMenu(); }
+				else {
+					JOptionPane.showMessageDialog(null,"Wrong username or password!");
+					if (JOptionPane.OK_OPTION == 0) {
+						Ntext.setText("");
+					//details.dispose();
+					//new ShopGui(clientSideConnection);
+					}
+				}
+			}
+		});
+		
 	}
 	
 	public class MainMenu {
@@ -413,12 +428,12 @@ public class ShopGui extends JPanel{
 		}
 		}
 
-	public static void main (String[] args) {
+	/*public static void main (String[] args) {
 		createandrunjframe();
 
-	}
+	}*/
 	
-	public static void createandrunjframe(){
+	/*public static void createandrunjframe(){
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
@@ -427,5 +442,5 @@ public class ShopGui extends JPanel{
 			
 			}
 		});
-	}
+	}*/
 }
