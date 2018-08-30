@@ -1,6 +1,5 @@
 package clientSide;
 
-import java.awt.Desktop.Action;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -19,9 +18,11 @@ public class ClientSideConnection extends Thread {
 	private Socket socket;
 	private BufferedReader socketBufferedReader;
 	private PrintWriter printWriter;
+	@SuppressWarnings("unused")
 	private BufferedReader commandBufferedReader;
 	private Actions action;
-	
+	@SuppressWarnings("unused")
+	private ShopGui shopGui;
 	
 	public ClientSideConnection() {
 		socket = null;
@@ -44,34 +45,24 @@ public class ClientSideConnection extends Thread {
 			e.printStackTrace();
 		}
 		commandBufferedReader = new BufferedReader(new InputStreamReader(System.in));
-		// open Gui, Gui send to log in page
-		try {
-			this.login();
-		} catch (ParseException | IOException e1) {
-			e1.printStackTrace();
-		}
-		/*while(true) { try {
-			System.out.println(socketBufferedReader.readLine());
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} }*/
+		shopGui = new ShopGui(this);
 	}
 	
-	public void login() throws ParseException, IOException
+	@SuppressWarnings("unchecked")
+	public JSONObject login(String workerId, String password) throws ParseException, IOException
 	{
-		//String username = "Admin", password = "Admin";
 		JSONObject json = new JSONObject();
 		json.put("Action",action.loginAction());
-		json.putIfAbsent("WorkerID", "1");
-		json.put("password", "ABC123!");
+		json.putIfAbsent("workerId", workerId);
+		json.put("password", password);
 		SendToServer(json);
 		String msg = socketBufferedReader.readLine();
 		System.out.println(msg);
 		JSONParser parser = new JSONParser();
-		json.clear();
+		//json.clear();
 		json = (JSONObject)parser.parse(msg);
-		System.out.println(json.get("Status"));
+		System.out.println("Status: " + json.get("Status"));
+		return json;
 	}
 	
 	public void SendToServer(JSONObject json)

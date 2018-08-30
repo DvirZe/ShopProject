@@ -43,20 +43,31 @@ public class serverClass extends Thread {
 	public void loginToApp(JSONObject json) throws IOException
 	{
 		 JSONArray workerDetails = new JSONArray();
-		 workerDetails = (JSONArray) workers.get(json.get("WorkerID"));
-		 if ((!workerDetails.isEmpty()) && (workerDetails.get(5).equals(json.get("password"))))
+		 JSONObject answer = new JSONObject();
+		 workerDetails = (JSONArray) workers.get(json.get("workerId"));
+		 /*if (workerDetails == null)
 		 {
-			 JSONObject answer = new JSONObject();
+			 System.out.println(workerDetails);
+			 answer.put("Status", "0");
+			 System.out.println("Not Exists!");
+			 sendToClient(answer);
+			 return;
+		 }*/
+		 System.out.println(workerDetails);
+		 if ((workerDetails != null) && (workerDetails.get(5).equals(json.get("password"))))
+		 {
 			 answer.put("Status", 1);
 			 answer.put("Shop", workerDetails.get(3));
 			 answer.put("Job", workerDetails.get(4));
 			 System.out.println("Send ok to client!");
-			 sendToClient(answer);
+			 //sendToClient(answer);
 		 }
 		 else
 		 {
-			 System.out.println("Fail! " + workerDetails.get(5) + " " + json.get("password"));
+			 answer.put("Status", "0");
+			 System.out.println("Fail!");
 		 }
+		 sendToClient(answer);
 		/*System.out.println(json.get("username").toString()); //Just a test, not log in function
 		try (FileWriter file = new FileWriter("./files/users.json", true)) {
 			file.write(json.toJSONString());
@@ -74,7 +85,6 @@ public class serverClass extends Thread {
 	public void run() {
 		JSONParser parser = new JSONParser();
 		
-		//JSONObject json = null;
 		//PrintWriter printWriter;
 		BufferedReader bufferedReader;
 		//JSONParser parser = new JSONParser();
@@ -85,11 +95,10 @@ public class serverClass extends Thread {
 				while(true) {
 					if (!msg.equals(""))
 						{
-							JSONObject json = (JSONObject)parser.parse(msg);
-							actionChoose(json);
+							JSONObject messageIn = (JSONObject)parser.parse(msg);
+							actionChoose(messageIn);
 						}
 					while ((msg = bufferedReader.readLine()) == null) {}
-					//msg = bufferedReader.readLine();
 				}
 			} catch (IOException | ParseException e) {
 				e.printStackTrace();
