@@ -23,6 +23,7 @@ public class ClientSideConnection extends Thread {
 	private Actions action;
 	@SuppressWarnings("unused")
 	private ShopGui shopGui;
+	private Shop shop;
 	
 	public ClientSideConnection() {
 		socket = null;
@@ -49,7 +50,7 @@ public class ClientSideConnection extends Thread {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public JSONObject login(String workerId, String password) throws ParseException, IOException
+	public int login(String workerId, String password) throws ParseException, IOException
 	{
 		JSONObject json = new JSONObject();
 		json.put("Action",action.loginAction());
@@ -59,10 +60,12 @@ public class ClientSideConnection extends Thread {
 		String msg = socketBufferedReader.readLine();
 		System.out.println(msg);
 		JSONParser parser = new JSONParser();
-		//json.clear();
 		json = (JSONObject)parser.parse(msg);
-		System.out.println("Status: " + json.get("Status"));
-		return json;
+		int status = Integer.parseInt(json.get("Status").toString());
+		if (status == 1)
+			shop = new Shop(json);
+		System.out.println("xxx");
+		return Integer.parseInt(json.get("Status").toString());
 	}
 	
 	public void SendToServer(JSONObject json)

@@ -12,6 +12,7 @@ import java.util.Vector;
 
 import javax.net.ssl.SSLSocketFactory;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 
@@ -23,25 +24,22 @@ public class Shop {
 	private CustomerType CustomerTypeReturn;
 	private CustomerType CustomerTypeVip;
 	
-	public Shop(String name) {
-		shopName = name;
+	public Shop(JSONObject json) {
+		shopName = json.get("shopName").toString();
 		Inventory = new TreeMap<Integer, Vector<Integer>>();
+		JSONArray inv, prices;
+		inv = (JSONArray) json.get("Inventory");
+		prices = (JSONArray) json.get("Price");
+		for (int i = 0; i < 4; ++i)
+		{
+			Inventory.put(i+1,new Vector<Integer>());
+			Inventory.get(i+1).addElement(Integer.parseInt(inv.get(i).toString()));
+			Inventory.get(i+1).addElement(Integer.parseInt(prices.get(i).toString()));
+		}
 		shopCart = new Cart();
-		Inventory.put(1,new Vector<Integer>()); //Shirt 1
-		Inventory.get(1).add(10); //Inventory
-		Inventory.get(1).add(35); //price
-		Inventory.put(2, new Vector<Integer>()); //Shirt 2
-		Inventory.get(2).add(5); //Inventory
-		Inventory.get(2).add(25); //price
-		Inventory.put(3, new Vector<Integer>()); //Pants 1
-		Inventory.get(3).add(15); //Inventory
-		Inventory.get(3).add(50); //price
-		Inventory.put(4, new Vector<Integer>()); //Pants 2
-		Inventory.get(4).add(10); //Inventory
-		Inventory.get(4).add(80); //price
 		CustomerTypeNew = new CustomerTypeNew();
-		CustomerTypeReturn = new CustomerTypeReturn(0.95);
-		CustomerTypeVip = new CustomerTypeVip(0.85);
+		CustomerTypeReturn = new CustomerTypeReturn(Double.parseDouble(json.get("customerTypeReturn").toString()));
+		CustomerTypeVip = new CustomerTypeVip(Double.parseDouble(json.get("customerTypeVip").toString()));
 	}
 	
 	public String getShopName() { return shopName; }
@@ -80,7 +78,7 @@ public class Shop {
 	}
 	
 	
-	public static void main(String[] args)
+	/*public static void main(String[] args)
 	{
 		JSONObject obj = null;
 		obj.put("ShopName", "shopName");
@@ -93,7 +91,6 @@ public class Shop {
 		System.out.println(c1.getId()+ " " + c1.getName()+ " " + c1.getPhoneNr() + " " + c1.getType().getCustomerTypeDiscount());
 		System.out.println(c2.getId()+ " " + c2.getName()+ " " + c2.getPhoneNr() + " " + c2.getType().getCustomerTypeDiscount());
 		System.out.println(sp.shopName);
-
-	}
+	}*/
 	
 }
