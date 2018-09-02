@@ -13,6 +13,8 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import gui.Login;
+
 
 public class ClientSideConnection extends Thread {
 	private Socket socket;
@@ -22,7 +24,7 @@ public class ClientSideConnection extends Thread {
 	private BufferedReader commandBufferedReader;
 	private Actions action;
 	@SuppressWarnings("unused")
-	private ShopGui shopGui;
+	private Login shopGui;
 	private Shop shop;
 	
 	public ClientSideConnection() {
@@ -46,7 +48,7 @@ public class ClientSideConnection extends Thread {
 			e.printStackTrace();
 		}
 		commandBufferedReader = new BufferedReader(new InputStreamReader(System.in));
-		shopGui = new ShopGui(this);
+		shopGui = new Login(this);
 	}
 	
 	@SuppressWarnings("unchecked")
