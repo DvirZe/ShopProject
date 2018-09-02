@@ -1,6 +1,7 @@
 package gui;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -11,16 +12,19 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.ListCellRenderer;
 import javax.swing.SpringLayout;
 
 import clientSide.ClientSideConnection;
+import clientSide.Shop;
 
 public class SellMain {
 
 	public  SellMain(ClientSideConnection clientSideConnection) {
-		JComboBox<String> ItemType,ItemQuantity,ItemType2,ItemQuantity2, ItemType3, ItemQuantity3, ItemQuantity4, ItemType4;
+		JComboBox<String> ItemType,/*ItemQuantity[0],*/ItemType2/*,ItemQuantity[1]*/, ItemType3,/* ItemQuantity[2], ItemQuantity[3],*/ ItemType4;
 		Font font1 = new Font("Ariel",Font.PLAIN,10);
 		Font font2 = new Font("Ariel",Font.BOLD,14);
 		JFrame SellMenu = new JFrame();
@@ -28,12 +32,29 @@ public class SellMain {
 		SellMenu.setExtendedState(JFrame.MAXIMIZED_BOTH); 
 		SellMenu.setLocationRelativeTo(null);	
 		SellMenu.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-		
+		JComboBox[] ItemQuantity = new JComboBox[4];
 		JPanel SellButtons = new JPanel();
 		SpringLayout SellLayout = new SpringLayout();
 		SellButtons.setLayout(SellLayout);
 		
 //		GridBagConstraints gc = new GridBagConstraints();
+			
+		
+		for (int i = 0; i<4 ; ++i)
+		{
+			ItemQuantity[i] = new JComboBox<>();
+			ItemQuantity[i].setPrototypeDisplayValue("How many from this item whold you like to buy ?"); //for bombobox size
+			ItemQuantity[i].setToolTipText("How many from this item whold you like to buy ?");
+		}
+		
+		Shop shop = clientSideConnection.getShop();
+		for (int i = 1; i<=4 ; ++i)
+		{
+			for (int j = 0; j< shop.getInventory(i) ;++j )
+			{
+				ItemQuantity[i-1].addItem(j);
+			}
+		}
 		
 		SellButtons.setBorder(BorderFactory.createTitledBorder("Sell Menu"));
 		SellButtons.setBackground(Color.white);
@@ -51,11 +72,11 @@ public class SellMain {
 		Quantity.setFont(font1);
 		SellButtons.add(Quantity);
 		SellLayout.putConstraint(SpringLayout.WEST, Quantity, 100, SpringLayout.EAST, Type);
-		ItemQuantity = new JComboBox<String>(new String[] {"The quantity of the item from the file from 1 to maximum"} );
-		ItemQuantity.setFont(font1);
-		SellButtons.add(ItemQuantity);
-		SellLayout.putConstraint(SpringLayout.WEST, ItemQuantity, 100, SpringLayout.EAST, Type);
-		SellLayout.putConstraint(SpringLayout.NORTH, ItemQuantity, 50, SpringLayout.SOUTH, Quantity);
+		//ItemQuantity[0] = new JComboBox<String>(new String[] {"The quantity of the item from the file from 1 to maximum"} );
+		ItemQuantity[0].setFont(font1);
+		SellButtons.add(ItemQuantity[0]);
+		SellLayout.putConstraint(SpringLayout.WEST, ItemQuantity[0], 100, SpringLayout.EAST, Type);
+		SellLayout.putConstraint(SpringLayout.NORTH, ItemQuantity[0], 50, SpringLayout.SOUTH, Quantity);
 		JLabel Price = new JLabel("Item Price");
 		Price.setFont(font1);
 		SellButtons.add(Price);
@@ -72,11 +93,11 @@ public class SellMain {
 		SellButtons.add(ItemType2);
 		SellLayout.putConstraint(SpringLayout.NORTH, ItemType2, 50, SpringLayout.SOUTH, ItemType);
 		SellLayout.putConstraint(SpringLayout.WEST, Quantity, 100, SpringLayout.EAST, ItemType);
-		ItemQuantity2 = new JComboBox<String>(new String[] {"The quantity of the item from the file from 1 to maximum"} );
-		ItemQuantity2.setFont(font1);
-		SellButtons.add(ItemQuantity2);
-		SellLayout.putConstraint(SpringLayout.WEST, ItemQuantity2, 100, SpringLayout.EAST, Type);
-		SellLayout.putConstraint(SpringLayout.NORTH, ItemQuantity2, 50, SpringLayout.SOUTH, ItemQuantity);
+		//ItemQuantity[1] = new JComboBox<String>(new String[] {"The quantity of the item from the file from 1 to maximum"} );
+		ItemQuantity[1].setFont(font1);
+		SellButtons.add(ItemQuantity[1]);
+		SellLayout.putConstraint(SpringLayout.WEST, ItemQuantity[1], 100, SpringLayout.EAST, Type);
+		SellLayout.putConstraint(SpringLayout.NORTH, ItemQuantity[1], 50, SpringLayout.SOUTH, ItemQuantity[0]);
 		JTextField ItemPrice2 = new JTextField("" , 5);
 		ItemPrice2.setFont(font1);
 		ItemPrice2.setEditable(false);
@@ -89,11 +110,11 @@ public class SellMain {
 		SellButtons.add(ItemType3);
 		SellLayout.putConstraint(SpringLayout.NORTH, ItemType3, 50, SpringLayout.SOUTH, ItemType2);
 		SellLayout.putConstraint(SpringLayout.WEST, Quantity, 100, SpringLayout.EAST, ItemType);
-		ItemQuantity3 = new JComboBox<String>(new String[] {"The quantity of the item from the file from 1 to maximum"} );
-		ItemQuantity3.setFont(font1);
-		SellButtons.add(ItemQuantity3);
-		SellLayout.putConstraint(SpringLayout.WEST, ItemQuantity3, 100, SpringLayout.EAST, Type);
-		SellLayout.putConstraint(SpringLayout.NORTH, ItemQuantity3, 50, SpringLayout.SOUTH, ItemQuantity2);
+		//ItemQuantity[2] = new JComboBox<String>(new String[] {"The quantity of the item from the file from 1 to maximum"} );
+		ItemQuantity[2].setFont(font1);
+		SellButtons.add(ItemQuantity[2]);
+		SellLayout.putConstraint(SpringLayout.WEST, ItemQuantity[2], 100, SpringLayout.EAST, Type);
+		SellLayout.putConstraint(SpringLayout.NORTH, ItemQuantity[2], 50, SpringLayout.SOUTH, ItemQuantity[1]);
 		JTextField ItemPrice3 = new JTextField("" , 5);
 		ItemPrice3.setFont(font1);
 		ItemPrice3.setEditable(false);
@@ -106,11 +127,11 @@ public class SellMain {
 		SellButtons.add(ItemType4);
 		SellLayout.putConstraint(SpringLayout.NORTH, ItemType4, 50, SpringLayout.SOUTH, ItemType3);
 		SellLayout.putConstraint(SpringLayout.WEST, Quantity, 100 , SpringLayout.EAST, ItemType);
-		ItemQuantity4 = new JComboBox<String>(new String[] {"The quantity of the item from the file from 1 to maximum"} );
-		ItemQuantity4.setFont(font1);
-		SellButtons.add(ItemQuantity4);
-		SellLayout.putConstraint(SpringLayout.WEST, ItemQuantity4, 100, SpringLayout.EAST, Type);
-		SellLayout.putConstraint(SpringLayout.NORTH, ItemQuantity4, 50, SpringLayout.SOUTH, ItemQuantity3);
+		//ItemQuantity[3] = new JComboBox<String>(new String[] {"The quantity of the item from the file from 1 to maximum"} );
+		ItemQuantity[3].setFont(font1);
+		SellButtons.add(ItemQuantity[3]);
+		SellLayout.putConstraint(SpringLayout.WEST, ItemQuantity[3], 100, SpringLayout.EAST, Type);
+		SellLayout.putConstraint(SpringLayout.NORTH, ItemQuantity[3], 50, SpringLayout.SOUTH, ItemQuantity[2]);
 		JTextField ItemPrice4 = new JTextField("" , 5);
 		ItemPrice4.setFont(font1);
 		ItemPrice4.setEditable(false);
@@ -143,11 +164,14 @@ public class SellMain {
 			}
 		});
 		
+
+		
+		
 		
 		SellMenu.add(SellButtons);
 		SellMenu.pack();
 		SellMenu.setVisible(true);
 		
 	}
-	
 }
+

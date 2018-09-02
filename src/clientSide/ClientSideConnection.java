@@ -6,6 +6,8 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.TreeMap;
+import java.util.Vector;
 
 import javax.net.ssl.SSLSocketFactory;
 
@@ -73,6 +75,10 @@ public class ClientSideConnection extends Thread {
 	public void SendToServer(JSONObject json)
 	{
 		printWriter.println(json);
+	}
+	
+	public Shop getShop() {
+		return shop;
 	}
 	
 	public static void main(String[] args) throws UnknownHostException, IOException
