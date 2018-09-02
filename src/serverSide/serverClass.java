@@ -18,15 +18,17 @@ import org.json.simple.parser.ParseException;
 public class serverClass extends Thread {
 	private Socket socket;
 	private JSONObject workers, shop;
+	private serverConnection serverConnection;
 	
 	public serverClass() {}
 	
-	public serverClass(Socket socket) throws FileNotFoundException, IOException, ParseException {
+	public serverClass(Socket socket, serverConnection serverConnection) throws FileNotFoundException, IOException, ParseException {
 		this.socket = socket;
-		JSONParser parser = new JSONParser();
+		/*JSONParser parser = new JSONParser();
 		Object obj = parser.parse(new FileReader("./files/Workers.json"));
-		workers = (JSONObject) obj;
-		
+		workers = (JSONObject) obj;*/
+		this.serverConnection = serverConnection;
+		workers = serverConnection.getWorkers();
 	}
 	
 	public void actionChoose(JSONObject json) throws IOException, ParseException

@@ -58,7 +58,7 @@ public class ClientSideConnection extends Thread {
 	{
 		JSONObject json = new JSONObject();
 		json.put("Action",action.loginAction());
-		json.putIfAbsent("workerId", workerId);
+		json.put("workerId", workerId);
 		json.put("password", password);
 		SendToServer(json);
 		String msg = socketBufferedReader.readLine();
