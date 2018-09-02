@@ -5,19 +5,26 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.io.IOException;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import org.json.simple.parser.ParseException;
+
 import clientSide.ClientSideConnection;
+import clientSide.Worker;
 
 public class Employee {
 
@@ -176,13 +183,68 @@ public class Employee {
 		EmpMgr.add(PositionText);
 		EmpLayout.putConstraint(SpringLayout.WEST, PositionText, 150, SpringLayout.WEST, Position);
 		EmpLayout.putConstraint(SpringLayout.NORTH, PositionText, 60, SpringLayout.SOUTH, EmpNumText);
-	
-
 		
+		
+////////////////////////ActionListener For finding worker/////////////////////////		
+ActionListener findWorkerAction = new ActionListener() {
+	public void actionPerformed (ActionEvent ae) {
+		Worker worker = null;
+		try {
+			worker = clientSideConnection.findWorker(IDNum.getText());
+		} catch (ParseException | IOException e) {
+			e.printStackTrace();
+		}
+		
+		if (worker != null)
+		{
+			FnText.setText(worker.getName());
+			PhnNumText.setText(worker.getPhoneNr());
+			AccNumText.setText(worker.getbankAcc());
+			String workerId = Integer.toString(worker.getWorkerId());
+			EmpNumText.setText(workerId);
+		}
+	}
+};
+
+FocusListener findWorkerFAction = new FocusListener() {
+
+	@Override
+	public void focusGained(FocusEvent arg0) {
+		Worker worker = null;
+		try {
+			worker = clientSideConnection.findWorker(IDNum.getText());
+		} catch (ParseException | IOException e) {
+			e.printStackTrace();
+		}
+		
+		if (worker != null)
+		{
+			FnText.setText(worker.getName());
+			PhnNumText.setText(worker.getPhoneNr());
+			AccNumText.setText(worker.getbankAcc());
+			String workerId = Integer.toString(worker.getWorkerId());
+			EmpNumText.setText(workerId);
+			
+		}
+	}
+
+	@Override
+	public void focusLost(FocusEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+};
+
+////////////////////End of ActionListener For login panel/////////////////////		
+		
+		IDNum.addActionListener(findWorkerAction);
+		IDNum.addFocusListener(findWorkerFAction);
 		
 		EmpMenu.add(EmpMgr);
 		EmpMenu.pack();
 		EmpMenu.setVisible(true);
 	}
+	
 	
 }

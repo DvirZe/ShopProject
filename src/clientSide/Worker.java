@@ -23,6 +23,8 @@ public class Worker extends Person {
 	public String getJob() { return job; }
 	public String getPassword() { return password; }
 	
+	public String getbankAcc() { return bankAcc; }
+	
 	public void setJob(String job) { this.job = job; }
 	
 	public void changeLogin() { login = !login; }

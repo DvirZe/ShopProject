@@ -72,7 +72,6 @@ public class SellMain {
 		Quantity.setFont(font1);
 		SellButtons.add(Quantity);
 		SellLayout.putConstraint(SpringLayout.WEST, Quantity, 100, SpringLayout.EAST, Type);
-		//ItemQuantity[0] = new JComboBox<String>(new String[] {"The quantity of the item from the file from 1 to maximum"} );
 		ItemQuantity[0].setFont(font1);
 		SellButtons.add(ItemQuantity[0]);
 		SellLayout.putConstraint(SpringLayout.WEST, ItemQuantity[0], 100, SpringLayout.EAST, Type);
@@ -93,7 +92,6 @@ public class SellMain {
 		SellButtons.add(ItemType2);
 		SellLayout.putConstraint(SpringLayout.NORTH, ItemType2, 50, SpringLayout.SOUTH, ItemType);
 		SellLayout.putConstraint(SpringLayout.WEST, Quantity, 100, SpringLayout.EAST, ItemType);
-		//ItemQuantity[1] = new JComboBox<String>(new String[] {"The quantity of the item from the file from 1 to maximum"} );
 		ItemQuantity[1].setFont(font1);
 		SellButtons.add(ItemQuantity[1]);
 		SellLayout.putConstraint(SpringLayout.WEST, ItemQuantity[1], 100, SpringLayout.EAST, Type);
@@ -110,7 +108,6 @@ public class SellMain {
 		SellButtons.add(ItemType3);
 		SellLayout.putConstraint(SpringLayout.NORTH, ItemType3, 50, SpringLayout.SOUTH, ItemType2);
 		SellLayout.putConstraint(SpringLayout.WEST, Quantity, 100, SpringLayout.EAST, ItemType);
-		//ItemQuantity[2] = new JComboBox<String>(new String[] {"The quantity of the item from the file from 1 to maximum"} );
 		ItemQuantity[2].setFont(font1);
 		SellButtons.add(ItemQuantity[2]);
 		SellLayout.putConstraint(SpringLayout.WEST, ItemQuantity[2], 100, SpringLayout.EAST, Type);
@@ -127,7 +124,6 @@ public class SellMain {
 		SellButtons.add(ItemType4);
 		SellLayout.putConstraint(SpringLayout.NORTH, ItemType4, 50, SpringLayout.SOUTH, ItemType3);
 		SellLayout.putConstraint(SpringLayout.WEST, Quantity, 100 , SpringLayout.EAST, ItemType);
-		//ItemQuantity[3] = new JComboBox<String>(new String[] {"The quantity of the item from the file from 1 to maximum"} );
 		ItemQuantity[3].setFont(font1);
 		SellButtons.add(ItemQuantity[3]);
 		SellLayout.putConstraint(SpringLayout.WEST, ItemQuantity[3], 100, SpringLayout.EAST, Type);
