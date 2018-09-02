@@ -14,139 +14,175 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 import clientSide.ClientSideConnection;
 
 public class Employee {
 
 	public  Employee(ClientSideConnection clientSideConnection) {
-		JComboBox<String> ItemType,ItemQuantity,ItemType2,ItemQuantity2, ItemType3, ItemQuantity3, ItemQuantity4, ItemType4;
 		Font font1 = new Font("Ariel",Font.PLAIN,10);
 		Font font2 = new Font("Ariel",Font.BOLD,14);
-		JFrame SellMenu = new JFrame();
-		SellMenu.setTitle("Sales managment menu");
-		SellMenu.setExtendedState(JFrame.MAXIMIZED_BOTH); 
-		SellMenu.setLocationRelativeTo(null);	
-		SellMenu.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		JFrame EmpMenu = new JFrame();
+		EmpMenu.setTitle("Sales managment menu");
+		EmpMenu.setExtendedState(JFrame.MAXIMIZED_BOTH); 
+		EmpMenu.setLocationRelativeTo(null);	
+		EmpMenu.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		
-		JPanel SellButtons = new JPanel();
-		SpringLayout SellLayout = new SpringLayout();
-		SellButtons.setLayout(SellLayout);
+		JPanel EmpMgr = new JPanel();
+		SpringLayout EmpLayout = new SpringLayout();
+		EmpMgr.setLayout(EmpLayout);
 		
+		JComboBox<String> PositionText;
 //		GridBagConstraints gc = new GridBagConstraints();
 		
-		SellButtons.setBorder(BorderFactory.createTitledBorder("Sell Menu"));
-		SellButtons.setBackground(Color.white);
-		SellButtons.setPreferredSize(new Dimension (200 , 175));
-		//SellButtons.setLayout(new FlowLayout());
-		JLabel Type = new JLabel("Item Type:");
-		Type.setFont(font1);
-		SellButtons.add(Type);
-		SellLayout.putConstraint(SpringLayout.WEST, Type, 20, SpringLayout.WEST, SellButtons);
-		ItemType = new JComboBox<String>(new String[] {"To be Connected to File","shirt","Pants"} );
-		ItemType.setFont(font1);
-		SellButtons.add(ItemType);
-		SellLayout.putConstraint(SpringLayout.NORTH, ItemType, 50, SpringLayout.SOUTH, Type);
-		JLabel Quantity = new JLabel("Quantity:");
-		Quantity.setFont(font1);
-		SellButtons.add(Quantity);
-		SellLayout.putConstraint(SpringLayout.WEST, Quantity, 100, SpringLayout.EAST, Type);
-		ItemQuantity = new JComboBox<String>(new String[] {"The quantity of the item from the file from 1 to maximum"} );
-		ItemQuantity.setFont(font1);
-		SellButtons.add(ItemQuantity);
-		SellLayout.putConstraint(SpringLayout.WEST, ItemQuantity, 100, SpringLayout.EAST, Type);
-		SellLayout.putConstraint(SpringLayout.NORTH, ItemQuantity, 50, SpringLayout.SOUTH, Quantity);
-		JLabel Price = new JLabel("Item Price");
-		Price.setFont(font1);
-		SellButtons.add(Price);
-		SellLayout.putConstraint(SpringLayout.WEST, Price, 200, SpringLayout.EAST, Quantity);
-		JTextField ItemPrice = new JTextField("" , 5);
-		ItemPrice.setFont(font1);
-		ItemPrice.setEditable(false);
-		SellButtons.add(ItemPrice);
-		SellLayout.putConstraint(SpringLayout.WEST, ItemPrice, 200, SpringLayout.EAST, Quantity);
-		SellLayout.putConstraint(SpringLayout.NORTH, ItemPrice, 50, SpringLayout.SOUTH, Price);
-		
-		ItemType2 = new JComboBox<String>(new String[] {"To be Connected to File","shirt","Pants"} );
-		ItemType2.setFont(font1);
-		SellButtons.add(ItemType2);
-		SellLayout.putConstraint(SpringLayout.NORTH, ItemType2, 50, SpringLayout.SOUTH, ItemType);
-		SellLayout.putConstraint(SpringLayout.WEST, Quantity, 100, SpringLayout.EAST, ItemType);
-		ItemQuantity2 = new JComboBox<String>(new String[] {"The quantity of the item from the file from 1 to maximum"} );
-		ItemQuantity2.setFont(font1);
-		SellButtons.add(ItemQuantity2);
-		SellLayout.putConstraint(SpringLayout.WEST, ItemQuantity2, 100, SpringLayout.EAST, Type);
-		SellLayout.putConstraint(SpringLayout.NORTH, ItemQuantity2, 50, SpringLayout.SOUTH, ItemQuantity);
-		JTextField ItemPrice2 = new JTextField("" , 5);
-		ItemPrice2.setFont(font1);
-		ItemPrice2.setEditable(false);
-		SellButtons.add(ItemPrice2);
-		SellLayout.putConstraint(SpringLayout.WEST, ItemPrice2, 200, SpringLayout.EAST, Quantity);
-		SellLayout.putConstraint(SpringLayout.NORTH, ItemPrice2, 50, SpringLayout.SOUTH, ItemPrice);
-		
-		ItemType3 = new JComboBox<String>(new String[] {"To be Connected to File","shirt","Pants"} );
-		ItemType3.setFont(font1);
-		SellButtons.add(ItemType3);
-		SellLayout.putConstraint(SpringLayout.NORTH, ItemType3, 50, SpringLayout.SOUTH, ItemType2);
-		SellLayout.putConstraint(SpringLayout.WEST, Quantity, 100, SpringLayout.EAST, ItemType);
-		ItemQuantity3 = new JComboBox<String>(new String[] {"The quantity of the item from the file from 1 to maximum"} );
-		ItemQuantity3.setFont(font1);
-		SellButtons.add(ItemQuantity3);
-		SellLayout.putConstraint(SpringLayout.WEST, ItemQuantity3, 100, SpringLayout.EAST, Type);
-		SellLayout.putConstraint(SpringLayout.NORTH, ItemQuantity3, 50, SpringLayout.SOUTH, ItemQuantity2);
-		JTextField ItemPrice3 = new JTextField("" , 5);
-		ItemPrice3.setFont(font1);
-		ItemPrice3.setEditable(false);
-		SellButtons.add(ItemPrice3);
-		SellLayout.putConstraint(SpringLayout.WEST, ItemPrice3, 200, SpringLayout.EAST, Quantity);
-		SellLayout.putConstraint(SpringLayout.NORTH, ItemPrice3, 50, SpringLayout.SOUTH, ItemPrice2);
-		
-		ItemType4 = new JComboBox<String>(new String[] {"To be Connected to File","shirt","Pants"} );
-		ItemType4.setFont(font1);
-		SellButtons.add(ItemType4);
-		SellLayout.putConstraint(SpringLayout.NORTH, ItemType4, 50, SpringLayout.SOUTH, ItemType3);
-		SellLayout.putConstraint(SpringLayout.WEST, Quantity, 100 , SpringLayout.EAST, ItemType);
-		ItemQuantity4 = new JComboBox<String>(new String[] {"The quantity of the item from the file from 1 to maximum"} );
-		ItemQuantity4.setFont(font1);
-		SellButtons.add(ItemQuantity4);
-		SellLayout.putConstraint(SpringLayout.WEST, ItemQuantity4, 100, SpringLayout.EAST, Type);
-		SellLayout.putConstraint(SpringLayout.NORTH, ItemQuantity4, 50, SpringLayout.SOUTH, ItemQuantity3);
-		JTextField ItemPrice4 = new JTextField("" , 5);
-		ItemPrice4.setFont(font1);
-		ItemPrice4.setEditable(false);
-		SellButtons.add(ItemPrice4);
-		SellLayout.putConstraint(SpringLayout.WEST, ItemPrice4, 200, SpringLayout.EAST, Quantity);
-		SellLayout.putConstraint(SpringLayout.NORTH, ItemPrice4, 50, SpringLayout.SOUTH, ItemPrice3);
+		EmpMgr.setBorder(BorderFactory.createTitledBorder("Employee Menu"));
+		EmpMgr.setBackground(Color.white);
+		EmpMgr.setPreferredSize(new Dimension (200 , 175));
 
-		
-		JButton Sell = new JButton("Sell");
-		Sell.setFont(font2);
-		SellButtons.add(Sell);
-		SellLayout.putConstraint(SpringLayout.WEST,Sell , 100, SpringLayout.EAST, ItemPrice);
-		SellLayout.putConstraint(SpringLayout.NORTH, Sell, 100, SpringLayout.SOUTH, ItemPrice4);
-		Sell.addActionListener(new ActionListener() {
+		JButton Save = new JButton("Save");
+		Save.setFont(font2);
+		EmpMgr.add(Save);
+		Save.setEnabled(false);
+		EmpLayout.putConstraint(SpringLayout.WEST, Save, 100, SpringLayout.WEST, EmpMgr);
+		EmpLayout.putConstraint(SpringLayout.NORTH, Save, 540, SpringLayout.NORTH, EmpMgr);
+		Save.addActionListener(new ActionListener() {
 			public void actionPerformed (ActionEvent ae) {
-				SellMenu.dispose();
-				new	SellMain(clientSideConnection);
+				EmpMenu.dispose();
+				new Employee(clientSideConnection);
+
 			}
 		});
 		
 		JButton Back = new JButton("Back");
 		Back.setFont(font2);
-		SellButtons.add(Back);
-		SellLayout.putConstraint(SpringLayout.WEST,Back , 50, SpringLayout.EAST, Sell);
-		SellLayout.putConstraint(SpringLayout.NORTH, Back, 100, SpringLayout.SOUTH, ItemPrice4);
+		EmpMgr.add(Back);
+		EmpLayout.putConstraint(SpringLayout.WEST,Back , 12, SpringLayout.EAST, Save);
+		EmpLayout.putConstraint(SpringLayout.NORTH, Back, 540, SpringLayout.NORTH, EmpMgr);
 		Back.addActionListener(new ActionListener() {
 			public void actionPerformed (ActionEvent ae) {
-				SellMenu.dispose();
+				EmpMenu.dispose();
 				new	BuySell(clientSideConnection);
 			}
 		});
 		
 		
-		SellMenu.add(SellButtons);
-		SellMenu.pack();
-		SellMenu.setVisible(true);
+		
+		DocumentListener Enabler = new DocumentListener(){
+
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				SaveEnable();
+				
+			}
+
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				SaveEnable();
+				
+			}
+
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				SaveEnable();
+				
+			}
+			public void SaveEnable(){
+				Save.setEnabled(true);
+			}
+			
+		}; 
+		JLabel ID = new JLabel("Employee ID:");
+		ID.setFont(font2);
+		EmpMgr.add(ID);
+		EmpLayout.putConstraint(SpringLayout.WEST, ID, 20, SpringLayout.WEST, EmpMgr);
+		JTextField IDNum = new JTextField("",10);
+		IDNum.setFont(font1);
+		EmpMgr.add(IDNum);
+		EmpLayout.putConstraint(SpringLayout.WEST, IDNum, 150, SpringLayout.WEST, ID);
+		
+		JLabel Fn = new JLabel("First name:");
+		Fn.setFont(font2);
+		EmpMgr.add(Fn);
+		EmpLayout.putConstraint(SpringLayout.WEST, Fn, 20, SpringLayout.WEST, EmpMgr);
+		EmpLayout.putConstraint(SpringLayout.NORTH, Fn, 60, SpringLayout.SOUTH, ID);
+		JTextField FnText = new JTextField("",10);
+		FnText.setFont(font1);
+		FnText.getDocument().addDocumentListener(Enabler);
+		EmpMgr.add(FnText);
+		EmpLayout.putConstraint(SpringLayout.WEST, FnText, 150, SpringLayout.WEST, ID);
+		EmpLayout.putConstraint(SpringLayout.NORTH, FnText, 60, SpringLayout.SOUTH, IDNum);
+		
+		JLabel Ln = new JLabel("Last name:");
+		Ln.setFont(font2);
+		EmpMgr.add(Ln);
+		EmpLayout.putConstraint(SpringLayout.WEST, Ln, 20, SpringLayout.WEST, EmpMgr);
+		EmpLayout.putConstraint(SpringLayout.NORTH, Ln, 60, SpringLayout.SOUTH, Fn);
+		JTextField LnText = new JTextField("",10);
+		LnText.setFont(font1);
+		LnText.getDocument().addDocumentListener(Enabler);
+		EmpMgr.add(LnText);
+		EmpLayout.putConstraint(SpringLayout.WEST, LnText, 150, SpringLayout.WEST, Fn);
+		EmpLayout.putConstraint(SpringLayout.NORTH, LnText, 60, SpringLayout.SOUTH, FnText);
+		
+		JLabel PhnNum = new JLabel("Phone number:");
+		PhnNum.setFont(font2);
+		EmpMgr.add(PhnNum);
+		EmpLayout.putConstraint(SpringLayout.WEST, PhnNum, 20, SpringLayout.WEST, EmpMgr);
+		EmpLayout.putConstraint(SpringLayout.NORTH, PhnNum, 60, SpringLayout.SOUTH, Ln);
+		JTextField PhnNumText = new JTextField("",10);
+		PhnNumText.setFont(font1);
+		PhnNumText.getDocument().addDocumentListener(Enabler);
+		EmpMgr.add(PhnNumText);
+		EmpLayout.putConstraint(SpringLayout.WEST, PhnNumText, 150, SpringLayout.WEST, Ln);
+		EmpLayout.putConstraint(SpringLayout.NORTH, PhnNumText, 60, SpringLayout.SOUTH, LnText);
+		
+		JLabel AccNum = new JLabel("Account number:");
+		AccNum.setFont(font2);
+		EmpMgr.add(AccNum);
+		EmpLayout.putConstraint(SpringLayout.WEST, AccNum, 20, SpringLayout.WEST, EmpMgr);
+		EmpLayout.putConstraint(SpringLayout.NORTH, AccNum, 60, SpringLayout.SOUTH, PhnNum);
+		JTextField AccNumText = new JTextField("",10);
+		AccNumText.setFont(font1);
+		AccNumText.getDocument().addDocumentListener(Enabler);
+		EmpMgr.add(AccNumText);
+		EmpLayout.putConstraint(SpringLayout.WEST, AccNumText, 150, SpringLayout.WEST, PhnNum);
+		EmpLayout.putConstraint(SpringLayout.NORTH, AccNumText, 60, SpringLayout.SOUTH, PhnNumText);
+
+		JLabel EmpNum = new JLabel("Employee number:");
+		EmpNum.setFont(font2);
+		EmpMgr.add(EmpNum);
+		EmpLayout.putConstraint(SpringLayout.WEST, EmpNum, 20, SpringLayout.WEST, EmpMgr);
+		EmpLayout.putConstraint(SpringLayout.NORTH, EmpNum, 60, SpringLayout.SOUTH, AccNum);
+		JTextField EmpNumText = new JTextField("mispar"	,10);
+		EmpNumText.setFont(font1);
+		EmpNumText.getDocument().addDocumentListener(Enabler);
+		EmpNumText.setEditable(false);
+		EmpMgr.add(EmpNumText);
+		EmpLayout.putConstraint(SpringLayout.WEST, EmpNumText, 150, SpringLayout.WEST, EmpNum);
+		EmpLayout.putConstraint(SpringLayout.NORTH, EmpNumText, 60, SpringLayout.SOUTH, AccNumText);
+		
+		
+		
+		JLabel Position = new JLabel("Position:");
+		Position.setFont(font2);
+		EmpMgr.add(Position);
+		EmpLayout.putConstraint(SpringLayout.WEST, Position, 20, SpringLayout.WEST, EmpMgr);
+		EmpLayout.putConstraint(SpringLayout.NORTH, Position, 60, SpringLayout.SOUTH, EmpNum);
+		PositionText = new JComboBox<String>(new String[] {"Manager","Seller","Cashier"} );
+		PositionText.setFont(font1);
+		((JTextField)PositionText.getEditor().getEditorComponent()).getDocument().addDocumentListener(Enabler);
+		EmpMgr.add(PositionText);
+		EmpLayout.putConstraint(SpringLayout.WEST, PositionText, 150, SpringLayout.WEST, Position);
+		EmpLayout.putConstraint(SpringLayout.NORTH, PositionText, 60, SpringLayout.SOUTH, EmpNumText);
+	
+
+		
+		
+		EmpMenu.add(EmpMgr);
+		EmpMenu.pack();
+		EmpMenu.setVisible(true);
 	}
 	
 }
