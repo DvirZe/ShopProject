@@ -59,6 +59,7 @@ public class Shop {
 	}
 	
 	public int getInventory(int item) { return Inventory.get(item).get(0); }
+	public int getPrices(int item) { return Inventory.get(item).get(1); }
 	
 	public void saveInfo(PrintWriter printWriter, BufferedReader socketBufferedReader) throws IOException { 
 		JSONObject obj = null;
