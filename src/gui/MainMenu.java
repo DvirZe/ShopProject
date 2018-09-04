@@ -29,7 +29,7 @@ public class MainMenu {
 		BuySell.addActionListener(new ActionListener() {
 			public void actionPerformed (ActionEvent ae) {
 				Main.dispose();
-				new	BuySell(clientSideConnection);
+				new	SellMain(clientSideConnection);
 			}
 		});
 		

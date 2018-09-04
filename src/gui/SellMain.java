@@ -3,8 +3,11 @@ package gui;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Point;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Stack;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -26,8 +29,11 @@ public class SellMain {
 		Font font2 = new Font("Ariel",Font.BOLD,14);
 		JFrame SellMenu = new JFrame();
 		SellMenu.setTitle("Sales managment menu");
-		SellMenu.setExtendedState(JFrame.MAXIMIZED_BOTH); 
-		SellMenu.setLocationRelativeTo(null);	
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		Point middle = new Point(screenSize.width / 2, screenSize.height / 2);
+		Point newLocation = new Point(middle.x - (600 / 2), 
+		                              middle.y - (700 / 2));
+		SellMenu.setLocation(newLocation);
 		SellMenu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		JComboBox[] ItemQuantity = new JComboBox[4];
 		JTextField[] ItemPrice = new JTextField[4] , ItemTotal = new JTextField[4];
@@ -53,7 +59,7 @@ public class SellMain {
 			{
 				ItemQuantity[i-1].addItem(j);
 			}
-			ItemTotal[i-1] = new JTextField("",4);
+			ItemTotal[i-1] = new JTextField("",5);
 			ItemTotal[i-1].setEditable(false);
 			ItemTotal[i-1].setText("0");
 			
@@ -62,7 +68,7 @@ public class SellMain {
 		
 		SellButtons.setBorder(BorderFactory.createTitledBorder("Sell Menu"));
 		SellButtons.setBackground(Color.white);
-		SellButtons.setPreferredSize(new Dimension (200 , 175));
+		SellButtons.setPreferredSize(new Dimension (730 , 510));
 		JLabel CusID = new JLabel("Customer ID:");
 		SellButtons.add(CusID);
 		SellLayout.putConstraint(SpringLayout.WEST, CusID, 0, SpringLayout.WEST, SellButtons);
@@ -111,6 +117,19 @@ public class SellMain {
 		SellButtons.add(ItemTotalPrice);
 		SellLayout.putConstraint(SpringLayout.WEST, ItemTotalPrice, 100, SpringLayout.EAST, Price);
 		SellLayout.putConstraint(SpringLayout.NORTH, ItemTotalPrice, 40, SpringLayout.SOUTH, CusID);
+		JLabel Sum = new JLabel("Total price:");
+		Sum.setFont(font2);
+		SellButtons.add(Sum);
+		SellLayout.putConstraint(SpringLayout.WEST, Sum, 20, SpringLayout.EAST, Price);
+		SellLayout.putConstraint(SpringLayout.NORTH, Sum, 50, SpringLayout.SOUTH, ItemPrice[3]);
+		JLabel DiscPrec = new JLabel("Discount precentage:");
+		DiscPrec.setFont(font2);
+		SellButtons.add(DiscPrec);
+		SellLayout.putConstraint(SpringLayout.EAST, DiscPrec, 0, SpringLayout.WEST, Price);
+		SellLayout.putConstraint(SpringLayout.NORTH, DiscPrec, 50, SpringLayout.SOUTH, ItemPrice[3]);
+
+		
+		
 		
 
 		SellButtons.add(ItemQuantity[0]);
@@ -175,13 +194,23 @@ public class SellMain {
 		SellButtons.add(ItemTotal[3]);
 		SellLayout.putConstraint(SpringLayout.WEST, ItemTotal[3], 0, SpringLayout.WEST, ItemTotalPrice);
 		SellLayout.putConstraint(SpringLayout.NORTH, ItemTotal[3], 50, SpringLayout.SOUTH, ItemPrice[2]);
+		JTextField SumText = new JTextField("0" , 5);
+		SumText.setEditable(false);
+		SellLayout.putConstraint(SpringLayout.WEST, SumText, 0, SpringLayout.WEST, ItemTotalPrice);
+		SellLayout.putConstraint(SpringLayout.NORTH, SumText, 50, SpringLayout.SOUTH, ItemPrice[3]);
+		SellButtons.add(SumText);
+		JTextField DiscPrecText = new JTextField("0%" , 5);
+		DiscPrecText.setEditable(false);
+		SellLayout.putConstraint(SpringLayout.WEST, DiscPrecText, 0, SpringLayout.WEST, ItemPrice[0]);
+		SellLayout.putConstraint(SpringLayout.NORTH, DiscPrecText, 50, SpringLayout.SOUTH, ItemPrice[3]);
+		SellButtons.add(DiscPrecText);
 
 		
 		
 		JButton Sell = new JButton("Sell");
 		Sell.setFont(font2);
 		SellButtons.add(Sell);
-		SellLayout.putConstraint(SpringLayout.WEST,Sell , 0, SpringLayout.WEST, SellButtons);
+		SellLayout.putConstraint(SpringLayout.WEST,Sell , 35, SpringLayout.WEST,ItemPrice[3] );
 		SellLayout.putConstraint(SpringLayout.NORTH, Sell, 100, SpringLayout.SOUTH, ItemPrice[3]);
 		Sell.addActionListener(new ActionListener() {
 			public void actionPerformed (ActionEvent ae) {
@@ -198,22 +227,24 @@ public class SellMain {
 		Back.addActionListener(new ActionListener() {
 			public void actionPerformed (ActionEvent ae) {
 				SellMenu.dispose();
-				new	BuySell(clientSideConnection);
+				new	MainMenu(clientSideConnection);
 			}
 		});
 		
-		
 		for (int i =0; i < 4; i++) 
 		{
-		    final int temp = i; // assign to temporary variable
-		    ItemQuantity[temp].addActionListener(new ActionListener() 
+		    final int index = i; // assign to temporary variable
+		    ItemQuantity[index].addActionListener(new ActionListener() 
 		    {
 		        @Override
 		        public void actionPerformed(ActionEvent e) 
 		        {
-		    		int MyPrice = Integer.valueOf(ItemPrice[temp].getText());
-					int MyQuantity = Integer.parseInt(ItemQuantity[temp].getSelectedItem().toString());
-					ItemTotal[temp].setText(""+MyPrice*MyQuantity);
+		    		int MyPrice = Integer.valueOf(ItemPrice[index].getText());
+					int MyQuantity = Integer.parseInt(ItemQuantity[index].getSelectedItem().toString());
+					ItemTotal[index].setText(""+MyPrice*MyQuantity);
+					int sum = Integer.parseInt(ItemTotal[0].getText()) + Integer.parseInt(ItemTotal[1].getText()) + Integer.parseInt(ItemTotal[2].getText()) + Integer.parseInt(ItemTotal[3].getText());
+					SumText.setText(new String(""+sum));
+
 		        }
 		    });
 		}
