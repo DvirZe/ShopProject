@@ -6,5 +6,5 @@ public class Actions { //to organized
 	
 	public int findWorkerAction() { return 2; }
 	
-	
+	public int saveWorkerAction() { return 3; }
 }

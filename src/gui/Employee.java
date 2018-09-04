@@ -31,7 +31,6 @@ import clientSide.ClientSideConnection;
 import clientSide.Worker;
 
 public class Employee {
-
 	public  Employee(ClientSideConnection clientSideConnection) {
 		Font font1 = new Font("Ariel",Font.PLAIN,10);
 		Font font2 = new Font("Ariel",Font.BOLD,14);
@@ -40,7 +39,7 @@ public class Employee {
 		EmpMenu.setExtendedState(JFrame.MAXIMIZED_BOTH); 
 		EmpMenu.setLocationRelativeTo(null);	
 		EmpMenu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
+				
 		JPanel EmpMgr = new JPanel();
 		SpringLayout EmpLayout = new SpringLayout();
 		EmpMgr.setLayout(EmpLayout);
@@ -57,13 +56,6 @@ public class Employee {
 		Save.setEnabled(false);
 		EmpLayout.putConstraint(SpringLayout.WEST, Save, 100, SpringLayout.WEST, EmpMgr);
 		EmpLayout.putConstraint(SpringLayout.NORTH, Save, 540, SpringLayout.NORTH, EmpMgr);
-		Save.addActionListener(new ActionListener() {
-			public void actionPerformed (ActionEvent ae) {
-				EmpMenu.dispose();
-				new Employee(clientSideConnection);
-
-			}
-		});
 		
 		JButton Back = new JButton("Back");
 		Back.setFont(font2);
@@ -88,7 +80,13 @@ public class Employee {
 		ID.setFont(font2);
 		EmpMgr.add(ID);
 		EmpLayout.putConstraint(SpringLayout.WEST, ID, 20, SpringLayout.WEST, EmpMgr);
-		JTextField IDNum = new JTextField("",20);
+		
+		NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.getDefault());
+		DecimalFormat decimalFormat = (DecimalFormat) numberFormat;
+		decimalFormat.setGroupingUsed(false);
+		
+		JTextField IDNum = new JFormattedTextField(decimalFormat);
+		IDNum.setColumns(20);
 		IDNum.setFont(font1);
 		EmpMgr.add(IDNum);
 		EmpLayout.putConstraint(SpringLayout.WEST, IDNum, 150, SpringLayout.WEST, ID);
@@ -99,6 +97,7 @@ public class Employee {
 		EmpMgr.add(Fn);
 		EmpLayout.putConstraint(SpringLayout.WEST, Fn, 20, SpringLayout.WEST, EmpMgr);
 		EmpLayout.putConstraint(SpringLayout.NORTH, Fn, 60, SpringLayout.SOUTH, ID);
+		
 		JTextField FnText = new JTextField("",20);
 		FnText.setFont(font1);
 		EmpMgr.add(FnText);
@@ -145,7 +144,7 @@ public class Employee {
 		EmpMgr.add(EmpNum);
 		EmpLayout.putConstraint(SpringLayout.WEST, EmpNum, 20, SpringLayout.WEST, EmpMgr);
 		EmpLayout.putConstraint(SpringLayout.NORTH, EmpNum, 60, SpringLayout.SOUTH, AccNum);
-		JTextField EmpNumText = new JTextField("mispar"	,20);
+		JTextField EmpNumText = new JTextField("0"	,20);
 		EmpNumText.setFont(font1);
 		EmpNumText.setEditable(false);
 		EmpMgr.add(EmpNumText);
@@ -165,12 +164,14 @@ public class Employee {
 		EmpLayout.putConstraint(SpringLayout.WEST, PositionText, 150, SpringLayout.WEST, Position);
 		EmpLayout.putConstraint(SpringLayout.NORTH, PositionText, 60, SpringLayout.SOUTH, EmpNumText);
 		
+		
 ////////////////////////ActionListener For finding worker/////////////////////////		
 ActionListener findWorkerAction = new ActionListener() {
 	public void actionPerformed (ActionEvent ae) {
 		Worker worker = null;
 		try {
 			worker = clientSideConnection.findWorker(IDNum.getText());
+			
 		} catch (ParseException | IOException e) {
 			e.printStackTrace();
 		}
@@ -178,52 +179,24 @@ ActionListener findWorkerAction = new ActionListener() {
 		if (worker != null)
 		{
 			FnText.setText(worker.getName());
+			PassText.setText(worker.getPassword());
 			PhnNumText.setText(worker.getPhoneNr());
-			AccNumText.setText(worker.getbankAcc());
+			AccNumText.setText(worker.getBankAcc());
 			String workerId = Integer.toString(worker.getWorkerId());
 			EmpNumText.setText(workerId);
 			PositionText.setSelectedItem(worker.getJob());
 		}
 		else
 		{
+			EmpNumText.setText("");
 			EmpNumText.setText(""+clientSideConnection.getNewWorkerID());
 			FnText.setText("");
+			PassText.setText("");
 			PhnNumText.setText("");
 			AccNumText.setText("");
 			PositionText.setSelectedItem("Seller");
 		}
 	}
-};
-
-FocusListener findWorkerFAction = new FocusListener() {
-
-	@Override
-	public void focusGained(FocusEvent arg0) {
-		Worker worker = null;
-		try {
-			worker = clientSideConnection.findWorker(IDNum.getText());
-		} catch (ParseException | IOException e) {
-			e.printStackTrace();
-		}
-		
-		if (worker != null)
-		{
-			FnText.setText(worker.getName());
-			PhnNumText.setText(worker.getPhoneNr());
-			AccNumText.setText(worker.getbankAcc());
-			String workerId = Integer.toString(worker.getWorkerId());
-			EmpNumText.setText(workerId);
-			
-		}
-	}
-	
-	@Override
-	public void focusLost(FocusEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-	
-	
 };
 
 ////////////////////End of ActionListener For login panel/////////////////////						
@@ -253,14 +226,14 @@ DocumentListener SaveEnabler = new DocumentListener(){
 	public void SaveEnable(){
 		if (!IDNum.getText().isEmpty()
 				&& !FnText.getText().isEmpty()
+				&& (PassText.getPassword().length != 0)
 				&& !PhnNumText.getText().isEmpty()
 				&& !PhnNumText.getText().isEmpty()
 				&& !AccNumText.getText().isEmpty())
 			Save.setEnabled(true);
 		else
 			Save.setEnabled(false);
-		//Save.setEnabled(true);
-	}
+		}
 	
 };
 
@@ -288,16 +261,52 @@ DocumentListener SearchEnabler = new DocumentListener(){
 	}
 };
 ///////////////////End Save Enable Action///////////////////
-FnText.getDocument().addDocumentListener(SaveEnabler);
-EmpNumText.getDocument().addDocumentListener(SaveEnabler);
-AccNumText.getDocument().addDocumentListener(SaveEnabler);
-PhnNumText.getDocument().addDocumentListener(SaveEnabler);
-IDNum.getDocument().addDocumentListener(SearchEnabler);
 
 
+////////////////////Clear fields on save//////////////////
+
+Save.addActionListener(new ActionListener() {
+	public void actionPerformed (ActionEvent ae) {
+		IDNum.setText("");
+		EmpNumText.setText("");
+		FnText.setText("");
+		PassText.setText("");
+		PhnNumText.setText("");
+		AccNumText.setText("");
+		PositionText.setSelectedItem("Seller");
+	}
+});
+
+//////////////////End Clear fields on save//////////////////
+
+
+		FnText.getDocument().addDocumentListener(SaveEnabler);
+		PassText.getDocument().addDocumentListener(SaveEnabler);
+		EmpNumText.getDocument().addDocumentListener(SaveEnabler);
+		AccNumText.getDocument().addDocumentListener(SaveEnabler);
+		PhnNumText.getDocument().addDocumentListener(SaveEnabler);
+		IDNum.getDocument().addDocumentListener(SearchEnabler);
+
+
+		Save.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				Worker worker = new Worker(IDNum.getText(),
+						Integer.parseInt(EmpNumText.getText()),
+						FnText.getText(),
+						PhnNumText.getText(),
+						AccNumText.getText(),
+						clientSideConnection.getShop().getShopName(),
+						PositionText.getSelectedItem().toString(),
+						new String(PassText.getPassword())); 
+				clientSideConnection.saveWorker(worker);
+			}
+		});
+		
 
 		IDNum.addActionListener(findWorkerAction);
-		IDNum.addFocusListener(findWorkerFAction);
 		Search.addActionListener(findWorkerAction);
 		
 		EmpMenu.add(EmpMgr);
