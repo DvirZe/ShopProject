@@ -3,6 +3,8 @@ package gui;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Point;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
@@ -36,19 +38,22 @@ public class Employee {
 		Font font2 = new Font("Ariel",Font.BOLD,14);
 		JFrame EmpMenu = new JFrame();
 		EmpMenu.setTitle("Sales managment menu");
-		EmpMenu.setExtendedState(JFrame.MAXIMIZED_BOTH); 
-		EmpMenu.setLocationRelativeTo(null);	
+		//Set the Panel on the middle
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		Point middle = new Point(screenSize.width / 2, screenSize.height / 2);
+		Point newLocation = new Point(middle.x - (600 / 2), 
+		                              middle.y - (700 / 2));
+		EmpMenu.setLocation(newLocation);
 		EmpMenu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 				
 		JPanel EmpMgr = new JPanel();
 		SpringLayout EmpLayout = new SpringLayout();
 		EmpMgr.setLayout(EmpLayout);
-		
 		JComboBox<String> PositionText;
 		
 		EmpMgr.setBorder(BorderFactory.createTitledBorder("Employee Menu"));
 		EmpMgr.setBackground(Color.white);
-		EmpMgr.setPreferredSize(new Dimension (200 , 175));
+		EmpMgr.setPreferredSize(new Dimension (550 , 650));
 
 		JButton Save = new JButton("Save");
 		Save.setFont(font2);
@@ -167,7 +172,6 @@ public class Employee {
 		EmpMgr.add(PositionText);
 		EmpLayout.putConstraint(SpringLayout.WEST, PositionText, 150, SpringLayout.WEST, Position);
 		EmpLayout.putConstraint(SpringLayout.NORTH, PositionText, 60, SpringLayout.SOUTH, EmpNumText);
-		
 		
 ////////////////////////ActionListener For finding worker/////////////////////////		
 ActionListener findWorkerAction = new ActionListener() {

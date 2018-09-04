@@ -129,6 +129,7 @@ public class ClientSideConnection extends Thread {
 		workerJson.put("job", worker.getJob());
 		workerJson.put("password", worker.getPassword());
 		workerJson.put("login", worker.getLoginStatus());
+		System.out.println(workerJson);
 		SendToServer(workerJson);
 	}
 	
