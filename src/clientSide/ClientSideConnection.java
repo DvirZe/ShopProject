@@ -28,7 +28,7 @@ public class ClientSideConnection extends Thread {
 	@SuppressWarnings("unused")
 	private Login shopGui;
 	private Shop shop;
-	public static int workerCounter = 2;
+	public int NextWorkerCounter;
 	
 	public ClientSideConnection() {
 		socket = null;
@@ -100,6 +100,8 @@ public class ClientSideConnection extends Thread {
 		json = getFromServer();
 		if (json.containsKey("workersNumber"))
 		{
+			if (NextWorkerCounter != Integer.parseInt(json.get("workersNumber").toString()))
+				NextWorkerCounter = Integer.parseInt(json.get("workersNumber").toString());
 			return null;
 		}
 		return new Worker(json.get("workerID").toString(),
@@ -110,6 +112,11 @@ public class ClientSideConnection extends Thread {
 						  json.get("job").toString(),
 						  json.get("password").toString());
 	}
+	
+	public int getNewWorkerID() {
+		return NextWorkerCounter;
+	}
+	
 	
 	public static void main(String[] args) throws UnknownHostException, IOException
 	{

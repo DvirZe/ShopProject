@@ -49,7 +49,7 @@ public class MainMenu {
 		Customer.addActionListener(new ActionListener() {
 			public void actionPerformed (ActionEvent ae) {
 				Main.dispose();
-				new	CustomerMain(clientSideConnection);
+				new	AddCus(clientSideConnection);
 			}
 		});
 		
