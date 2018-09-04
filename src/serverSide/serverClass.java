@@ -134,9 +134,8 @@ public class serverClass extends Thread {
 		} catch (IOException | ParseException e) {
 			endOfWork();
 			System.out.println("End.");
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
-		finally { System.out.println("End.");}
 	}
 	
 	public void endOfWork() {

@@ -8,10 +8,14 @@ import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.io.IOException;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.Locale;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -41,7 +45,6 @@ public class Employee {
 		EmpMgr.setLayout(EmpLayout);
 		
 		JComboBox<String> PositionText;
-//		GridBagConstraints gc = new GridBagConstraints();
 		
 		EmpMgr.setBorder(BorderFactory.createTitledBorder("Employee Menu"));
 		EmpMgr.setBackground(Color.white);
@@ -73,37 +76,16 @@ public class Employee {
 			}
 		});
 		
-		
-		
-		DocumentListener Enabler = new DocumentListener(){
-
-			@Override
-			public void changedUpdate(DocumentEvent e) {
-				SaveEnable();
-				
-			}
-
-			@Override
-			public void insertUpdate(DocumentEvent e) {
-				SaveEnable();
-				
-			}
-
-			@Override
-			public void removeUpdate(DocumentEvent e) {
-				SaveEnable();
-				
-			}
-			public void SaveEnable(){
-				Save.setEnabled(true);
-			}
-			
-		}; 
+		 
+		NumberFormat idFormat = NumberFormat.getNumberInstance(Locale.getDefault());
+		DecimalFormat decimalFormat = (DecimalFormat) idFormat;
+		decimalFormat.setGroupingUsed(false);
 		JLabel ID = new JLabel("Employee ID:");
 		ID.setFont(font2);
 		EmpMgr.add(ID);
 		EmpLayout.putConstraint(SpringLayout.WEST, ID, 20, SpringLayout.WEST, EmpMgr);
-		JTextField IDNum = new JTextField("",10);
+		JTextField IDNum = new JFormattedTextField(decimalFormat);
+		IDNum.setColumns(10);
 		IDNum.setFont(font1);
 		EmpMgr.add(IDNum);
 		EmpLayout.putConstraint(SpringLayout.WEST, IDNum, 150, SpringLayout.WEST, ID);
@@ -115,7 +97,6 @@ public class Employee {
 		EmpLayout.putConstraint(SpringLayout.NORTH, Fn, 60, SpringLayout.SOUTH, ID);
 		JTextField FnText = new JTextField("",10);
 		FnText.setFont(font1);
-		FnText.getDocument().addDocumentListener(Enabler);
 		EmpMgr.add(FnText);
 		EmpLayout.putConstraint(SpringLayout.WEST, FnText, 150, SpringLayout.WEST, ID);
 		EmpLayout.putConstraint(SpringLayout.NORTH, FnText, 60, SpringLayout.SOUTH, IDNum);
@@ -127,7 +108,6 @@ public class Employee {
 		EmpLayout.putConstraint(SpringLayout.NORTH, Ln, 60, SpringLayout.SOUTH, Fn);
 		JTextField LnText = new JTextField("",10);
 		LnText.setFont(font1);
-		LnText.getDocument().addDocumentListener(Enabler);
 		EmpMgr.add(LnText);
 		EmpLayout.putConstraint(SpringLayout.WEST, LnText, 150, SpringLayout.WEST, Fn);
 		EmpLayout.putConstraint(SpringLayout.NORTH, LnText, 60, SpringLayout.SOUTH, FnText);
@@ -139,7 +119,6 @@ public class Employee {
 		EmpLayout.putConstraint(SpringLayout.NORTH, PhnNum, 60, SpringLayout.SOUTH, Ln);
 		JTextField PhnNumText = new JTextField("",10);
 		PhnNumText.setFont(font1);
-		PhnNumText.getDocument().addDocumentListener(Enabler);
 		EmpMgr.add(PhnNumText);
 		EmpLayout.putConstraint(SpringLayout.WEST, PhnNumText, 150, SpringLayout.WEST, Ln);
 		EmpLayout.putConstraint(SpringLayout.NORTH, PhnNumText, 60, SpringLayout.SOUTH, LnText);
@@ -151,7 +130,6 @@ public class Employee {
 		EmpLayout.putConstraint(SpringLayout.NORTH, AccNum, 60, SpringLayout.SOUTH, PhnNum);
 		JTextField AccNumText = new JTextField("",10);
 		AccNumText.setFont(font1);
-		AccNumText.getDocument().addDocumentListener(Enabler);
 		EmpMgr.add(AccNumText);
 		EmpLayout.putConstraint(SpringLayout.WEST, AccNumText, 150, SpringLayout.WEST, PhnNum);
 		EmpLayout.putConstraint(SpringLayout.NORTH, AccNumText, 60, SpringLayout.SOUTH, PhnNumText);
@@ -161,9 +139,8 @@ public class Employee {
 		EmpMgr.add(EmpNum);
 		EmpLayout.putConstraint(SpringLayout.WEST, EmpNum, 20, SpringLayout.WEST, EmpMgr);
 		EmpLayout.putConstraint(SpringLayout.NORTH, EmpNum, 60, SpringLayout.SOUTH, AccNum);
-		JTextField EmpNumText = new JTextField("mispar"	,10);
+		JTextField EmpNumText = new JTextField("0"	,10);
 		EmpNumText.setFont(font1);
-		EmpNumText.getDocument().addDocumentListener(Enabler);
 		EmpNumText.setEditable(false);
 		EmpMgr.add(EmpNumText);
 		EmpLayout.putConstraint(SpringLayout.WEST, EmpNumText, 150, SpringLayout.WEST, EmpNum);
@@ -176,9 +153,9 @@ public class Employee {
 		EmpMgr.add(Position);
 		EmpLayout.putConstraint(SpringLayout.WEST, Position, 20, SpringLayout.WEST, EmpMgr);
 		EmpLayout.putConstraint(SpringLayout.NORTH, Position, 60, SpringLayout.SOUTH, EmpNum);
-		PositionText = new JComboBox<String>(new String[] {"Manager","Seller","Cashier"} );
+		PositionText = new JComboBox<String>(new String[] {"Seller","Cashier","Manager"} );
 		PositionText.setFont(font1);
-		((JTextField)PositionText.getEditor().getEditorComponent()).getDocument().addDocumentListener(Enabler);
+		//((JTextField)PositionText.getEditor().getEditorComponent()).getDocument().addDocumentListener(Enabler);
 		EmpMgr.add(PositionText);
 		EmpLayout.putConstraint(SpringLayout.WEST, PositionText, 150, SpringLayout.WEST, Position);
 		EmpLayout.putConstraint(SpringLayout.NORTH, PositionText, 60, SpringLayout.SOUTH, EmpNumText);
@@ -201,6 +178,15 @@ ActionListener findWorkerAction = new ActionListener() {
 			AccNumText.setText(worker.getbankAcc());
 			String workerId = Integer.toString(worker.getWorkerId());
 			EmpNumText.setText(workerId);
+			PositionText.setSelectedItem(worker.getJob());
+		}
+		else
+		{
+			EmpNumText.setText(""+clientSideConnection.getNewWorkerID());
+			FnText.setText("");
+			PhnNumText.setText("");
+			AccNumText.setText("");
+			PositionText.setSelectedItem("Seller");
 		}
 	}
 };
@@ -226,17 +212,61 @@ FocusListener findWorkerFAction = new FocusListener() {
 			
 		}
 	}
-
+	
 	@Override
 	public void focusLost(FocusEvent arg0) {
 		// TODO Auto-generated method stub
 		
 	}
 	
+	
 };
 
-////////////////////End of ActionListener For login panel/////////////////////		
+////////////////////End of ActionListener For login panel/////////////////////						
+
+
+
+///////////////////Save Enable Action/////////////////////////
+DocumentListener Enabler = new DocumentListener(){
+
+	@Override
+	public void changedUpdate(DocumentEvent e) {
+		SaveEnable();
 		
+	}
+
+	@Override
+	public void insertUpdate(DocumentEvent e) {
+		SaveEnable();
+		
+	}
+
+	@Override
+	public void removeUpdate(DocumentEvent e) {
+		SaveEnable();
+		
+	}
+	public void SaveEnable(){
+		if (!IDNum.getText().isEmpty()
+				&& !FnText.getText().isEmpty()
+				&& !PhnNumText.getText().isEmpty()
+				&& !PhnNumText.getText().isEmpty()
+				&& !AccNumText.getText().isEmpty())
+			Save.setEnabled(true);
+		else
+			Save.setEnabled(false);
+		//Save.setEnabled(true);
+	}
+	
+};
+///////////////////End Save Enable Action///////////////////
+FnText.getDocument().addDocumentListener(Enabler);
+EmpNumText.getDocument().addDocumentListener(Enabler);
+AccNumText.getDocument().addDocumentListener(Enabler);
+PhnNumText.getDocument().addDocumentListener(Enabler);
+
+
+
 		IDNum.addActionListener(findWorkerAction);
 		IDNum.addFocusListener(findWorkerFAction);
 		

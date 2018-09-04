@@ -20,7 +20,7 @@ public class Worker extends Person {
 	}
 	
 	public int getWorkerId() { return workerID; }
-	public String getJob() { return job; }
+	
 	public String getPassword() { return password; }
 	
 	public String getbankAcc() { return bankAcc; }
@@ -29,5 +29,17 @@ public class Worker extends Person {
 	
 	public void changeLogin() { login = !login; }
 	public boolean isLogin() { return login; }
+	
+	public String getJob() {
+		switch (job)
+		{
+			case "1": 
+				return "Manager";
+			case "2":
+				return "Cashier";
+			default:
+				return "Seller";
+		}
+	}
 
 }
