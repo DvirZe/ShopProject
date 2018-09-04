@@ -33,6 +33,8 @@ import clientSide.ClientSideConnection;
 import clientSide.Worker;
 
 public class Employee {
+	Boolean isWorkerfound;
+	Worker workerFound;
 	public  Employee(ClientSideConnection clientSideConnection) {
 		Font font1 = new Font("Ariel",Font.PLAIN,10);
 		Font font2 = new Font("Ariel",Font.BOLD,14);
@@ -173,6 +175,7 @@ public class Employee {
 		EmpLayout.putConstraint(SpringLayout.WEST, PositionText, 150, SpringLayout.WEST, Position);
 		EmpLayout.putConstraint(SpringLayout.NORTH, PositionText, 60, SpringLayout.SOUTH, EmpNumText);
 		
+		isWorkerfound = false;
 ////////////////////////ActionListener For finding worker/////////////////////////		
 ActionListener findWorkerAction = new ActionListener() {
 	public void actionPerformed (ActionEvent ae) {
@@ -193,6 +196,8 @@ ActionListener findWorkerAction = new ActionListener() {
 			String workerId = Integer.toString(worker.getWorkerId());
 			EmpNumText.setText(workerId);
 			PositionText.setSelectedItem(worker.getJob());
+			isWorkerfound = true;
+			workerFound = worker;
 		}
 		else
 		{
@@ -306,9 +311,9 @@ Save.addActionListener(new ActionListener() {
 						FnText.getText(),
 						PhnNumText.getText(),
 						AccNumText.getText(),
-						clientSideConnection.getShop().getShopName(),
+						workerFound.getShopName(),
 						PositionText.getSelectedItem().toString(),
-						new String(PassText.getPassword())); 
+						new String(PassText.getPassword()));
 				clientSideConnection.saveWorker(worker);
 			}
 		});
