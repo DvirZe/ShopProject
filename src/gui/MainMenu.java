@@ -17,7 +17,7 @@ public class MainMenu {
 		Main.setTitle("Store Managment");
 		Main.setSize(800, 420);
 		Main.setLocationRelativeTo(null);
-		Main.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		Main.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		GridLayout Layout = new GridLayout(3,2);
 		Main.setLayout(Layout);
 		

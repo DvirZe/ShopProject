@@ -14,7 +14,6 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
@@ -35,7 +34,7 @@ public class Employee {
 		EmpMenu.setTitle("Sales managment menu");
 		EmpMenu.setExtendedState(JFrame.MAXIMIZED_BOTH); 
 		EmpMenu.setLocationRelativeTo(null);	
-		EmpMenu.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		EmpMenu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		JPanel EmpMgr = new JPanel();
 		SpringLayout EmpLayout = new SpringLayout();

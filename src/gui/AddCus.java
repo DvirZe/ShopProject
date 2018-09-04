@@ -28,7 +28,7 @@ public class AddCus {
 		AddMenu.setExtendedState(JFrame.MAXIMIZED_BOTH); 
 		//AddMenu.setUndecorated(true);
 		AddMenu.setLocationRelativeTo(null);	
-		AddMenu.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		AddMenu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		
 		JPanel AddButtons = new JPanel();

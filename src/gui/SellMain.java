@@ -31,7 +31,7 @@ public class SellMain {
 		SellMenu.setTitle("Sales managment menu");
 		SellMenu.setExtendedState(JFrame.MAXIMIZED_BOTH); 
 		SellMenu.setLocationRelativeTo(null);	
-		SellMenu.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		SellMenu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		JComboBox[] ItemQuantity = new JComboBox[4];
 		JPanel SellButtons = new JPanel();
 		SpringLayout SellLayout = new SpringLayout();

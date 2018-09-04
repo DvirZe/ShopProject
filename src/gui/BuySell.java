@@ -21,7 +21,7 @@ public class BuySell {
 		SupplyMenu.setTitle("Supply managment menu");
 		SupplyMenu.setSize(580, 220);
 		SupplyMenu.setLocationRelativeTo(null);
-		SupplyMenu.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		SupplyMenu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		
 		JPanel SupplyButtons = new JPanel();

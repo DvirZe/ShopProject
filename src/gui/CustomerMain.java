@@ -20,7 +20,7 @@ public class CustomerMain {
 		CustomerMenu.setTitle("Supply managment menu");
 		CustomerMenu.setSize(580, 220);
 		CustomerMenu.setLocationRelativeTo(null);
-		CustomerMenu.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		CustomerMenu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		
 		JPanel CustomerButtons = new JPanel();

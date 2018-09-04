@@ -24,7 +24,7 @@ public class Login extends JPanel{
 		details.setTitle("Store managment login");
 		details.setSize(580, 220);
 		details.setLocationRelativeTo(null);
-		details.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		details.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		//Login.setBorder(BorderFactory.createTitledBorder(Login, "Your Details", TitledBorder.LEADING, TitledBorder.TOP, new Font("Ariel", Font.BOLD,20), Color.BLACK));
 		
