@@ -15,6 +15,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 import javax.swing.event.DocumentEvent;
@@ -69,13 +70,46 @@ public class Employee {
 		Back.addActionListener(new ActionListener() {
 			public void actionPerformed (ActionEvent ae) {
 				EmpMenu.dispose();
-				new	BuySell(clientSideConnection);
+				new	MainMenu(clientSideConnection);
 			}
 		});
 		
+		JButton Search = new JButton("Search employee");
+		Search.setFont(font2);
+		Search.setEnabled(false);
+		EmpMgr.add(Search);
+		EmpLayout.putConstraint(SpringLayout.WEST, Search, 380, SpringLayout.WEST, EmpMgr);
 		
 		
-		DocumentListener Enabler = new DocumentListener(){
+		
+		
+		DocumentListener SearchEnabler = new DocumentListener(){
+
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				SearchEnable();
+				
+			}
+
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				SearchEnable();
+				
+			}
+
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				SearchEnable();
+				
+			}
+			public void SearchEnable(){
+				Search.setEnabled(true);
+			}
+		};
+			
+		
+		
+		DocumentListener SaveEnabler = new DocumentListener(){
 
 			@Override
 			public void changedUpdate(DocumentEvent e) {
@@ -99,59 +133,64 @@ public class Employee {
 			}
 			
 		}; 
+		
 		JLabel ID = new JLabel("Employee ID:");
 		ID.setFont(font2);
 		EmpMgr.add(ID);
 		EmpLayout.putConstraint(SpringLayout.WEST, ID, 20, SpringLayout.WEST, EmpMgr);
-		JTextField IDNum = new JTextField("",10);
+		JTextField IDNum = new JTextField("",20);
 		IDNum.setFont(font1);
+		IDNum.getDocument().addDocumentListener(SearchEnabler);
 		EmpMgr.add(IDNum);
 		EmpLayout.putConstraint(SpringLayout.WEST, IDNum, 150, SpringLayout.WEST, ID);
+
 		
-		JLabel Fn = new JLabel("First name:");
+		JLabel Fn = new JLabel("Full name:");
 		Fn.setFont(font2);
 		EmpMgr.add(Fn);
 		EmpLayout.putConstraint(SpringLayout.WEST, Fn, 20, SpringLayout.WEST, EmpMgr);
 		EmpLayout.putConstraint(SpringLayout.NORTH, Fn, 60, SpringLayout.SOUTH, ID);
-		JTextField FnText = new JTextField("",10);
+		JTextField FnText = new JTextField("",20);
 		FnText.setFont(font1);
-		FnText.getDocument().addDocumentListener(Enabler);
+		FnText.getDocument().addDocumentListener(SaveEnabler);
 		EmpMgr.add(FnText);
 		EmpLayout.putConstraint(SpringLayout.WEST, FnText, 150, SpringLayout.WEST, ID);
 		EmpLayout.putConstraint(SpringLayout.NORTH, FnText, 60, SpringLayout.SOUTH, IDNum);
 		
-		JLabel Ln = new JLabel("Last name:");
-		Ln.setFont(font2);
-		EmpMgr.add(Ln);
-		EmpLayout.putConstraint(SpringLayout.WEST, Ln, 20, SpringLayout.WEST, EmpMgr);
-		EmpLayout.putConstraint(SpringLayout.NORTH, Ln, 60, SpringLayout.SOUTH, Fn);
-		JTextField LnText = new JTextField("",10);
-		LnText.setFont(font1);
-		LnText.getDocument().addDocumentListener(Enabler);
-		EmpMgr.add(LnText);
-		EmpLayout.putConstraint(SpringLayout.WEST, LnText, 150, SpringLayout.WEST, Fn);
-		EmpLayout.putConstraint(SpringLayout.NORTH, LnText, 60, SpringLayout.SOUTH, FnText);
+
+		
+		JLabel Pass = new JLabel("Password:");
+		Pass.setFont(font2);
+		EmpMgr.add(Pass);
+		EmpLayout.putConstraint(SpringLayout.WEST, Pass, 20, SpringLayout.WEST, EmpMgr);
+		EmpLayout.putConstraint(SpringLayout.NORTH, Pass, 60, SpringLayout.SOUTH, Fn);
+		JPasswordField PassText = new JPasswordField("",20);
+		PassText.setFont(font1);
+		PassText.getDocument().addDocumentListener(SaveEnabler);
+		EmpMgr.add(PassText);
+		EmpLayout.putConstraint(SpringLayout.WEST, PassText, 150, SpringLayout.WEST, Fn);
+		EmpLayout.putConstraint(SpringLayout.NORTH, PassText, 60, SpringLayout.SOUTH, FnText);
 		
 		JLabel PhnNum = new JLabel("Phone number:");
 		PhnNum.setFont(font2);
 		EmpMgr.add(PhnNum);
 		EmpLayout.putConstraint(SpringLayout.WEST, PhnNum, 20, SpringLayout.WEST, EmpMgr);
-		EmpLayout.putConstraint(SpringLayout.NORTH, PhnNum, 60, SpringLayout.SOUTH, Ln);
-		JTextField PhnNumText = new JTextField("",10);
+		EmpLayout.putConstraint(SpringLayout.NORTH, PhnNum, 60, SpringLayout.SOUTH, Pass);
+		JTextField PhnNumText = new JTextField("",20);
 		PhnNumText.setFont(font1);
-		PhnNumText.getDocument().addDocumentListener(Enabler);
+		PhnNumText.getDocument().addDocumentListener(SaveEnabler);
 		EmpMgr.add(PhnNumText);
-		EmpLayout.putConstraint(SpringLayout.WEST, PhnNumText, 150, SpringLayout.WEST, Ln);
-		EmpLayout.putConstraint(SpringLayout.NORTH, PhnNumText, 60, SpringLayout.SOUTH, LnText);
+		EmpLayout.putConstraint(SpringLayout.WEST, PhnNumText, 150, SpringLayout.WEST, Pass);
+		EmpLayout.putConstraint(SpringLayout.NORTH, PhnNumText, 60, SpringLayout.SOUTH, PassText);
 		
 		JLabel AccNum = new JLabel("Account number:");
 		AccNum.setFont(font2);
 		EmpMgr.add(AccNum);
 		EmpLayout.putConstraint(SpringLayout.WEST, AccNum, 20, SpringLayout.WEST, EmpMgr);
 		EmpLayout.putConstraint(SpringLayout.NORTH, AccNum, 60, SpringLayout.SOUTH, PhnNum);
-		JTextField AccNumText = new JTextField("",10);
+		JTextField AccNumText = new JTextField("",20);
 		AccNumText.setFont(font1);
-		AccNumText.getDocument().addDocumentListener(Enabler);
+		AccNumText.getDocument().addDocumentListener(SaveEnabler);
 		EmpMgr.add(AccNumText);
 		EmpLayout.putConstraint(SpringLayout.WEST, AccNumText, 150, SpringLayout.WEST, PhnNum);
 		EmpLayout.putConstraint(SpringLayout.NORTH, AccNumText, 60, SpringLayout.SOUTH, PhnNumText);
@@ -161,9 +200,9 @@ public class Employee {
 		EmpMgr.add(EmpNum);
 		EmpLayout.putConstraint(SpringLayout.WEST, EmpNum, 20, SpringLayout.WEST, EmpMgr);
 		EmpLayout.putConstraint(SpringLayout.NORTH, EmpNum, 60, SpringLayout.SOUTH, AccNum);
-		JTextField EmpNumText = new JTextField("mispar"	,10);
+		JTextField EmpNumText = new JTextField("mispar"	,20);
 		EmpNumText.setFont(font1);
-		EmpNumText.getDocument().addDocumentListener(Enabler);
+		EmpNumText.getDocument().addDocumentListener(SaveEnabler);
 		EmpNumText.setEditable(false);
 		EmpMgr.add(EmpNumText);
 		EmpLayout.putConstraint(SpringLayout.WEST, EmpNumText, 150, SpringLayout.WEST, EmpNum);
@@ -178,7 +217,7 @@ public class Employee {
 		EmpLayout.putConstraint(SpringLayout.NORTH, Position, 60, SpringLayout.SOUTH, EmpNum);
 		PositionText = new JComboBox<String>(new String[] {"Manager","Seller","Cashier"} );
 		PositionText.setFont(font1);
-		((JTextField)PositionText.getEditor().getEditorComponent()).getDocument().addDocumentListener(Enabler);
+		((JTextField)PositionText.getEditor().getEditorComponent()).getDocument().addDocumentListener(SaveEnabler);
 		EmpMgr.add(PositionText);
 		EmpLayout.putConstraint(SpringLayout.WEST, PositionText, 150, SpringLayout.WEST, Position);
 		EmpLayout.putConstraint(SpringLayout.NORTH, PositionText, 60, SpringLayout.SOUTH, EmpNumText);
@@ -239,7 +278,7 @@ FocusListener findWorkerFAction = new FocusListener() {
 		
 		IDNum.addActionListener(findWorkerAction);
 		IDNum.addFocusListener(findWorkerFAction);
-		
+		Search.addActionListener(findWorkerAction);
 		EmpMenu.add(EmpMgr);
 		EmpMenu.pack();
 		EmpMenu.setVisible(true);
