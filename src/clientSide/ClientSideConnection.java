@@ -63,7 +63,7 @@ public class ClientSideConnection extends Thread {
 		json.put("password", password);
 		SendToServer(json);
 		String msg = socketBufferedReader.readLine();
-		System.out.println(msg);
+		//System.out.println(msg);
 		JSONParser parser = new JSONParser();
 		json = (JSONObject)parser.parse(msg);
 		int status = Integer.parseInt(json.get("Status").toString());
@@ -81,7 +81,7 @@ public class ClientSideConnection extends Thread {
 	{
 		JSONObject json = new JSONObject();
 		String msg = socketBufferedReader.readLine();
-		System.out.println(msg);
+		//System.out.println(msg);
 		JSONParser parser = new JSONParser();
 		json = (JSONObject)parser.parse(msg);
 		return json;
@@ -100,11 +100,11 @@ public class ClientSideConnection extends Thread {
 		json = getFromServer();
 		if (json.containsKey("workersNumber"))
 		{
-			if (NextWorkerCounter != Integer.parseInt(json.get("workersNumber").toString()))
-				NextWorkerCounter = Integer.parseInt(json.get("workersNumber").toString());
+			NextWorkerCounter = (Integer.parseInt(json.get("workersNumber").toString()) + 1);
 			return null;
 		}
 		return new Worker(json.get("workerID").toString(),
+						  Integer.parseInt(id),
 						  json.get("name").toString(),
 						  json.get("phoneNr").toString(),
 						  json.get("bankAcc").toString(),
@@ -115,6 +115,21 @@ public class ClientSideConnection extends Thread {
 	
 	public int getNewWorkerID() {
 		return NextWorkerCounter;
+	}
+	
+	public void saveWorker(Worker worker) {
+		JSONObject workerJson = new JSONObject();
+		workerJson.put("Action", 3);
+		workerJson.put("personalID", worker.getId());
+		workerJson.put("workerID", worker.getWorkerId());
+		workerJson.put("name", worker.getName());
+		workerJson.put("bankAcc", worker.getBankAcc());
+		workerJson.put("phoneNr", worker.getPhoneNr());
+		workerJson.put("shop", worker.getShopName());
+		workerJson.put("job", worker.getJob());
+		workerJson.put("password", worker.getPassword());
+		workerJson.put("login", worker.getLoginStatus());
+		SendToServer(workerJson);
 	}
 	
 	

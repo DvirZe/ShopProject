@@ -1,8 +1,6 @@
 package clientSide;
 
 public class Worker extends Person {
-
-	private static int workerCounter = 1;
 	private int workerID;
 	private String bankAcc;
 	private String shop;
@@ -10,12 +8,13 @@ public class Worker extends Person {
 	private String password;
 	private boolean login;
 	
-	public Worker(String id, String name, String phoneNr, String bankAcc, String shop, String job, String password) {
+	public Worker(String id, int workerID, String name, String phoneNr, String bankAcc, String shop, String job, String password) {
 		super(id, name, phoneNr);
-		workerID = workerCounter++;
+		this.workerID = workerID;
 		this.bankAcc = bankAcc;
 		this.shop = shop;
 		this.job = job;
+		this.password = password;
 		login = false;
 	}
 	
@@ -23,12 +22,17 @@ public class Worker extends Person {
 	
 	public String getPassword() { return password; }
 	
-	public String getbankAcc() { return bankAcc; }
+	public String getBankAcc() { return bankAcc; }
 	
 	public void setJob(String job) { this.job = job; }
 	
 	public void changeLogin() { login = !login; }
+	
 	public boolean isLogin() { return login; }
+	
+	public String getShopName() {return shop; }
+	
+	public int getLoginStatus() { return login?1:0; }
 	
 	public String getJob() {
 		switch (job)
