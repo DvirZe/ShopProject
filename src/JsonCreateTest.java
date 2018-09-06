@@ -17,24 +17,24 @@ public class JsonCreateTest {
 		// TODO Auto-generated method stub
 		//TreeMap<String,Object> tmpShop = new TreeMap<String,Object>();
 		JSONObject json = new JSONObject();
-		json.put("shopName", "Shop2");
-		json.put("customerTypeNew", 1);
-		json.put("customerTypeReturn", 0.95);
-		json.put("customerTypeVip", 0.85);
+		/*json.put("id", "123");
+		json.put("name", "alex");
+		json.put("phoneNr", "0505554564");
+		json.put("CustomerType", 0);*/
 		JSONArray list = new JSONArray();
-		list.add(10);
-		list.add(5);
-		list.add(15);
-		list.add(10);
-		JSONArray list2 = new JSONArray();
+		list.add("alex");
+		list.add("0505554564");
+		list.add("VIP");
+		//list.add(10);
+		/*JSONArray list2 = new JSONArray();
 		list2.add(35);
 		list2.add(25);
 		list2.add(50);
-		list2.add(80);
+		list2.add(80);*/
 		//JSONObject json = new JSONObject();
 		//json.putAll(tmpShop);
-		json.put("Inventory", list);
-		json.put("Price", list2);
+		json.put("123", list);
+		//json.put("Price", list2);
 		
         JSONParser parser = new JSONParser();
         
@@ -61,7 +61,7 @@ public class JsonCreateTest {
 		
 		//System.out.println(json.get("ID")); //Just a test, not log in function
 		
-		try (FileWriter file = new FileWriter("./files/Shop2.json")) {
+		try (FileWriter file = new FileWriter("./files/Customers.json")) {
 			file.write(json.toJSONString());
 			System.out.println("Successfully Copied JSON Object to File...");
 			System.out.println("\nJSON Object: " + json);

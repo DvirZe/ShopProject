@@ -113,13 +113,31 @@ public class ClientSideConnection extends Thread {
 						  json.get("password").toString());
 	}
 	
+	public Customer findCustomer(String id) throws IOException, ParseException
+	{
+		JSONObject json = new JSONObject();
+		json.put("customerId", id);
+		json.put("Action",action.findCustomerAction());
+		SendToServer(json);
+		json = getFromServer();
+		if (!json.containsKey("name"))
+		{
+			return null;
+		}
+		System.out.println(json);
+		return new Customer(id,
+						  json.get("name").toString(),
+						  json.get("phoneNr").toString(),
+						  (json.get("customerType").toString()));
+	}
+
 	public int getNewWorkerID() {
 		return NextWorkerCounter;
 	}
 	
 	public void saveWorker(Worker worker) {
 		JSONObject workerJson = new JSONObject();
-		workerJson.put("Action", 3);
+		workerJson.put("Action", action.saveWorkerAction());
 		workerJson.put("personalID", worker.getId());
 		workerJson.put("workerID", worker.getWorkerId());
 		workerJson.put("name", worker.getName());
@@ -131,6 +149,17 @@ public class ClientSideConnection extends Thread {
 		workerJson.put("login", worker.getLoginStatus());
 		System.out.println(workerJson);
 		SendToServer(workerJson);
+	}
+	
+	public void saveCustomer(Customer customer) {
+		JSONObject customerJson = new JSONObject();
+		customerJson.put("Action", action.saveCustomerAction());
+		customerJson.put("customerId", customer.getId());
+		customerJson.put("name", customer.getName());
+		customerJson.put("phoneNr", customer.getPhoneNr());
+		customerJson.put("customerType", customer.getType());
+		System.out.println(customerJson);
+		SendToServer(customerJson);
 	}
 	
 	

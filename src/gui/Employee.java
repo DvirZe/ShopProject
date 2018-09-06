@@ -243,7 +243,6 @@ DocumentListener SaveEnabler = new DocumentListener(){
 				&& !FnText.getText().isEmpty()
 				&& (PassText.getPassword().length != 0)
 				&& !PhnNumText.getText().isEmpty()
-				&& !PhnNumText.getText().isEmpty()
 				&& !AccNumText.getText().isEmpty())
 			Save.setEnabled(true);
 		else

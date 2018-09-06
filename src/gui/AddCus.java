@@ -9,6 +9,8 @@ import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ContainerEvent;
+import java.awt.event.ContainerListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.io.IOException;
@@ -22,10 +24,13 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
+import javax.swing.event.AncestorEvent;
+import javax.swing.event.AncestorListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import clientSide.ClientSideConnection;
+import clientSide.Customer;
 import clientSide.Worker;
 
 public class AddCus {
@@ -103,13 +108,6 @@ public class AddCus {
 		Save.setEnabled(false);
 		CusLayout.putConstraint(SpringLayout.WEST, Save, 100, SpringLayout.WEST, CusMgr);
 		CusLayout.putConstraint(SpringLayout.NORTH, Save, 50, SpringLayout.NORTH, CusType);
-		Save.addActionListener(new ActionListener() {
-			public void actionPerformed (ActionEvent ae) {
-				CusMenu.dispose();
-				new AddCus(clientSideConnection);
-
-			}
-		});
 		
 		JButton Back = new JButton("Back");
 		Back.setFont(font2);
@@ -123,11 +121,11 @@ public class AddCus {
 			}
 		});
 		
-		JButton Search = new JButton("Search Customer");
-		Search.setFont(font2);
-		Search.setEnabled(false);
-		CusMgr.add(Search);
-		CusLayout.putConstraint(SpringLayout.WEST, Search, 380, SpringLayout.WEST, CusMgr);
+		JButton search = new JButton("Search Customer");
+		search.setFont(font2);
+		search.setEnabled(false);
+		CusMgr.add(search);
+		CusLayout.putConstraint(SpringLayout.WEST, search, 380, SpringLayout.WEST, CusMgr);
 		
 		JButton BackToSell = new JButton("Back to sell");
 		BackToSell.setFont(font2);
@@ -142,116 +140,131 @@ public class AddCus {
 			}
 		});
 		
-////////////////////////ActionListener For finding worker/////////////////////////		
-ActionListener findWorkerAction = new ActionListener() {
+////////////////////////ActionListener For finding customer/////////////////////////		
+ActionListener findCustomererAction = new ActionListener() {
 	public void actionPerformed (ActionEvent ae) {
-		Worker worker = null;
+		Customer customer = null;
 		try {
-			worker = clientSideConnection.findWorker(IDNum.getText());
+			customer = clientSideConnection.findCustomer(IDNum.getText());
+			search.setEnabled(false);
 		} catch ( IOException | org.json.simple.parser.ParseException e) {
 			e.printStackTrace();
 		}
 		
-		if (worker != null)
+		if (customer != null)
 		{
-			FnText.setText(worker.getName());
-			PhnNumText.setText(worker.getPhoneNr());
-			String workerId = Integer.toString(worker.getWorkerId());
+			FnText.setText(customer.getName());
+			PhnNumText.setText(customer.getPhoneNr());
+			System.out.println(customer.getType());
+			CusTypeText.setSelectedItem(customer.getType());
+		}
+		else 
+		{
+			FnText.setText("");
+			PhnNumText.setText("");
+			CusTypeText.setSelectedItem("New");
 		}
 	}
 };
 
-FocusListener findWorkerFAction = new FocusListener() {
-
-	@Override
-	public void focusGained(FocusEvent arg0) {
-		Worker worker = null;
-		try {
-			worker = clientSideConnection.findWorker(IDNum.getText());
-		} catch ( IOException | org.json.simple.parser.ParseException e) {
-			e.printStackTrace();
-		}
-		
-		if (worker != null)
-		{
-			FnText.setText(worker.getName());
-			PhnNumText.setText(worker.getPhoneNr());
-
-			String workerId = Integer.toString(worker.getWorkerId());
-			
-		}
-	}
-
-	@Override
-	public void focusLost(FocusEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
+IDNum.addActionListener(new ActionListener() {
 	
-};
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		search.setEnabled(true);
+		
+	}
+});
 
 ////////////////////End of ActionListener For login panel/////////////////////		
-		
+	search.addActionListener(findCustomererAction);
+	IDNum.addActionListener(findCustomererAction);
+	
 
-DocumentListener SearchEnabler = new DocumentListener(){
+///////////////////Save Enable Action/////////////////////////
+	DocumentListener SaveEnabler = new DocumentListener(){
 
-	@Override
+@Override
+	public void changedUpdate(DocumentEvent e) {
+		SaveEnable();
+	}
+
+@Override
+	public void insertUpdate(DocumentEvent e) {
+		SaveEnable();
+	}
+
+@Override
+	public void removeUpdate(DocumentEvent e) {
+		SaveEnable();
+	}
+
+	public void SaveEnable(){
+		if (!IDNum.getText().isEmpty()
+			&& !FnText.getText().isEmpty()
+			&& !PhnNumText.getText().isEmpty())
+		Save.setEnabled(true);
+		else
+		Save.setEnabled(false);
+	}
+
+};
+
+	DocumentListener SearchEnabler = new DocumentListener(){
+
+@Override
 	public void changedUpdate(DocumentEvent e) {
 		SearchEnable();
-		
+	
 	}
 
-	@Override
+@Override
 	public void insertUpdate(DocumentEvent e) {
 		SearchEnable();
-		
+	
 	}
 
-	@Override
+@Override
 	public void removeUpdate(DocumentEvent e) {
-		SearchEnable();
-		
+	SearchEnable();
+
 	}
 	public void SearchEnable(){
-		Search.setEnabled(true);
+		search.setEnabled(true);
 	}
 };
+///////////////////End Save Enable Action///////////////////
+
+
+////////////////////Save//////////////////
+
+Save.addActionListener(new ActionListener() {
 	
-
-
-DocumentListener SaveEnabler = new DocumentListener(){
-
 	@Override
-	public void changedUpdate(DocumentEvent e) {
-		SaveEnable();
-		
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		Customer customer = new Customer(IDNum.getText(),
+										FnText.getText(),
+										PhnNumText.getText(),
+										CusTypeText.getSelectedItem().toString());
+		clientSideConnection.saveCustomer(customer);
+		IDNum.setText("");
+		FnText.setText("");
+		PhnNumText.setText("");
+		CusTypeText.setSelectedIndex(0);
 	}
+});
 
-	@Override
-	public void insertUpdate(DocumentEvent e) {
-		SaveEnable();
-		
-	}
+//////////////////End save//////////////////
 
-	@Override
-	public void removeUpdate(DocumentEvent e) {
-		SaveEnable();
-		
-	}
-	public void SaveEnable(){
-		Save.setEnabled(true);
-	}
-	
-}; 
 IDNum.getDocument().addDocumentListener(SearchEnabler);
 FnText.getDocument().addDocumentListener(SaveEnabler);
 PhnNumText.getDocument().addDocumentListener(SaveEnabler);
 ((JTextField)CusTypeText.getEditor().getEditorComponent()).getDocument().addDocumentListener(SaveEnabler);
 
 
-		IDNum.addActionListener(findWorkerAction);
-		IDNum.addFocusListener(findWorkerFAction);
-		Search.addActionListener(findWorkerAction);
+		IDNum.addActionListener(findCustomererAction);
+		search.addActionListener(findCustomererAction);
 		
 		CusMenu.add(CusMgr);
 		CusMenu.pack();

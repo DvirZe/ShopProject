@@ -2,14 +2,14 @@ package clientSide;
 
 public class Customer extends Person {
 
-	private CustomerType type;
+	private String type;
 	
-	public Customer(String id, String name, String phoneNr, CustomerType type) {
+	public Customer(String id, String name, String phoneNr, String type) {
 		super(id, name, phoneNr);
 		this.type = type;
 	}
 
-	public CustomerType getType() { return type; }
-	public void changeType(CustomerType type) { this.type = type; }
+	public String getType() { return type; }
+	public void changeType(String type) { this.type = type; }
 	
 }

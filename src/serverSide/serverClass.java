@@ -20,7 +20,7 @@ import clientSide.Worker;
 
 public class serverClass extends Thread {
 	private Socket socket;
-	private JSONObject workers, shop;
+	private JSONObject workers, shop, customers;
 	private serverConnection serverConnection;
 	private int logedInUserID;
 	
@@ -33,6 +33,7 @@ public class serverClass extends Thread {
 		workers = (JSONObject) obj;*/
 		this.serverConnection = serverConnection;
 		workers = serverConnection.getWorkers();
+		customers = serverConnection.getCustomers();
 	}
 	
 	public void actionChoose(JSONObject json) throws IOException, ParseException
@@ -45,7 +46,13 @@ public class serverClass extends Thread {
 			findWorker(json);
 			break;
 		case "3":
-			updateWorkers(json);
+			updateWorker(json);
+			break;	
+		case "4":
+			findCustomer(json);
+			break;	
+		case "5":
+			updateCustomer(json);
 			break;	
 		default:
 			break;
@@ -101,7 +108,26 @@ public class serverClass extends Thread {
 		sendToClient(json);
 	}
 	
-	public void updateWorkers(JSONObject json)
+	public void findCustomer(JSONObject json) throws IOException
+	{
+		if (customers.containsKey(json.get("customerId")))
+		{
+			JSONArray customersDetails = new JSONArray();
+			customersDetails = (JSONArray) customers.get(json.get("customerId"));
+			System.out.println(customers.get(json.get("customerId")));
+			json.put("name", customersDetails.get(0));
+			json.put("phoneNr", customersDetails.get(1));
+			json.put("customerType", customersDetails.get(2));
+		}
+		else
+		{
+			json.put("customerId","not found");
+		}
+		System.out.println(json);
+		sendToClient(json);
+	}
+	
+	public void updateWorker(JSONObject json)
 	{
 		JSONArray workerDetails = new JSONArray();
 		workerDetails.add(0, json.get("name"));
@@ -118,6 +144,24 @@ public class serverClass extends Thread {
 		}
 		else { //new worker
 			workers.put(json.get("personalID"), workerDetails);
+		}
+	}
+	
+	public void updateCustomer(JSONObject json)
+	{
+		JSONArray customerDetails = new JSONArray();
+		customerDetails.add(0, json.get("name"));
+		customerDetails.add(1, json.get("phoneNr"));
+		customerDetails.add(2, json.get("customerType"));
+		System.out.println(customerDetails);
+		if (customers.containsKey(json.get("customerId")))
+		{//Update customer
+			customers.replace(json.get("customerId"), customerDetails);
+			System.out.println("222: " + customers);
+		}
+		else { //new customer
+			customers.put(json.get("customerId"), customerDetails);
+			System.out.println(customers);
 		}
 	}
 	
