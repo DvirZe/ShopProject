@@ -127,7 +127,7 @@ public class AddCus {
 		CusMgr.add(search);
 		CusLayout.putConstraint(SpringLayout.WEST, search, 380, SpringLayout.WEST, CusMgr);
 		
-		JButton BackToSell = new JButton("Back to sell");
+		JButton BackToSell = new JButton("Go to sell");
 		BackToSell.setFont(font2);
 		BackToSell.setPreferredSize(new Dimension(120,30));
 		CusMgr.add(BackToSell);

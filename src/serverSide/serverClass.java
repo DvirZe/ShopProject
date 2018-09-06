@@ -3,7 +3,6 @@ package serverSide;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -13,9 +12,6 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-
-import clientSide.Person;
-import clientSide.Worker;
 
 
 public class serverClass extends Thread {
@@ -28,9 +24,6 @@ public class serverClass extends Thread {
 	
 	public serverClass(Socket socket, serverConnection serverConnection) throws FileNotFoundException, IOException, ParseException {
 		this.socket = socket;
-		/*JSONParser parser = new JSONParser();
-		Object obj = parser.parse(new FileReader("./files/Workers.json"));
-		workers = (JSONObject) obj;*/
 		this.serverConnection = serverConnection;
 		workers = serverConnection.getWorkers();
 		customers = serverConnection.getCustomers();

@@ -3,23 +3,20 @@ package clientSide;
 import java.util.Vector;
 
 public class Cart {
-	private Vector<Integer> cart;
+	private int[] cart;
 	private Customer customer;
 	
 	public Cart() { 
-		cart = new Vector<Integer>();
+		cart = new int[4];
 		customer = null;
 	}
 	
-	public void addToCart(int itemNr) { cart.addElement(itemNr); }
+	public void cartUpdate(int itemNr, int sum) { cart[itemNr] = sum; }
 	
-	public int deleteFromCart(int place) { 
-		int item = cart.get(place);
-		cart.remove(place); 
-		return item;
+	public void emptyCart() { 
+		for (int i=0;i<4;++i)
+			cart[i]=0;
 	}
-	
-	public int getSize() { return cart.size(); }
 	
 	public void setCustomer(Customer customer)
 	{

@@ -23,6 +23,7 @@ public class Shop {
 	private CustomerType customerTypeNew;
 	private CustomerType customerTypeReturn;
 	private CustomerType customerTypeVip;
+	private int totalSales;
 	
 	public Shop(JSONObject json) {
 		shopName = json.get("shopName").toString();
@@ -40,17 +41,13 @@ public class Shop {
 		customerTypeNew = new CustomerTypeNew();
 		customerTypeReturn = new CustomerTypeReturn(Double.parseDouble(json.get("customerTypeReturn").toString()));
 		customerTypeVip = new CustomerTypeVip(Double.parseDouble(json.get("customerTypeVip").toString()));
+		totalSales = Integer.parseInt(json.get("totalSales").toString());
 	}
 	
 	public String getShopName() { return shopName; }
 	
 	public void endSell() { 
-		int size = shopCart.getSize();
-		for (int i = 0; i < size; ++i)
-		{
-			int updatedItem = shopCart.deleteFromCart(0);
-			Inventory.get(updatedItem).set(0, Inventory.get(updatedItem).get(0)-1);
-		}
+		
 	}
 	
 	public void buyInventory(int item, int sum)

@@ -27,10 +27,14 @@ import clientSide.Shop;
 
 public class SellMain {
 
+	double discount;
+	
 	public  SellMain(ClientSideConnection clientSideConnection) {
-		JComboBox<String> ItemType,/*ItemQuantity[0],*/ItemType2/*,ItemQuantity[1]*/, ItemType3,/* ItemQuantity[2], ItemQuantity[3],*/ ItemType4;
+		discount = 0; //Full price
+		JComboBox<String> ItemType,ItemType2, ItemType3, ItemType4;
 		Font font1 = new Font("Ariel",Font.PLAIN,10);
 		Font font2 = new Font("Ariel",Font.BOLD,14);
+		
 		JFrame SellMenu = new JFrame();
 		SellMenu.setTitle("Sales managment menu");
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -194,7 +198,7 @@ public class SellMain {
 		SellLayout.putConstraint(SpringLayout.WEST, SumText, 0, SpringLayout.WEST, ItemTotalPrice);
 		SellLayout.putConstraint(SpringLayout.NORTH, SumText, 50, SpringLayout.SOUTH, ItemPrice[3]);
 		SellButtons.add(SumText);
-		JTextField DiscPrecText = new JTextField("0%" , 5);
+		JTextField DiscPrecText = new JTextField("0.0%" , 5);
 		DiscPrecText.setEditable(false);
 		SellLayout.putConstraint(SpringLayout.WEST, DiscPrecText, 0, SpringLayout.WEST, ItemPrice[0]);
 		SellLayout.putConstraint(SpringLayout.NORTH, DiscPrecText, 50, SpringLayout.SOUTH, ItemPrice[3]);
@@ -226,6 +230,14 @@ public class SellMain {
 			}
 		});
 		
+		JLabel clientNotFound = new JLabel("Client not found");
+		SellLayout.putConstraint(SpringLayout.WEST,clientNotFound , 150, SpringLayout.WEST, SellButtons);
+		SellLayout.putConstraint(SpringLayout.NORTH, clientNotFound, 30, SpringLayout.NORTH, SellButtons);
+		clientNotFound.setFont(font2);
+		clientNotFound.setForeground(Color.RED);
+		SellButtons.add(clientNotFound);
+		clientNotFound.setVisible(false);
+		
 		for (int i =0; i < 4; i++) 
 		{
 		    final int index = i; // assign to temporary variable
@@ -237,9 +249,9 @@ public class SellMain {
 		    		int MyPrice = Integer.valueOf(ItemPrice[index].getText());
 					int MyQuantity = Integer.parseInt(ItemQuantity[index].getSelectedItem().toString());
 					ItemTotal[index].setText(""+MyPrice*MyQuantity);
-					int sum = Integer.parseInt(ItemTotal[0].getText()) + Integer.parseInt(ItemTotal[1].getText()) + Integer.parseInt(ItemTotal[2].getText()) + Integer.parseInt(ItemTotal[3].getText());
+					double sum = (Integer.parseInt(ItemTotal[0].getText()) + Integer.parseInt(ItemTotal[1].getText()) + Integer.parseInt(ItemTotal[2].getText()) + Integer.parseInt(ItemTotal[3].getText())) * (1-discount);
 					SumText.setText(new String(""+sum));
-
+					clientSideConnection.getShop().getCart().cartUpdate(index, MyQuantity);
 		        }
 		    });
 		}
@@ -249,7 +261,8 @@ public class SellMain {
 			public void actionPerformed (ActionEvent ae) {
 				Customer customer = null;
 					try {
-						customer = clientSideConnection.findCustomer(SearchCus.getText());
+						System.out.println(CusIDText.getText());
+						customer = clientSideConnection.findCustomer(CusIDText.getText());
 					} catch (IOException | ParseException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -257,9 +270,18 @@ public class SellMain {
 					
 					if (customer != null)
 					{
-						double discount = clientSideConnection.getShop().getDiscountForCustomer(customer.getType());
-						
+						discount = clientSideConnection.getShop().getDiscountForCustomer(customer.getType());
+						clientSideConnection.getShop().getCart().setCustomer(customer);
+						clientNotFound.setVisible(false);
 					}
+					else 
+					{
+						discount = 0.0;
+						clientNotFound.setVisible(true);
+					}
+					DiscPrecText.setText(discount+"%");
+					double sum = (Integer.parseInt(ItemTotal[0].getText()) + Integer.parseInt(ItemTotal[1].getText()) + Integer.parseInt(ItemTotal[2].getText()) + Integer.parseInt(ItemTotal[3].getText())) * (1-discount);
+					SumText.setText(new String(""+sum));
 
 			}
 		});
