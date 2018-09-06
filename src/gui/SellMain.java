@@ -7,6 +7,7 @@ import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.Stack;
 
 import javax.swing.BorderFactory;
@@ -18,7 +19,10 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 
+import org.json.simple.parser.ParseException;
+
 import clientSide.ClientSideConnection;
+import clientSide.Customer;
 import clientSide.Shop;
 
 public class SellMain {
@@ -39,10 +43,7 @@ public class SellMain {
 		JTextField[] ItemPrice = new JTextField[4] , ItemTotal = new JTextField[4];
 		JPanel SellButtons = new JPanel();
 		SpringLayout SellLayout = new SpringLayout();
-		SellButtons.setLayout(SellLayout);
-		
-//		GridBagConstraints gc = new GridBagConstraints();
-			
+		SellButtons.setLayout(SellLayout);			
 		
 		for (int i = 0; i<4 ; ++i)
 		{
@@ -85,12 +86,6 @@ public class SellMain {
 		SellButtons.add(SearchCus);
 		SellLayout.putConstraint(SpringLayout.WEST,SearchCus , 50, SpringLayout.EAST, CusIDText);
 		SellLayout.putConstraint(SpringLayout.NORTH, SearchCus, 10, SpringLayout.NORTH, SellButtons);
-		SearchCus.addActionListener(new ActionListener() {
-			public void actionPerformed (ActionEvent ae) {
-				SellMenu.dispose();
-				new	AddCus(clientSideConnection);
-			}
-		});
 		
 		JLabel Type = new JLabel("Item Type:");
 		Type.setFont(font1);
@@ -249,6 +244,27 @@ public class SellMain {
 		    });
 		}
 
+//////////////////////Get Customer for discount/////////////////////////
+		SearchCus.addActionListener(new ActionListener() {
+			public void actionPerformed (ActionEvent ae) {
+				Customer customer = null;
+					try {
+						customer = clientSideConnection.findCustomer(SearchCus.getText());
+					} catch (IOException | ParseException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
+					if (customer != null)
+					{
+						double discount = clientSideConnection.getShop().getDiscountForCustomer(customer.getType());
+						
+					}
+
+			}
+		});
+////////////////////End Get Customer for discount//////////////////////
+		
 		
 		
 		

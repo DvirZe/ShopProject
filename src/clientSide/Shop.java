@@ -20,9 +20,9 @@ public class Shop {
 	private String shopName;
 	private TreeMap<Integer, Vector<Integer>> Inventory;
 	private Cart shopCart; 
-	private CustomerType CustomerTypeNew;
-	private CustomerType CustomerTypeReturn;
-	private CustomerType CustomerTypeVip;
+	private CustomerType customerTypeNew;
+	private CustomerType customerTypeReturn;
+	private CustomerType customerTypeVip;
 	
 	public Shop(JSONObject json) {
 		shopName = json.get("shopName").toString();
@@ -37,9 +37,9 @@ public class Shop {
 			Inventory.get(i+1).addElement(Integer.parseInt(prices.get(i).toString()));
 		}
 		shopCart = new Cart();
-		CustomerTypeNew = new CustomerTypeNew();
-		CustomerTypeReturn = new CustomerTypeReturn(Double.parseDouble(json.get("customerTypeReturn").toString()));
-		CustomerTypeVip = new CustomerTypeVip(Double.parseDouble(json.get("customerTypeVip").toString()));
+		customerTypeNew = new CustomerTypeNew();
+		customerTypeReturn = new CustomerTypeReturn(Double.parseDouble(json.get("customerTypeReturn").toString()));
+		customerTypeVip = new CustomerTypeVip(Double.parseDouble(json.get("customerTypeVip").toString()));
 	}
 	
 	public String getShopName() { return shopName; }
@@ -60,38 +60,26 @@ public class Shop {
 	
 	public int getInventory(int item) { return Inventory.get(item).get(0); }
 	public int getPrices(int item) { return Inventory.get(item).get(1); }
+	public Cart getCart() { return shopCart; }
+	
+	
+	public Double getDiscountForCustomer(String type)
+	{
+		switch(type)
+		{
+			case "Return":
+				return customerTypeReturn.getCustomerTypeDiscount();
+			case "VIP":
+				return customerTypeVip.getCustomerTypeDiscount();
+			default:
+				return 0.0;	
+		}
+	}
 	
 	public void saveInfo(PrintWriter printWriter, BufferedReader socketBufferedReader) throws IOException { 
 		JSONObject obj = null;
 		obj.put("shopName", shopName);
 		printWriter.println(obj.toString());
 		System.out.println(socketBufferedReader.readLine());
-		/*
-		try (FileWriter file = new FileWriter("c:\\employees.json")) {
-			 
-            file.write(obj.toString());
-            file.flush();
- 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
-		
 	}
-	
-	
-	/*public static void main(String[] args)
-	{
-		JSONObject obj = null;
-		obj.put("ShopName", "shopName");
-		Shop sp = new Shop(obj.escape("ShopName"));
-		Customer c1 = new Customer("54646465", "fdgfd", "0502133427", sp.CustomerTypeReturn);
-		System.out.println(c1.getId()+ " " + c1.getName()+ " " + c1.getPhoneNr() + " " + c1.getType().getCustomerTypeDiscount());
-		Customer c2 = new Customer("54646465", "fdgfd", "0502133427", sp.CustomerTypeReturn);
-		System.out.println(c2.getId()+ " " + c2.getName()+ " " + c2.getPhoneNr() + " " + c2.getType().getCustomerTypeDiscount());
-		sp.CustomerTypeReturn.setCustomerTypeDiscount(0.90);
-		System.out.println(c1.getId()+ " " + c1.getName()+ " " + c1.getPhoneNr() + " " + c1.getType().getCustomerTypeDiscount());
-		System.out.println(c2.getId()+ " " + c2.getName()+ " " + c2.getPhoneNr() + " " + c2.getType().getCustomerTypeDiscount());
-		System.out.println(sp.shopName);
-	}*/
-	
 }
