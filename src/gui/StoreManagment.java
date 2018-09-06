@@ -52,7 +52,7 @@ public class StoreManagment {
 		Prices.addActionListener(new ActionListener() {
 			public void actionPerformed (ActionEvent ae) {
 				StoreMgr.dispose();
-				new	StoreManagment(clientSideConnection);
+				new	PriceManagment(clientSideConnection);
 			}
 		});
 		
