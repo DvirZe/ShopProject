@@ -1,5 +1,6 @@
 package gui;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -20,23 +21,23 @@ public class StoreManagment {
 		StoreMgr.setSize(800, 420);
 		StoreMgr.setLocationRelativeTo(null);
 		StoreMgr.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		GridLayout Layout = new GridLayout(0,3);
-		StoreMgr.setLayout(Layout);
+		StoreMgr.setLayout( new BorderLayout());
+		
 		
 	
 		JButton DiscountMgr = new JButton("Manage Discounts");
-		StoreMgr.add(DiscountMgr);
+		StoreMgr.add(DiscountMgr , BorderLayout.WEST);
 		DiscountMgr.setFont(font2);
 		DiscountMgr.addActionListener(new ActionListener() {
 			public void actionPerformed (ActionEvent ae) {
 				StoreMgr.dispose();
-				new	StoreManagment(clientSideConnection);
+				new	Discount(clientSideConnection);
 			}
 		});
 		
 
 		JButton Supply = new JButton("Manage Supplys");
-		StoreMgr.add(Supply);
+		StoreMgr.add(Supply,BorderLayout.CENTER);
 		Supply.setFont(font2);
 		Supply.addActionListener(new ActionListener() {
 			public void actionPerformed (ActionEvent ae) {
@@ -46,7 +47,7 @@ public class StoreManagment {
 		});
 		
 		JButton Prices = new JButton("Manage Pricess");
-		StoreMgr.add(Prices);
+		StoreMgr.add(Prices,BorderLayout.EAST);
 		Prices.setFont(font2);
 		Prices.addActionListener(new ActionListener() {
 			public void actionPerformed (ActionEvent ae) {
@@ -57,7 +58,13 @@ public class StoreManagment {
 		
 		JButton Back = new JButton("Back to Main Menu");
 		Back.setFont(font2);
-		StoreMgr.add(Back);
+		StoreMgr.add(Back,BorderLayout.SOUTH);
+		Back.addActionListener(new ActionListener() {
+			public void actionPerformed (ActionEvent ae) {
+				StoreMgr.dispose();
+				new	MainMenu(clientSideConnection);
+			}
+		});
 		
 		StoreMgr.setVisible(true);
 	}
