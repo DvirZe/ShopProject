@@ -3,13 +3,19 @@ package gui;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.Stack;
 
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -30,7 +36,7 @@ public class PriceManagment {
 		
 		Font font2 = new Font("Ariel",Font.BOLD,14);
 		JFrame PriceMenu = new JFrame();
-		PriceMenu.setTitle("Sales managment menu");
+		PriceMenu.setTitle("Manage Prices");
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		Point middle = new Point(screenSize.width / 2, screenSize.height / 2);
 		Point newLocation = new Point(middle.x - (600 / 2), 
@@ -43,19 +49,26 @@ public class PriceManagment {
 		SpringLayout DiscLayout = new SpringLayout();
 		PriceMain.setLayout(DiscLayout);
 		
+		JLabel shirt1 = new JLabel();
+		shirt1.setIcon(new ImageIcon("./files/whiteshirt.jpg"));
+		PriceMain.add(shirt1);
+		JLabel shirt2 = new JLabel();
+		shirt2.setIcon(new ImageIcon("./files/blackshirt.jpg"));
+		PriceMain.add(shirt2);
+		
 		for (int i = 1; i<=2 ; ++i)
 		{
 			Price[i-1] = new JTextField("", 4);
 			PriceMain.add(Price[i-1]);
 		}
-		PriceMain.setBorder(BorderFactory.createTitledBorder("Sell Menu"));
+		PriceMain.setBorder(BorderFactory.createTitledBorder("Price Menu"));
 		PriceMain.setBackground(Color.white);
 		PriceMain.setPreferredSize(new Dimension (730 , 510));
 		JLabel Item = new JLabel("Item Price:");
 		PriceMain.add(Item);
 		
-		JLabel ReturnDisc = new JLabel("Retuened Customer Discount:");
-		PriceMain.add(ReturnDisc);
+		JLabel Item2 = new JLabel("Item Price:");
+		PriceMain.add(Item2);
 		
 		JButton Save = new JButton("Save");
 		Save.setEnabled(false);
@@ -64,18 +77,20 @@ public class PriceManagment {
 		JButton Back = new JButton("Back");
 		PriceMain.add(Back);
 		
+
+		DiscLayout.putConstraint(SpringLayout.WEST, shirt2, 0, SpringLayout.WEST, PriceMain);
+		DiscLayout.putConstraint(SpringLayout.NORTH, shirt2, 30, SpringLayout.SOUTH, shirt1);
 		
+		DiscLayout.putConstraint(SpringLayout.WEST, Item2, 20, SpringLayout.EAST, shirt2);
+		DiscLayout.putConstraint(SpringLayout.NORTH, Item2, 50, SpringLayout.NORTH, shirt2);
 		
-		DiscLayout.putConstraint(SpringLayout.WEST, ReturnDisc, 0, SpringLayout.WEST, PriceMain);
-		DiscLayout.putConstraint(SpringLayout.NORTH, ReturnDisc, 30, SpringLayout.NORTH, Item);
+		DiscLayout.putConstraint(SpringLayout.WEST, Item, 20, SpringLayout.EAST, shirt1);
+		DiscLayout.putConstraint(SpringLayout.NORTH, Item, 50, SpringLayout.NORTH, shirt1);
 		
-		DiscLayout.putConstraint(SpringLayout.WEST, Item, 0, SpringLayout.WEST, PriceMain);
-		DiscLayout.putConstraint(SpringLayout.NORTH, Item, 10, SpringLayout.NORTH, PriceMain);
+		DiscLayout.putConstraint(SpringLayout.WEST, Price[1], 15, SpringLayout.EAST, Item2);
+		DiscLayout.putConstraint(SpringLayout.NORTH, Price[1], 0, SpringLayout.NORTH, Item2);
 		
-		DiscLayout.putConstraint(SpringLayout.WEST, Price[1], 15, SpringLayout.EAST, ReturnDisc);
-		DiscLayout.putConstraint(SpringLayout.NORTH, Price[1], 0, SpringLayout.NORTH, ReturnDisc);
-		
-		DiscLayout.putConstraint(SpringLayout.WEST, Price[0], 0, SpringLayout.WEST, Price[1]);
+		DiscLayout.putConstraint(SpringLayout.WEST, Price[0], 15, SpringLayout.EAST, Item);
 		DiscLayout.putConstraint(SpringLayout.NORTH, Price[0], 0, SpringLayout.NORTH, Item);
 		
 		DiscLayout.putConstraint(SpringLayout.WEST, Save, 0, SpringLayout.WEST, Price[1]);
@@ -139,7 +154,7 @@ public class PriceManagment {
 		
 		
 		
-		PriceMenu.setPreferredSize(new Dimension(340,160));
+		PriceMenu.setPreferredSize(new Dimension(1200,860));
 		PriceMenu.add(PriceMain);
 		PriceMenu.pack();
 		PriceMenu.setVisible(true);

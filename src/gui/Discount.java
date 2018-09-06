@@ -49,7 +49,7 @@ public class Discount {
 			DiscPrec[i-1] = new JTextField("", 4);
 			DiscMain.add(DiscPrec[i-1]);
 		}
-		DiscMain.setBorder(BorderFactory.createTitledBorder("Sell Menu"));
+		DiscMain.setBorder(BorderFactory.createTitledBorder("Discount Menu"));
 		DiscMain.setBackground(Color.white);
 		DiscMain.setPreferredSize(new Dimension (730 , 510));
 		JLabel VIPDisc = new JLabel("VIP Customer Discount:");
