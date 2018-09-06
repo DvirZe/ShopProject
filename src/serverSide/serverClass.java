@@ -124,7 +124,7 @@ public class serverClass extends Thread {
 		sendToClient(json);
 	}
 	
-	public void updateWorker(JSONObject json)
+	public void updateWorker(JSONObject json) throws IOException
 	{
 		JSONArray workerDetails = new JSONArray();
 		workerDetails.add(0, json.get("name"));
@@ -138,10 +138,13 @@ public class serverClass extends Thread {
 		if (workers.containsKey(json.get("personalID")))
 		{//Update worker
 			workers.replace(json.get("personalID"), workerDetails);
+			json.put("Status", "Update");
 		}
 		else { //new worker
 			workers.put(json.get("personalID"), workerDetails);
+			json.put("Status", "Create");
 		}
+		logs.workersLog(json);
 	}
 	
 	public void updateCustomer(JSONObject json)

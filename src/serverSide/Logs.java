@@ -12,16 +12,30 @@ public class Logs {
 	{
 		FileWriter log = new FileWriter("./files/sales.log",true);
 		log.write("#"+json.get("shopName") +" - "+
-				"Customer: " + json.get("customerId") + " " +
-				"Shirt 1: " + json.get("shirt1") + " " +
-				"Shirt 2: " + json.get("shirt2") + " " +
-				"Pants 1: " + json.get("pants1") + " " +
-				"Pants 2: " + json.get("pants2") + " " +
+				"Customer: " + json.get("customerId") + ", " +
+				"Shirt 1: " + json.get("shirt1") + ", " +
+				"Shirt 2: " + json.get("shirt2") + ", " +
+				"Pants 1: " + json.get("pants1") + ", " +
+				"Pants 2: " + json.get("pants2") + ", " +
 				"Total price: " + json.get("totalPrice") + " " +
 				 new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date())
 				 + "\n");
 		log.close();
 	}
+	
+	public void workersLog(JSONObject json) throws IOException
+	{
+		FileWriter log = new FileWriter("./files/workers.log",true);
+		log.write("#"+json.get("Status")+" - "+
+				"Worker ID: " + json.get("personalID") + ", " +
+				"Worker name: " + json.get("name") + ", " +
+				"Worker phone: " + json.get("phoneNr") + ", " +
+				"Shop name: " + json.get("shop") + " " +
+				 new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date())
+				 + "\n");
+		log.close();
+	}
+	
 	
 	public void loginsLog(JSONObject json) throws IOException
 	{

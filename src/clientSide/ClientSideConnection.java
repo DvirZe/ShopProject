@@ -6,8 +6,6 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.TreeMap;
-import java.util.Vector;
 
 import javax.net.ssl.SSLSocketFactory;
 
