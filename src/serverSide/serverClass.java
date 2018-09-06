@@ -19,6 +19,7 @@ public class serverClass extends Thread {
 	private JSONObject workers, shop, customers;
 	private serverConnection serverConnection;
 	private int logedInUserID;
+	private Logs logs;
 	
 	public serverClass() {}
 	
@@ -27,6 +28,7 @@ public class serverClass extends Thread {
 		this.serverConnection = serverConnection;
 		workers = serverConnection.getWorkers();
 		customers = serverConnection.getCustomers();
+		logs = new Logs();
 	}
 	
 	public void actionChoose(JSONObject json) throws IOException, ParseException
@@ -57,6 +59,7 @@ public class serverClass extends Thread {
 		 JSONArray workerDetails = new JSONArray();
 		 JSONObject answer = new JSONObject();
 		 workerDetails = (JSONArray) workers.get(json.get("personalID"));
+		 answer.put("personalID", json.get("personalID"));
 		 if ((workerDetails != null) && (workerDetails.get(6).equals(json.get("password"))) && (Integer.parseInt(workerDetails.get(7).toString()) == 0))
 		 {
 			 answer.put("Status", 1);
@@ -77,6 +80,7 @@ public class serverClass extends Thread {
 			 System.out.println("Fail!");
 		 }
 		 sendToClient(answer);
+		 logs.loginsLog(answer);
 	}
 	
 	public void findWorker(JSONObject json) throws IOException
@@ -158,10 +162,14 @@ public class serverClass extends Thread {
 		}
 	}
 	
-	public void logout() {
+	public void logout() throws IOException {
 		 JSONArray workerDetails = new JSONArray();
 		 workerDetails = (JSONArray) workers.get(""+logedInUserID);
 		 workerDetails.set(7, 0); //Set user as logged out 
+		 JSONObject logout = new JSONObject();
+		 logout.put("shopName", workerDetails.get(4));
+		 logout.put("personalID", logedInUserID);
+		 logs.logoutsLog(logout);
 		 workers.replace(logedInUserID, workerDetails);
 	}
 	
