@@ -33,13 +33,13 @@ public class MainMenu {
 			}
 		});
 		
-		JButton Supply = new JButton("Supply Managment");
-		Main.add(Supply);
-		Supply.setFont(font2);
-		Supply.addActionListener(new ActionListener() {
+		JButton StoreMgr = new JButton("Store Managment");
+		Main.add(StoreMgr);
+		StoreMgr.setFont(font2);
+		StoreMgr.addActionListener(new ActionListener() {
 			public void actionPerformed (ActionEvent ae) {
 				Main.dispose();
-				new	MainMenu(clientSideConnection);
+				new	StoreManagment(clientSideConnection);
 			}
 		});
 		
