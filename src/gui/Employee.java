@@ -30,6 +30,7 @@ import javax.swing.event.DocumentListener;
 import org.json.simple.parser.ParseException;
 
 import clientSide.ClientSideConnection;
+import clientSide.Shop;
 import clientSide.Worker;
 
 public class Employee {
@@ -169,6 +170,7 @@ public class Employee {
 		EmpLayout.putConstraint(SpringLayout.WEST, Position, 20, SpringLayout.WEST, EmpMgr);
 		EmpLayout.putConstraint(SpringLayout.NORTH, Position, 60, SpringLayout.SOUTH, EmpNum);
 		PositionText = new JComboBox<String>(new String[] {"Manager","Seller","Cashier"} );
+		PositionText.setSelectedItem("Seller");
 		PositionText.setFont(font1);
 
 		EmpMgr.add(PositionText);
@@ -311,7 +313,7 @@ Save.addActionListener(new ActionListener() {
 						FnText.getText(),
 						PhnNumText.getText(),
 						AccNumText.getText(),
-						workerFound.getShopName(),
+						isWorkerfound?workerFound.getShopName():clientSideConnection.getShop().getShopName(),
 						PositionText.getSelectedItem().toString(),
 						new String(PassText.getPassword()));
 				clientSideConnection.saveWorker(worker);

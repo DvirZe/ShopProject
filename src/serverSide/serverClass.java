@@ -149,16 +149,21 @@ public class serverClass extends Thread {
 				while ((msg = bufferedReader.readLine()) == null) {}
 			}
 		} catch (IOException | ParseException e) {
-			endOfWork();
+			try {
+				endOfWork();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			System.out.println("End.");
 			//e.printStackTrace();
 		}
 	}
 	
-	public void endOfWork() {
+	public void endOfWork() throws IOException {
 		if (logedInUserID != 0)
 			this.logout();
-		System.out.println("All saved to files");
+		serverConnection.saveData(this);
 	}
 	
 }
