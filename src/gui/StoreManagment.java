@@ -42,7 +42,7 @@ public class StoreManagment {
 		Supply.addActionListener(new ActionListener() {
 			public void actionPerformed (ActionEvent ae) {
 				StoreMgr.dispose();
-				new	StoreManagment(clientSideConnection);
+				new	SupplyManagment(clientSideConnection);
 			}
 		});
 		
