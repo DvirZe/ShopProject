@@ -24,6 +24,7 @@ public class Shop {
 	private CustomerType customerTypeReturn;
 	private CustomerType customerTypeVip;
 	private int totalSales;
+	private int workerOnline;
 	
 	public Shop(JSONObject json) {
 		shopName = json.get("shopName").toString();
@@ -42,12 +43,29 @@ public class Shop {
 		customerTypeReturn = new CustomerTypeReturn(Double.parseDouble(json.get("customerTypeReturn").toString()));
 		customerTypeVip = new CustomerTypeVip(Double.parseDouble(json.get("customerTypeVip").toString()));
 		totalSales = Integer.parseInt(json.get("totalSales").toString());
+		workerOnline = Integer.parseInt(json.get("personalID").toString());
 	}
 	
 	public String getShopName() { return shopName; }
 	
-	public void endSell() { 
-		
+	public JSONObject endSell() { 
+		for (int i = 0; i < 4 ; ++i)
+		{
+			int curInv = Inventory.get(i+1).get(0);
+			Inventory.get(i+1).set(0, curInv-shopCart.getCartItems(i));
+			System.out.println("curInv: " + curInv +"   now:" + Inventory.get(i+1).get(0));
+		}
+		JSONObject sell = new JSONObject();
+		sell.put("shopName", this.shopName);
+		sell.put("customerId", shopCart.getCustomer());
+		sell.put("shirt1", shopCart.getCartItems(0));
+		sell.put("shirt2", shopCart.getCartItems(1));
+		sell.put("pants1", shopCart.getCartItems(2));
+		sell.put("pants2", shopCart.getCartItems(3));
+		sell.put("totalPrice", shopCart.getTotalPrice());
+		sell.put("workerId", workerOnline);
+		shopCart.emptyCart();
+		return sell;
 	}
 	
 	public void buyInventory(int item, int sum)
@@ -72,6 +90,8 @@ public class Shop {
 				return 0.0;	
 		}
 	}
+	
+	public int getWorkerOnline() { return workerOnline; }
 	
 	public void saveInfo(PrintWriter printWriter, BufferedReader socketBufferedReader) throws IOException { 
 		JSONObject obj = null;

@@ -160,6 +160,12 @@ public class ClientSideConnection extends Thread {
 		SendToServer(customerJson);
 	}
 	
+	public void endSell() { 
+		JSONObject sell = shop.endSell();
+		sell.put("Action", action.sellAction());
+		System.out.println(sell);
+		SendToServer(sell);
+	}
 	
 	public static void main(String[] args) throws UnknownHostException, IOException
 	{

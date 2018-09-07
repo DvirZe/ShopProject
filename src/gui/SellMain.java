@@ -18,6 +18,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
+import javax.xml.bind.Marshaller.Listener;
 
 import org.json.simple.parser.ParseException;
 
@@ -211,12 +212,7 @@ public class SellMain {
 		SellButtons.add(Sell);
 		SellLayout.putConstraint(SpringLayout.WEST,Sell , 35, SpringLayout.WEST,ItemPrice[3] );
 		SellLayout.putConstraint(SpringLayout.NORTH, Sell, 100, SpringLayout.SOUTH, ItemPrice[3]);
-		Sell.addActionListener(new ActionListener() {
-			public void actionPerformed (ActionEvent ae) {
-				SellMenu.dispose();
-				new	SellMain(clientSideConnection);
-			}
-		});
+		Sell.setEnabled(false);
 		
 		JButton Back = new JButton("Back");
 		Back.setFont(font2);
@@ -246,12 +242,20 @@ public class SellMain {
 		        @Override
 		        public void actionPerformed(ActionEvent e) 
 		        {
-		    		int MyPrice = Integer.valueOf(ItemPrice[index].getText());
-					int MyQuantity = Integer.parseInt(ItemQuantity[index].getSelectedItem().toString());
-					ItemTotal[index].setText(""+MyPrice*MyQuantity);
-					double sum = (Integer.parseInt(ItemTotal[0].getText()) + Integer.parseInt(ItemTotal[1].getText()) + Integer.parseInt(ItemTotal[2].getText()) + Integer.parseInt(ItemTotal[3].getText())) * (1-discount);
-					SumText.setText(new String(""+sum));
-					clientSideConnection.getShop().getCart().cartUpdate(index, MyQuantity);
+		        	if (ItemQuantity[index].getItemCount() != 0)
+		        	{
+			    		int MyPrice = Integer.valueOf(ItemPrice[index].getText());
+						int MyQuantity = Integer.parseInt(ItemQuantity[index].getSelectedItem().toString());
+						ItemTotal[index].setText(""+MyPrice*MyQuantity);
+						double sum = (Integer.parseInt(ItemTotal[0].getText()) + Integer.parseInt(ItemTotal[1].getText()) + Integer.parseInt(ItemTotal[2].getText()) + Integer.parseInt(ItemTotal[3].getText())) * (1-discount);
+						SumText.setText(new String(""+sum));
+						clientSideConnection.getShop().getCart().cartUpdate(index, MyQuantity);
+						if (sum != 0.0)
+							Sell.setEnabled(true);
+						else
+							Sell.setEnabled(false);
+		        	}
+					
 		        }
 		    });
 		}
@@ -271,7 +275,7 @@ public class SellMain {
 					if (customer != null)
 					{
 						discount = clientSideConnection.getShop().getDiscountForCustomer(customer.getType());
-						clientSideConnection.getShop().getCart().setCustomer(customer);
+						clientSideConnection.getShop().getCart().setCustomer(CusIDText.getText());
 						clientNotFound.setVisible(false);
 					}
 					else 
@@ -287,8 +291,29 @@ public class SellMain {
 		});
 ////////////////////End Get Customer for discount//////////////////////
 		
+		ActionListener sell = new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				for (int i = 0; i<4 ; ++i)
+				{
+					
+				}
+				clientSideConnection.getShop().getCart().setTotalPrice(Double.parseDouble(SumText.getText().toString()));
+				clientSideConnection.endSell();
+				for (int i = 0; i<4 ; ++i)
+				{
+					ItemQuantity[i].removeAllItems();
+					for (int j = 0; j<= shop.getInventory(i+1) ;++j )
+					{
+						ItemQuantity[i].addItem(j);
+					}
+				}
+				CusIDText.setText("");
+			}
+		};	
 		
-		
+		Sell.addActionListener(sell);
 		
 		SellMenu.add(SellButtons);
 		SellMenu.pack();

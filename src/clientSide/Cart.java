@@ -4,24 +4,39 @@ import java.util.Vector;
 
 public class Cart {
 	private int[] cart;
-	private Customer customer;
+	private String customer;
+	private double totalPrice;
 	
 	public Cart() { 
 		cart = new int[4];
-		customer = null;
+		customer = new String("New Customer - ID not saved");
 	}
 	
 	public void cartUpdate(int itemNr, int sum) { cart[itemNr] = sum; }
 	
+	public int getCartItems(int item)
+	{
+		return cart[item];
+	}
+	
 	public void emptyCart() { 
 		for (int i=0;i<4;++i)
 			cart[i]=0;
+		customer = "New Customer - ID not saved";
+		totalPrice = 0;
 	}
 	
-	public void setCustomer(Customer customer)
+	public void setTotalPrice(double price)
+	{
+		totalPrice = price;
+	}
+	
+	public double getTotalPrice() { return totalPrice; }
+	
+	public void setCustomer(String customer)
 	{
 		this.customer = customer;
 	}
 	
-	public Customer getCustomer() { return customer; }
+	public String getCustomer() { return customer; }
 }

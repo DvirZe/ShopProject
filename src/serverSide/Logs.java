@@ -10,7 +10,7 @@ import org.json.simple.JSONObject;
 public class Logs {
 	public void selesLog(JSONObject json) throws IOException
 	{
-		FileWriter log = new FileWriter("./files/sales.log",true);
+		FileWriter log = new FileWriter("./files/sells.log",true);
 		log.write("#"+json.get("shopName") +" - "+
 				"Customer: " + json.get("customerId") + ", " +
 				"Shirt 1: " + json.get("shirt1") + ", " +

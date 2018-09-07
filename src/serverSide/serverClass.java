@@ -49,6 +49,9 @@ public class serverClass extends Thread {
 		case "5":
 			updateCustomer(json);
 			break;	
+		case "6":
+			saveSell(json);
+			break;	
 		default:
 			break;
 		}
@@ -165,6 +168,8 @@ public class serverClass extends Thread {
 		}
 	}
 	
+	public void saveSell(JSONObject json) {}
+	
 	public void logout() throws IOException {
 		 JSONArray workerDetails = new JSONArray();
 		 workerDetails = (JSONArray) workers.get(""+logedInUserID);
@@ -175,6 +180,7 @@ public class serverClass extends Thread {
 		 logs.logoutsLog(logout);
 		 workers.replace(logedInUserID, workerDetails);
 	}
+
 	
 	public void sendToClient(JSONObject json) throws IOException
 	{
