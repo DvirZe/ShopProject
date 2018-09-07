@@ -70,13 +70,13 @@ public class Login extends JPanel{
 		LogLayout.putConstraint(SpringLayout.NORTH, Name, 10, SpringLayout.NORTH, Login);
 		
 		LogLayout.putConstraint(SpringLayout.WEST, Ntext, 0, SpringLayout.WEST, Name);
-		LogLayout.putConstraint(SpringLayout.NORTH, Ntext, 40, SpringLayout.NORTH, Login);
+		LogLayout.putConstraint(SpringLayout.NORTH, Ntext, 10, SpringLayout.SOUTH, Name);
 		
 		LogLayout.putConstraint(SpringLayout.WEST, Pass, 10, SpringLayout.WEST, Login);
 		LogLayout.putConstraint(SpringLayout.NORTH, Pass, 20, SpringLayout.SOUTH, Ntext);
 		
 		LogLayout.putConstraint(SpringLayout.WEST, Ptext, 0, SpringLayout.WEST, Pass);
-		LogLayout.putConstraint(SpringLayout.NORTH, Ptext, 20, SpringLayout.SOUTH, Pass);
+		LogLayout.putConstraint(SpringLayout.NORTH, Ptext, 10, SpringLayout.SOUTH, Pass);
 		
 ////////////////////////ActionListener For login panel/////////////////////////		
 		ActionListener logAction = new ActionListener() {
