@@ -62,12 +62,10 @@ public class SupplyManagment {
 	JLabel pants2 = new JLabel();
 	pants2.setIcon(new ImageIcon("./files/blackpants.jpg"));
 	QuantityMain.add(pants2);
-	
 	for (int i = 1; i<=4 ; ++i)
 	{
-		Quantity[i-1] = new JTextField("", 4);
+		Quantity[i-1] = new JTextField("" + ClientSideConnection.getShop().getInventory(i), 4);
 		QuantityMain.add(Quantity[i-1]);
-		System.out.println(""+i);
 	}
 	QuantityMain.setBorder(BorderFactory.createTitledBorder("Supply Menu"));
 	QuantityMain.setBackground(Color.white);

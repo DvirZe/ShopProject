@@ -61,12 +61,11 @@ public class PriceManagment {
 		JLabel pants2 = new JLabel();
 		pants2.setIcon(new ImageIcon("./files/blackpants.jpg"));
 		PriceMain.add(pants2);
-		
+
 		for (int i = 1; i<=4 ; ++i)
 		{
-			Price[i-1] = new JTextField("", 4);
+			Price[i-1] = new JTextField(""+ClientSideConnection.getShop().getPrices(i), 5);
 			PriceMain.add(Price[i-1]);
-			System.out.println(""+i);
 		}
 		PriceMain.setBorder(BorderFactory.createTitledBorder("Price Menu"));
 		PriceMain.setBackground(Color.white);
