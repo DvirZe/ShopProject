@@ -37,6 +37,8 @@ public class Login extends JPanel{
 		JLabel Name = new JLabel("Username:");
 		Name.setFont(font2);
 		Login.add(Name, BorderLayout.NORTH);
+		Image img = Toolkit.getDefaultToolkit().getImage("./files/store_icon.jpg");
+		details.setIconImage(img);
 		
 		JTextField Ntext = new JTextField("" , 25);
 		Ntext.setFont(font);
