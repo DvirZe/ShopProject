@@ -3,6 +3,7 @@ package serverSide;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -52,6 +53,8 @@ public class serverClass extends Thread {
 		case "6":
 			saveSell(json);
 			break;	
+		case "7":
+			sendInventory();
 		default:
 			break;
 		}
@@ -72,8 +75,11 @@ public class serverClass extends Thread {
 			 workerDetails.set(7, 1); //Set user as logged in
 			 workers.get(json.get("personalID"));
 			 JSONParser parser = new JSONParser();
-			 Object obj = parser.parse(new FileReader("./files/"+workerDetails.get(4)+".json"));
-		     shop = (JSONObject) obj;
+			 String shopName = workerDetails.get(4).toString();
+			 if (shopName.equals("Shop1"))
+				 shop = serverConnection.getShop1();
+			 else
+				 shop = serverConnection.getShop2();
 		     answer.putAll(shop);
 		     logedInUserID = Integer.parseInt(json.get("personalID").toString());
 		 }
@@ -168,7 +174,26 @@ public class serverClass extends Thread {
 		}
 	}
 	
-	public void saveSell(JSONObject json) {}
+	public void saveSell(JSONObject json) throws IOException {
+		JSONArray newInventory = new JSONArray();
+		JSONArray curInventory = (JSONArray) shop.get("Inventory");
+		newInventory.add(Integer.parseInt(curInventory.get(0).toString())-Integer.parseInt(json.get("shirt1").toString()));
+		newInventory.add(Integer.parseInt(curInventory.get(1).toString())-Integer.parseInt(json.get("shirt2").toString()));
+		newInventory.add(Integer.parseInt(curInventory.get(2).toString())-Integer.parseInt(json.get("pants1").toString()));
+		newInventory.add(Integer.parseInt(curInventory.get(3).toString())-Integer.parseInt(json.get("pants2").toString()));
+		shop.replace("Inventory", newInventory);
+		curInventory = newInventory;
+	}
+	
+	public void sendInventory() throws IOException {	
+		JSONObject json = new JSONObject();
+		JSONArray curInventory = (JSONArray) shop.get("Inventory");
+		json.put("shirt1", curInventory.get(0));
+		json.put("shirt2", curInventory.get(1));
+		json.put("pants1", curInventory.get(2));
+		json.put("pants2", curInventory.get(3));
+		sendToClient(json);
+	}
 	
 	public void logout() throws IOException {
 		 JSONArray workerDetails = new JSONArray();

@@ -4,9 +4,14 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.ParseException;
 
 import clientSide.ClientSideConnection;
 
@@ -23,11 +28,17 @@ public class MainMenu {
 		
 	
 	
-		JButton BuySell = new JButton("Buy and sell items");
+		JButton BuySell = new JButton("Sell items");
 		Main.add(BuySell);
 		BuySell.setFont(font2);
 		BuySell.addActionListener(new ActionListener() {
 			public void actionPerformed (ActionEvent ae) {
+				try {
+					clientSideConnection.updateInventory();
+				} catch (IOException | ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				Main.dispose();
 				new	SellMain(clientSideConnection);
 			}

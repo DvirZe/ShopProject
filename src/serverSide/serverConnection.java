@@ -13,7 +13,7 @@ import org.json.simple.parser.ParseException;
 
 public class serverConnection {
 	
-	JSONObject workers, customers;
+	JSONObject workers, customers, shop1, shop2;
 	
 	private serverConnection() throws IOException, ParseException {
 		System.setProperty("javax.net.ssl.keyStore", "sp.store");
@@ -24,6 +24,10 @@ public class serverConnection {
 		workers = (JSONObject) obj;
 		obj = parser.parse(new FileReader("./files/Customers.json"));
 		customers = (JSONObject) obj;
+		obj = parser.parse(new FileReader("./files/shop1.json"));
+		shop1 = (JSONObject) obj;
+		obj = parser.parse(new FileReader("./files/shop2.json"));
+		shop2 = (JSONObject) obj;
 	}
 	
 	public void saveData(serverClass sc) throws IOException {
@@ -35,6 +39,12 @@ public class serverConnection {
 			FileWriter customersFile = new FileWriter("./files/Customers.json",false);
 			customersFile.write(customers.toString());
 			customersFile.close();
+			FileWriter shop = new FileWriter("./files/shop1.json",false);
+			shop.write(shop1.toString());
+			shop.close();
+			shop = new FileWriter("./files/shop2.json",false);
+			shop.write(shop2.toString());
+			shop.close();
 			System.out.println("Files Saved.");
 		}
 	}
@@ -45,6 +55,14 @@ public class serverConnection {
 	
 	public JSONObject getCustomers() {
 		return customers;
+	}
+	
+	public JSONObject getShop1() {
+		return shop1;
+	}
+	
+	public JSONObject getShop2() {
+		return shop2;
 	}
 	
 	public static void main(String[] args) throws IOException, ParseException  {

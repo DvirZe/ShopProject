@@ -9,6 +9,7 @@ import java.net.UnknownHostException;
 
 import javax.net.ssl.SSLSocketFactory;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -158,6 +159,18 @@ public class ClientSideConnection extends Thread {
 		customerJson.put("customerType", customer.getType());
 		System.out.println(customerJson);
 		SendToServer(customerJson);
+	}
+	
+	
+	public void updateInventory() throws IOException, ParseException {
+		JSONObject json = new JSONObject();
+		json.put("Action", action.updateInventory());
+		SendToServer(json);
+		JSONObject newInventory = getFromServer();
+		shop.UpdateInventory(1, Integer.parseInt(newInventory.get("shirt1").toString()));
+		shop.UpdateInventory(2, Integer.parseInt(newInventory.get("shirt2").toString()));
+		shop.UpdateInventory(3, Integer.parseInt(newInventory.get("pants1").toString()));
+		shop.UpdateInventory(4, Integer.parseInt(newInventory.get("pants2").toString()));
 	}
 	
 	public void endSell() { 

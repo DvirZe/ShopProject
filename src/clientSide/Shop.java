@@ -73,6 +73,11 @@ public class Shop {
 		Inventory.get(item).set(0, Inventory.get(item).get(0)+sum);
 	}
 	
+	public void UpdateInventory(int item, int sum)
+	{
+		Inventory.get(item).set(0, sum);
+	}
+	
 	public int getInventory(int item) { return Inventory.get(item).get(0); }
 	public int getPrices(int item) { return Inventory.get(item).get(1); }
 	public Cart getCart() { return shopCart; }
