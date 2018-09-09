@@ -42,6 +42,7 @@ public class Shop {
 		customerTypeNew = new CustomerTypeNew();
 		customerTypeReturn = new CustomerTypeReturn(Double.parseDouble(json.get("customerTypeReturn").toString()));
 		customerTypeVip = new CustomerTypeVip(Double.parseDouble(json.get("customerTypeVip").toString()));
+		
 		totalSales = Integer.parseInt(json.get("totalSales").toString());
 		workerOnline = Integer.parseInt(json.get("personalID").toString());
 	}
@@ -85,6 +86,10 @@ public class Shop {
 	
 	public Double getDiscountForCustomer(String type)
 	{
+		
+		System.out.println(customerTypeReturn.getCustomerTypeName());
+		System.out.println(customerTypeVip.getCustomerTypeName());
+		
 		switch(type)
 		{
 			case "Return":
@@ -94,6 +99,12 @@ public class Shop {
 			default:
 				return 0.0;	
 		}
+	}
+	
+	public void setDiscount(double vip, double returned)
+	{
+		customerTypeReturn.setCustomerTypeDiscount(returned);
+		customerTypeVip.setCustomerTypeDiscount(vip);
 	}
 	
 	public int getWorkerOnline() { return workerOnline; }

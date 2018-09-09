@@ -52,6 +52,9 @@ public class Discount {
 			DiscPrec[i-1] = new JTextField("", 4);
 			DiscMain.add(DiscPrec[i-1]);
 		}
+		DiscPrec[0].setText(clientSideConnection.getShop().getDiscountForCustomer("VIP").toString());
+		DiscPrec[1].setText(clientSideConnection.getShop().getDiscountForCustomer("Return").toString());
+
 		DiscMain.setBorder(BorderFactory.createTitledBorder("Discount Menu"));
 		DiscMain.setBackground(Color.white);
 		DiscMain.setPreferredSize(new Dimension (730 , 510));
@@ -135,8 +138,8 @@ public class Discount {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-
+				clientSideConnection.setDiscount(Double.parseDouble(DiscPrec[0].getText()), Double.parseDouble(DiscPrec[1].getText()));
+				Save.setEnabled(false);
 			}
 		});
 		

@@ -55,6 +55,12 @@ public class serverClass extends Thread {
 			break;	
 		case "7":
 			sendInventory();
+			break;	
+		case "8":
+			updateDiscounts(json);
+			break;	
+		case "9":
+			sendDiscounts();
 		default:
 			break;
 		}
@@ -193,6 +199,20 @@ public class serverClass extends Thread {
 		json.put("pants1", curInventory.get(2));
 		json.put("pants2", curInventory.get(3));
 		sendToClient(json);
+	}
+	
+	public void updateDiscounts(JSONObject json)
+	{
+		shop.replace("customerTypeReturn", json.get("Return"));
+		shop.replace("customerTypeVip", json.get("VIP"));
+	}
+	
+	public void sendDiscounts() throws IOException
+	{
+		JSONObject discounts = new JSONObject();
+		discounts.put("VIP", shop.get("customerTypeVip"));
+		discounts.put("Return", shop.get("customerTypeReturn"));
+		sendToClient(discounts);
 	}
 	
 	public void logout() throws IOException {

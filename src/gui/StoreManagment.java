@@ -8,9 +8,12 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+
+import org.json.simple.parser.ParseException;
 
 import clientSide.ClientSideConnection;
 
@@ -35,6 +38,12 @@ public class StoreManagment {
 		DiscountMgr.addActionListener(new ActionListener() {
 			public void actionPerformed (ActionEvent ae) {
 				StoreMgr.dispose();
+				try {
+					clientSideConnection.updateDicounts();
+				} catch (IOException | ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				new	Discount(clientSideConnection);
 			}
 		});

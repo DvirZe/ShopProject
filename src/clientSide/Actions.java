@@ -15,4 +15,8 @@ public class Actions { //to organized
 	public int sellAction() { return 6; }
 	
 	public int updateInventory() { return 7; }
+	
+	public int setDiscounts() { return 8; }
+	
+	public int updateDiscounts() { return 9; }
 }

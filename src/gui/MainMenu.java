@@ -40,6 +40,7 @@ public class MainMenu {
 			public void actionPerformed (ActionEvent ae) {
 				try {
 					clientSideConnection.updateInventory();
+					clientSideConnection.updateDicounts();
 				} catch (IOException | ParseException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

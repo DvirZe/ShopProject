@@ -21,10 +21,8 @@ public class ClientSideConnection extends Thread {
 	private Socket socket;
 	private BufferedReader socketBufferedReader;
 	private PrintWriter printWriter;
-	@SuppressWarnings("unused")
 	private BufferedReader commandBufferedReader;
 	private Actions action;
-	@SuppressWarnings("unused")
 	private Login shopGui;
 	private Shop shop;
 	public int NextWorkerCounter;
@@ -161,7 +159,6 @@ public class ClientSideConnection extends Thread {
 		SendToServer(customerJson);
 	}
 	
-	
 	public void updateInventory() throws IOException, ParseException {
 		JSONObject json = new JSONObject();
 		json.put("Action", action.updateInventory());
@@ -171,6 +168,27 @@ public class ClientSideConnection extends Thread {
 		shop.UpdateInventory(2, Integer.parseInt(newInventory.get("shirt2").toString()));
 		shop.UpdateInventory(3, Integer.parseInt(newInventory.get("pants1").toString()));
 		shop.UpdateInventory(4, Integer.parseInt(newInventory.get("pants2").toString()));
+	}
+	
+	public void setDiscount(double vip, double returned)
+	{
+		shop.setDiscount(vip, returned);
+		JSONObject json = new JSONObject();
+		json.put("Action", action.setDiscounts());
+		json.put("VIP", vip);
+		json.put("Return", returned);
+		SendToServer(json);
+	}
+	
+	public void updateDicounts() throws IOException, ParseException
+	{
+		JSONObject json = new JSONObject();
+		json.put("Action", action.updateDiscounts());
+		System.out.println(json);
+		SendToServer(json);
+		JSONObject updatedDiscounts = getFromServer();
+		System.out.println(updatedDiscounts);
+		shop.setDiscount(Double.parseDouble(updatedDiscounts.get("VIP").toString()), Double.parseDouble(updatedDiscounts.get("Return").toString()));
 	}
 	
 	public void endSell() { 
