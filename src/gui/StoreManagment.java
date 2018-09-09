@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -20,6 +22,8 @@ public class StoreManagment {
 		StoreMgr.setTitle("Store Managment");
 		StoreMgr.setSize(800, 420);
 		StoreMgr.setLocationRelativeTo(null);
+		Image img = Toolkit.getDefaultToolkit().getImage("./files/store_icon.jpg");
+		StoreMgr.setIconImage(img);
 		StoreMgr.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		StoreMgr.setLayout( new BorderLayout());
 		

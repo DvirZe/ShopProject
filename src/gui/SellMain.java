@@ -3,6 +3,7 @@ package gui;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -43,7 +44,10 @@ public class SellMain {
 		Point newLocation = new Point(middle.x - (600 / 2), 
 		                              middle.y - (700 / 2));
 		SellMenu.setLocation(newLocation);
+		Image img = Toolkit.getDefaultToolkit().getImage("./files/SellIcon.png");
+		SellMenu.setIconImage(img);
 		SellMenu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
 		JComboBox[] ItemQuantity = new JComboBox[4];
 		JTextField[] ItemPrice = new JTextField[4] , ItemTotal = new JTextField[4];
 		JPanel SellButtons = new JPanel();

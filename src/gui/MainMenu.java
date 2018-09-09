@@ -2,6 +2,8 @@ package gui;
 
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -22,9 +24,12 @@ public class MainMenu {
 		Main.setTitle("Store Managment");
 		Main.setSize(800, 420);
 		Main.setLocationRelativeTo(null);
+		Image img = Toolkit.getDefaultToolkit().getImage("./files/store_icon.jpg");
+		Main.setIconImage(img);
 		Main.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		GridLayout Layout = new GridLayout(3,2);
 		Main.setLayout(Layout);
+
 		
 	
 	
@@ -81,7 +86,7 @@ public class MainMenu {
 		Reports.addActionListener(new ActionListener() {
 			public void actionPerformed (ActionEvent ae) {
 				Main.dispose();
-				new	MainMenu(clientSideConnection);
+				new	Reports(clientSideConnection);
 			}
 		});
 		

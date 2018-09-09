@@ -4,6 +4,7 @@ package gui;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -31,12 +32,14 @@ public class Discount {
 		
 		Font font2 = new Font("Ariel",Font.BOLD,14);
 		JFrame DiscMenu = new JFrame();
-		DiscMenu.setTitle("Sales managment menu");
+		DiscMenu.setTitle("Discount managment menu");
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		Point middle = new Point(screenSize.width / 2, screenSize.height / 2);
 		Point newLocation = new Point(middle.x - (600 / 2), 
 		                              middle.y - (700 / 2));
 		DiscMenu.setLocation(newLocation);
+		Image img = Toolkit.getDefaultToolkit().getImage("./files/DiscIcon.png");
+		DiscMenu.setIconImage(img);
 		DiscMenu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		JTextField[] DiscPrec = new JTextField[4];

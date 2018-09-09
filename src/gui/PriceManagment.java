@@ -42,6 +42,8 @@ public class PriceManagment {
 		Point newLocation = new Point(middle.x - (600 / 2), 
 		                              middle.y - (700 / 2));
 		PriceMenu.setLocation(newLocation);
+		Image img = Toolkit.getDefaultToolkit().getImage("./files/PriceIcon.png");
+		PriceMenu.setIconImage(img);
 		PriceMenu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		JTextField[] Price = new JTextField[4];

@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -38,7 +39,7 @@ public class AddCus {
 		Font font1 = new Font("Ariel",Font.PLAIN,10);
 		Font font2 = new Font("Ariel",Font.BOLD,14);
 		JFrame CusMenu = new JFrame();
-		CusMenu.setTitle("Sales managment menu");
+		CusMenu.setTitle("Customer managment menu");
 		//Set the Panel on the middle
 				Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 				Point middle = new Point(screenSize.width / 2, screenSize.height / 2);
@@ -46,6 +47,9 @@ public class AddCus {
 				                              middle.y - (370 / 2));
 				CusMenu.setLocation(newLocation);
 		CusMenu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		Image img = Toolkit.getDefaultToolkit().getImage("./files/ClientIcon.png");
+		CusMenu.setIconImage(img);
 		
 		JPanel CusMgr = new JPanel();
 		SpringLayout CusLayout = new SpringLayout();

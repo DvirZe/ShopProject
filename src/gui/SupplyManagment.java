@@ -43,6 +43,8 @@ public class SupplyManagment {
 	Point newLocation = new Point(middle.x - (600 / 2), 
 	                              middle.y - (700 / 2));
 	SupplyMenu.setLocation(newLocation);
+	Image img = Toolkit.getDefaultToolkit().getImage("./files/SupIcon.png");
+	SupplyMenu.setIconImage(img);
 	SupplyMenu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	
 	JTextField[] Quantity = new JTextField[4];

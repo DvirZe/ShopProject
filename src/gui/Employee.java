@@ -3,6 +3,7 @@ package gui;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -40,14 +41,18 @@ public class Employee {
 		Font font1 = new Font("Ariel",Font.PLAIN,10);
 		Font font2 = new Font("Ariel",Font.BOLD,14);
 		JFrame EmpMenu = new JFrame();
-		EmpMenu.setTitle("Sales managment menu");
+		EmpMenu.setTitle("Employee managment menu");
 		//Set the Panel on the middle
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		Point middle = new Point(screenSize.width / 2, screenSize.height / 2);
 		Point newLocation = new Point(middle.x - (600 / 2), 
 		                              middle.y - (700 / 2));
 		EmpMenu.setLocation(newLocation);
+		Image img = Toolkit.getDefaultToolkit().getImage("./files/EmpIcon.png");
+		EmpMenu.setIconImage(img);
 		EmpMenu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+
 				
 		JPanel EmpMgr = new JPanel();
 		SpringLayout EmpLayout = new SpringLayout();
