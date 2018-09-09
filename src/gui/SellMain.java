@@ -16,6 +16,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
@@ -299,12 +300,29 @@ public class SellMain {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				for (int i = 0; i<4 ; ++i)
-				{
-					
+				Boolean quantityTest = true;
+				try {
+					clientSideConnection.updateInventory();
+				} catch (IOException | ParseException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
 				}
-				clientSideConnection.getShop().getCart().setTotalPrice(Double.parseDouble(SumText.getText().toString()));
-				clientSideConnection.endSell();
+				for (int i=1;i<=4;++i)
+				{
+					if (Integer.parseInt(ItemQuantity[i-1].getSelectedItem().toString()) > clientSideConnection.getShop().getInventory(i))
+					{
+						quantityTest = false;
+						JOptionPane pane = new JOptionPane();
+						JOptionPane.showMessageDialog(pane, "Can't sell more then you have at the shop\n the panel will update now.", "Error on item " + i, JOptionPane.PLAIN_MESSAGE);
+						break;	
+					}
+				}
+				if (quantityTest == true)
+				{
+					clientSideConnection.getShop().getCart().setTotalPrice(Double.parseDouble(SumText.getText().toString()));
+					clientSideConnection.endSell();
+					CusIDText.setText("");
+				}
 				for (int i = 0; i<4 ; ++i)
 				{
 					ItemQuantity[i].removeAllItems();
@@ -313,7 +331,6 @@ public class SellMain {
 						ItemQuantity[i].addItem(j);
 					}
 				}
-				CusIDText.setText("");
 			}
 		};	
 		
