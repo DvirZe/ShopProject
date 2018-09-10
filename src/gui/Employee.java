@@ -35,7 +35,7 @@ import clientSide.Shop;
 import clientSide.Worker;
 
 public class Employee {
-	Boolean isWorkerfound;
+	Boolean isWorkerfound, passwordValidation;
 	Worker workerFound;
 	public  Employee(ClientSideConnection clientSideConnection) {
 		Font font1 = new Font("Ariel",Font.PLAIN,10);
@@ -248,7 +248,8 @@ DocumentListener SaveEnabler = new DocumentListener(){
 				&& !FnText.getText().isEmpty()
 				&& (PassText.getPassword().length != 0)
 				&& !PhnNumText.getText().isEmpty()
-				&& !AccNumText.getText().isEmpty())
+				&& !AccNumText.getText().isEmpty()
+				&& passwordValidation)
 			Save.setEnabled(true);
 		else
 			Save.setEnabled(false);
@@ -298,6 +299,54 @@ Save.addActionListener(new ActionListener() {
 
 //////////////////End Clear fields on save//////////////////
 
+
+////////////Password Rules///////////////////
+
+passwordValidation = false;
+
+JLabel[] passwordRules = new JLabel[3];
+passwordRules[0] = new JLabel(new String("<html><u>Password Rules:</u></html>"));
+passwordRules[1] = new JLabel(new String("Length of 8 charcters"));
+passwordRules[2] = new JLabel(new String("At least 1 number, big letter and spacial charcter."));
+
+EmpMgr.add(passwordRules[0]);
+EmpLayout.putConstraint(SpringLayout.WEST, passwordRules[0], 150, SpringLayout.WEST, Fn);
+EmpLayout.putConstraint(SpringLayout.NORTH, passwordRules[0], 0, SpringLayout.SOUTH, PassText);
+EmpMgr.add(passwordRules[1]);
+EmpLayout.putConstraint(SpringLayout.WEST, passwordRules[1], 150, SpringLayout.WEST, Fn);
+EmpLayout.putConstraint(SpringLayout.NORTH, passwordRules[1], 0, SpringLayout.SOUTH, passwordRules[0]);
+EmpMgr.add(passwordRules[2]);
+EmpLayout.putConstraint(SpringLayout.WEST, passwordRules[2], 150, SpringLayout.WEST, Fn);
+EmpLayout.putConstraint(SpringLayout.NORTH, passwordRules[2], 0, SpringLayout.SOUTH, passwordRules[1]);
+
+PassText.addFocusListener(new FocusListener() {
+	
+	@Override
+	public void focusLost(FocusEvent e) {
+		String pattern = "(?=.*[0-9])(?=.*[A-Z])(?=.*[@#$%^&+!=])(?=\\S+$).{8,}";
+		System.out.println(new String(PassText.getPassword()));
+		String password = new String(PassText.getPassword());
+		if (password.matches(pattern) == false)
+		{
+			PassText.setBackground(Color.red);
+			Save.setEnabled(false);
+			passwordValidation = false;
+		}
+		else
+		{
+			PassText.setBackground(Color.green);
+			passwordValidation = true;
+		}
+		
+	}
+	
+	@Override
+	public void focusGained(FocusEvent e) {}
+});
+
+
+
+//////////End Password Rules////////////////
 
 		FnText.getDocument().addDocumentListener(SaveEnabler);
 		PassText.getDocument().addDocumentListener(SaveEnabler);

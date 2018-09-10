@@ -41,6 +41,7 @@ public class MainMenu {
 				try {
 					clientSideConnection.updateInventory();
 					clientSideConnection.updateDicounts();
+					clientSideConnection.updatePrices();
 				} catch (IOException | ParseException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

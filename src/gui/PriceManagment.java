@@ -46,7 +46,8 @@ public class PriceManagment {
 		PriceMenu.setIconImage(img);
 		PriceMenu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		JTextField[] Price = new JTextField[4];
+		JTextField[] price = new JTextField[4];
+		JLabel[] item = new JLabel[4];
 		JPanel PriceMain = new JPanel();
 		SpringLayout DiscLayout = new SpringLayout();
 		PriceMain.setLayout(DiscLayout);
@@ -66,23 +67,14 @@ public class PriceManagment {
 
 		for (int i = 1; i<=4 ; ++i)
 		{
-			Price[i-1] = new JTextField(""+ClientSideConnection.getShop().getPrices(i), 5);
-			PriceMain.add(Price[i-1]);
+			price[i-1] = new JTextField(""+ClientSideConnection.getShop().getPrices(i), 5);
+			PriceMain.add(price[i-1]);
+			item[i-1] = new JLabel("Item Price:");
+			PriceMain.add(item[i-1]);
 		}
 		PriceMain.setBorder(BorderFactory.createTitledBorder("Price Menu"));
 		PriceMain.setBackground(Color.white);
 		PriceMain.setPreferredSize(new Dimension (730 , 510));
-		JLabel Item = new JLabel("Item Price:");
-		PriceMain.add(Item);
-		
-		JLabel Item2 = new JLabel("Item Price:");
-		PriceMain.add(Item2);
-		
-		JLabel Item3 = new JLabel("Item Price:");
-		PriceMain.add(Item3);
-		
-		JLabel Item4 = new JLabel("Item Price:");
-		PriceMain.add(Item4);
 		
 		JButton Save = new JButton("Save");
 		Save.setEnabled(false);
@@ -101,33 +93,33 @@ public class PriceManagment {
 		DiscLayout.putConstraint(SpringLayout.WEST, shirt2, 0, SpringLayout.WEST, PriceMain);
 		DiscLayout.putConstraint(SpringLayout.NORTH, shirt2, 30, SpringLayout.SOUTH, shirt1);
 		
-		DiscLayout.putConstraint(SpringLayout.WEST, Item4, 0, SpringLayout.WEST, Item);
-		DiscLayout.putConstraint(SpringLayout.NORTH, Item4, 50, SpringLayout.NORTH, pants2);
+		DiscLayout.putConstraint(SpringLayout.WEST, item[3], 0, SpringLayout.WEST, item[0]);
+		DiscLayout.putConstraint(SpringLayout.NORTH, item[3], 50, SpringLayout.NORTH, pants2);
 		
-		DiscLayout.putConstraint(SpringLayout.WEST, Item3, 0, SpringLayout.WEST, Item);
-		DiscLayout.putConstraint(SpringLayout.NORTH, Item3, 50, SpringLayout.NORTH, pants1);
+		DiscLayout.putConstraint(SpringLayout.WEST, item[2], 0, SpringLayout.WEST, item[0]);
+		DiscLayout.putConstraint(SpringLayout.NORTH, item[2], 50, SpringLayout.NORTH, pants1);
 		
-		DiscLayout.putConstraint(SpringLayout.WEST, Item2, 20, SpringLayout.EAST, shirt2);
-		DiscLayout.putConstraint(SpringLayout.NORTH, Item2, 50, SpringLayout.NORTH, shirt2);
+		DiscLayout.putConstraint(SpringLayout.WEST, item[1], 20, SpringLayout.EAST, shirt2);
+		DiscLayout.putConstraint(SpringLayout.NORTH, item[1], 50, SpringLayout.NORTH, shirt2);
 		
-		DiscLayout.putConstraint(SpringLayout.WEST, Item, 20, SpringLayout.EAST, shirt1);
-		DiscLayout.putConstraint(SpringLayout.NORTH, Item, 50, SpringLayout.NORTH, shirt1);
+		DiscLayout.putConstraint(SpringLayout.WEST, item[0], 20, SpringLayout.EAST, shirt1);
+		DiscLayout.putConstraint(SpringLayout.NORTH, item[0], 50, SpringLayout.NORTH, shirt1);
 		
-		DiscLayout.putConstraint(SpringLayout.WEST, Price[3], 15, SpringLayout.EAST, Item4);
-		DiscLayout.putConstraint(SpringLayout.NORTH, Price[3], 0, SpringLayout.NORTH, Item4);
-		
-		
-		DiscLayout.putConstraint(SpringLayout.WEST, Price[2], 15, SpringLayout.EAST, Item3);
-		DiscLayout.putConstraint(SpringLayout.NORTH, Price[2], 0, SpringLayout.NORTH, Item3);
+		DiscLayout.putConstraint(SpringLayout.WEST, price[3], 15, SpringLayout.EAST, item[3]);
+		DiscLayout.putConstraint(SpringLayout.NORTH, price[3], 0, SpringLayout.NORTH, item[3]);
 		
 		
-		DiscLayout.putConstraint(SpringLayout.WEST, Price[1], 15, SpringLayout.EAST, Item2);
-		DiscLayout.putConstraint(SpringLayout.NORTH, Price[1], 0, SpringLayout.NORTH, Item2);
+		DiscLayout.putConstraint(SpringLayout.WEST, price[2], 15, SpringLayout.EAST, item[2]);
+		DiscLayout.putConstraint(SpringLayout.NORTH, price[2], 0, SpringLayout.NORTH, item[2]);
 		
-		DiscLayout.putConstraint(SpringLayout.WEST, Price[0], 15, SpringLayout.EAST, Item);
-		DiscLayout.putConstraint(SpringLayout.NORTH, Price[0], 0, SpringLayout.NORTH, Item);
 		
-		DiscLayout.putConstraint(SpringLayout.WEST, Save, 0, SpringLayout.WEST, Price[3]);
+		DiscLayout.putConstraint(SpringLayout.WEST, price[1], 15, SpringLayout.EAST, item[1]);
+		DiscLayout.putConstraint(SpringLayout.NORTH, price[1], 0, SpringLayout.NORTH, item[1]);
+		
+		DiscLayout.putConstraint(SpringLayout.WEST, price[0], 15, SpringLayout.EAST, item[0]);
+		DiscLayout.putConstraint(SpringLayout.NORTH, price[0], 0, SpringLayout.NORTH, item[0]);
+		
+		DiscLayout.putConstraint(SpringLayout.WEST, Save, 0, SpringLayout.WEST, price[3]);
 		DiscLayout.putConstraint(SpringLayout.NORTH, Save, 0, SpringLayout.SOUTH, pants2);
 		
 		DiscLayout.putConstraint(SpringLayout.WEST, Back, 5, SpringLayout.EAST, Save);
@@ -153,10 +145,10 @@ public class PriceManagment {
 				
 			}
 			public void SaveEnable(){
-				if (!Price[0].getText().isEmpty()
-						&& !Price[1].getText().isEmpty()
-						&& !Price[2].getText().isEmpty()
-						&& !Price[3].getText().isEmpty())
+				if (!price[0].getText().isEmpty()
+						&& !price[1].getText().isEmpty()
+						&& !price[2].getText().isEmpty()
+						&& !price[3].getText().isEmpty())
 					Save.setEnabled(true);
 				else
 					Save.setEnabled(false);
@@ -164,10 +156,10 @@ public class PriceManagment {
 			
 		};
 		
-		Price[0].getDocument().addDocumentListener(SaveEnabler);
-		Price[1].getDocument().addDocumentListener(SaveEnabler);
-		Price[2].getDocument().addDocumentListener(SaveEnabler);
-		Price[3].getDocument().addDocumentListener(SaveEnabler);
+		price[0].getDocument().addDocumentListener(SaveEnabler);
+		price[1].getDocument().addDocumentListener(SaveEnabler);
+		price[2].getDocument().addDocumentListener(SaveEnabler);
+		price[3].getDocument().addDocumentListener(SaveEnabler);
 		
 		Back.addActionListener(new ActionListener() {
 			
@@ -185,8 +177,13 @@ public class PriceManagment {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-	
+				int[] prices = new int[4];
+				for (int i = 0; i < 4 ; ++i )
+				{
+					prices[i] = Integer.parseInt(price[i].getText().toString());
+				}
+				ClientSideConnection.setPrices(prices);
+				Save.setEnabled(false);
 			}
 		});
 		

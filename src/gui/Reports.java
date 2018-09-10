@@ -8,6 +8,7 @@ import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.Stack;
 
 import javax.swing.BorderFactory;
@@ -20,6 +21,8 @@ import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+
+import org.json.simple.parser.ParseException;
 
 import clientSide.ClientSideConnection;
 import clientSide.Shop;
@@ -105,6 +108,20 @@ public class Reports {
 			}
 		});
 		
+		RepBtn[0].addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					clientSideConnection.saveSimpleSaveReport();
+				} catch (IOException | ParseException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				RepBtn[0].setEnabled(false);
+				
+			}
+		});
 		
 		RepMenu.setPreferredSize(new Dimension(400,260));
 		RepMenu.add(RepMain);

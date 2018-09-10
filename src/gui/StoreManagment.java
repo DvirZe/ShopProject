@@ -64,6 +64,12 @@ public class StoreManagment {
 		Prices.setFont(font2);
 		Prices.addActionListener(new ActionListener() {
 			public void actionPerformed (ActionEvent ae) {
+				try {
+					clientSideConnection.updatePrices();
+				} catch (IOException | ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				StoreMgr.dispose();
 				new	PriceManagment(clientSideConnection);
 			}

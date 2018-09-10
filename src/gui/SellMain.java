@@ -132,10 +132,7 @@ public class SellMain {
 		SellButtons.add(DiscPrec);
 		SellLayout.putConstraint(SpringLayout.EAST, DiscPrec, 0, SpringLayout.WEST, Price);
 		SellLayout.putConstraint(SpringLayout.NORTH, DiscPrec, 50, SpringLayout.SOUTH, ItemPrice[3]);
-
-		
-		
-		
+	
 
 		SellButtons.add(ItemQuantity[0]);
 		SellLayout.putConstraint(SpringLayout.WEST, ItemQuantity[0], 100, SpringLayout.EAST, Type);

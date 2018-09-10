@@ -47,7 +47,8 @@ public class SupplyManagment {
 	SupplyMenu.setIconImage(img);
 	SupplyMenu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	
-	JTextField[] Quantity = new JTextField[4];
+	JTextField[] quantity = new JTextField[4];
+	JLabel[] item = new JLabel[4];
 	JPanel QuantityMain = new JPanel();
 	SpringLayout DiscLayout = new SpringLayout();
 	QuantityMain.setLayout(DiscLayout);
@@ -66,23 +67,15 @@ public class SupplyManagment {
 	QuantityMain.add(pants2);
 	for (int i = 1; i<=4 ; ++i)
 	{
-		Quantity[i-1] = new JTextField("" + ClientSideConnection.getShop().getInventory(i), 4);
-		QuantityMain.add(Quantity[i-1]);
+		quantity[i-1] = new JTextField("" + ClientSideConnection.getShop().getInventory(i), 4);
+		QuantityMain.add(quantity[i-1]);
+		quantity[i-1].setEnabled(false);
+		item[i-1] = new JLabel("Item Quantity:");
+		QuantityMain.add(item[i-1]);
 	}
 	QuantityMain.setBorder(BorderFactory.createTitledBorder("Supply Menu"));
 	QuantityMain.setBackground(Color.white);
 	QuantityMain.setPreferredSize(new Dimension (730 , 510));
-	JLabel Item = new JLabel("Item Quantity:");
-	QuantityMain.add(Item);
-	
-	JLabel Item2 = new JLabel("Item Quantity:");
-	QuantityMain.add(Item2);
-	
-	JLabel Item3 = new JLabel("Item Quantity:");
-	QuantityMain.add(Item3);
-	
-	JLabel Item4 = new JLabel("Item Quantity:");
-	QuantityMain.add(Item4);
 	
 	JButton Save = new JButton("Save");
 	Save.setEnabled(false);
@@ -101,33 +94,33 @@ public class SupplyManagment {
 	DiscLayout.putConstraint(SpringLayout.WEST, shirt2, 0, SpringLayout.WEST, QuantityMain);
 	DiscLayout.putConstraint(SpringLayout.NORTH, shirt2, 30, SpringLayout.SOUTH, shirt1);
 	
-	DiscLayout.putConstraint(SpringLayout.WEST, Item4, 0, SpringLayout.WEST, Item);
-	DiscLayout.putConstraint(SpringLayout.NORTH, Item4, 50, SpringLayout.NORTH, pants2);
+	DiscLayout.putConstraint(SpringLayout.WEST, item[3], 0, SpringLayout.WEST, item[0]);
+	DiscLayout.putConstraint(SpringLayout.NORTH, item[3], 50, SpringLayout.NORTH, pants2);
 	
-	DiscLayout.putConstraint(SpringLayout.WEST, Item3, 0, SpringLayout.WEST, Item);
-	DiscLayout.putConstraint(SpringLayout.NORTH, Item3, 50, SpringLayout.NORTH, pants1);
+	DiscLayout.putConstraint(SpringLayout.WEST, item[2], 0, SpringLayout.WEST, item[0]);
+	DiscLayout.putConstraint(SpringLayout.NORTH, item[2], 50, SpringLayout.NORTH, pants1);
 	
-	DiscLayout.putConstraint(SpringLayout.WEST, Item2, 20, SpringLayout.EAST, shirt2);
-	DiscLayout.putConstraint(SpringLayout.NORTH, Item2, 50, SpringLayout.NORTH, shirt2);
+	DiscLayout.putConstraint(SpringLayout.WEST, item[1], 20, SpringLayout.EAST, shirt2);
+	DiscLayout.putConstraint(SpringLayout.NORTH, item[1], 50, SpringLayout.NORTH, shirt2);
 	
-	DiscLayout.putConstraint(SpringLayout.WEST, Item, 20, SpringLayout.EAST, shirt1);
-	DiscLayout.putConstraint(SpringLayout.NORTH, Item, 50, SpringLayout.NORTH, shirt1);
+	DiscLayout.putConstraint(SpringLayout.WEST, item[0], 20, SpringLayout.EAST, shirt1);
+	DiscLayout.putConstraint(SpringLayout.NORTH, item[0], 50, SpringLayout.NORTH, shirt1);
 	
-	DiscLayout.putConstraint(SpringLayout.WEST, Quantity[3], 15, SpringLayout.EAST, Item4);
-	DiscLayout.putConstraint(SpringLayout.NORTH, Quantity[3], 0, SpringLayout.NORTH, Item4);
-	
-	
-	DiscLayout.putConstraint(SpringLayout.WEST, Quantity[2], 15, SpringLayout.EAST, Item3);
-	DiscLayout.putConstraint(SpringLayout.NORTH, Quantity[2], 0, SpringLayout.NORTH, Item3);
+	DiscLayout.putConstraint(SpringLayout.WEST, quantity[3], 15, SpringLayout.EAST, item[3]);
+	DiscLayout.putConstraint(SpringLayout.NORTH, quantity[3], 0, SpringLayout.NORTH, item[3]);
 	
 	
-	DiscLayout.putConstraint(SpringLayout.WEST, Quantity[1], 15, SpringLayout.EAST, Item2);
-	DiscLayout.putConstraint(SpringLayout.NORTH, Quantity[1], 0, SpringLayout.NORTH, Item2);
+	DiscLayout.putConstraint(SpringLayout.WEST, quantity[2], 15, SpringLayout.EAST, item[2]);
+	DiscLayout.putConstraint(SpringLayout.NORTH, quantity[2], 0, SpringLayout.NORTH, item[2]);
 	
-	DiscLayout.putConstraint(SpringLayout.WEST, Quantity[0], 15, SpringLayout.EAST, Item);
-	DiscLayout.putConstraint(SpringLayout.NORTH, Quantity[0], 0, SpringLayout.NORTH, Item);
 	
-	DiscLayout.putConstraint(SpringLayout.WEST, Save, 0, SpringLayout.WEST, Quantity[3]);
+	DiscLayout.putConstraint(SpringLayout.WEST, quantity[1], 15, SpringLayout.EAST, item[1]);
+	DiscLayout.putConstraint(SpringLayout.NORTH, quantity[1], 0, SpringLayout.NORTH, item[1]);
+	
+	DiscLayout.putConstraint(SpringLayout.WEST, quantity[0], 15, SpringLayout.EAST, item[0]);
+	DiscLayout.putConstraint(SpringLayout.NORTH, quantity[0], 0, SpringLayout.NORTH, item[0]);
+	
+	DiscLayout.putConstraint(SpringLayout.WEST, Save, 0, SpringLayout.WEST, quantity[3]);
 	DiscLayout.putConstraint(SpringLayout.NORTH, Save, 0, SpringLayout.SOUTH, pants2);
 	
 	DiscLayout.putConstraint(SpringLayout.WEST, Back, 5, SpringLayout.EAST, Save);
@@ -153,10 +146,10 @@ public class SupplyManagment {
 			
 		}
 		public void SaveEnable(){
-			if (!Quantity[0].getText().isEmpty()
-					&& !Quantity[1].getText().isEmpty()
-					&& !Quantity[2].getText().isEmpty()
-					&& !Quantity[3].getText().isEmpty())
+			if (!quantity[0].getText().isEmpty()
+					&& !quantity[1].getText().isEmpty()
+					&& !quantity[2].getText().isEmpty()
+					&& !quantity[3].getText().isEmpty())
 				Save.setEnabled(true);
 			else
 				Save.setEnabled(false);
@@ -164,10 +157,10 @@ public class SupplyManagment {
 		
 	};
 	
-	Quantity[0].getDocument().addDocumentListener(SaveEnabler);
-	Quantity[1].getDocument().addDocumentListener(SaveEnabler);
-	Quantity[2].getDocument().addDocumentListener(SaveEnabler);
-	Quantity[3].getDocument().addDocumentListener(SaveEnabler);
+	quantity[0].getDocument().addDocumentListener(SaveEnabler);
+	quantity[1].getDocument().addDocumentListener(SaveEnabler);
+	quantity[2].getDocument().addDocumentListener(SaveEnabler);
+	quantity[3].getDocument().addDocumentListener(SaveEnabler);
 	
 	Back.addActionListener(new ActionListener() {
 		

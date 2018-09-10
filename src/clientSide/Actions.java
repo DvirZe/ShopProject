@@ -19,4 +19,11 @@ public class Actions { //to organized
 	public int setDiscounts() { return 8; }
 	
 	public int updateDiscounts() { return 9; }
+	
+	public int setPrices() { return 10; }
+	
+	public int updatePrices() { return 11; }
+	
+	public int sellsRepoet() { return 12; }
+	
 }

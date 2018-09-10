@@ -61,6 +61,16 @@ public class serverClass extends Thread {
 			break;	
 		case "9":
 			sendDiscounts();
+			break;
+		case "10":
+			updatePrices(json);
+			break;	
+		case "11":
+			sendPrices();
+			break;	
+		case "12":
+			sendSellsRepoet(json);
+			break;
 		default:
 			break;
 		}
@@ -126,7 +136,6 @@ public class serverClass extends Thread {
 		{
 			JSONArray customersDetails = new JSONArray();
 			customersDetails = (JSONArray) customers.get(json.get("customerId"));
-			System.out.println(customers.get(json.get("customerId")));
 			json.put("name", customersDetails.get(0));
 			json.put("phoneNr", customersDetails.get(1));
 			json.put("customerType", customersDetails.get(2));
@@ -135,7 +144,6 @@ public class serverClass extends Thread {
 		{
 			json.put("customerId","not found");
 		}
-		System.out.println(json);
 		sendToClient(json);
 	}
 	
@@ -162,26 +170,27 @@ public class serverClass extends Thread {
 		logs.workersLog(json);
 	}
 	
-	public void updateCustomer(JSONObject json)
+	public void updateCustomer(JSONObject json) throws IOException
 	{
 		JSONArray customerDetails = new JSONArray();
 		customerDetails.add(0, json.get("name"));
 		customerDetails.add(1, json.get("phoneNr"));
 		customerDetails.add(2, json.get("customerType"));
-		System.out.println(customerDetails);
 		if (customers.containsKey(json.get("customerId")))
 		{//Update customer
 			customers.replace(json.get("customerId"), customerDetails);
-			System.out.println("222: " + customers);
+			json.replace("Action", "Update");
 		}
 		else { //new customer
 			customers.put(json.get("customerId"), customerDetails);
-			System.out.println(customers);
+			json.replace("Action", "Create");
 		}
+		json.put("Worker", logedInUserID);
+		logs.clientsLog(json);
 	}
 	
-	public void saveSell(JSONObject json) throws IOException {
-		JSONArray newInventory = new JSONArray();
+	public synchronized void saveSell(JSONObject json) throws IOException {
+		JSONArray newInventory = new JSONArray();	
 		JSONArray curInventory = (JSONArray) shop.get("Inventory");
 		newInventory.add(Integer.parseInt(curInventory.get(0).toString())-Integer.parseInt(json.get("shirt1").toString()));
 		newInventory.add(Integer.parseInt(curInventory.get(1).toString())-Integer.parseInt(json.get("shirt2").toString()));
@@ -189,7 +198,16 @@ public class serverClass extends Thread {
 		newInventory.add(Integer.parseInt(curInventory.get(3).toString())-Integer.parseInt(json.get("pants2").toString()));
 		shop.replace("Inventory", newInventory);
 		curInventory = newInventory;
+		logs.selesLog(json);
+		shop.replace("TotalSelles", Integer.parseInt(shop.get("TotalSelles").toString())+1);
+		JSONArray sellesHistoryTmp =  (JSONArray) shop.get("sellesHistory");
+		sellesHistoryTmp.set(0, Integer.parseInt(sellesHistoryTmp.get(0).toString()) + Integer.parseInt(json.get("shirt1").toString()));
+		sellesHistoryTmp.set(1, Integer.parseInt(sellesHistoryTmp.get(1).toString()) + Integer.parseInt(json.get("shirt2").toString()));
+		sellesHistoryTmp.set(2, Integer.parseInt(sellesHistoryTmp.get(2).toString()) + Integer.parseInt(json.get("pants1").toString()));
+		sellesHistoryTmp.set(3, Integer.parseInt(sellesHistoryTmp.get(3).toString()) + Integer.parseInt(json.get("pants2").toString()));
+		shop.replace("sellesHistory",sellesHistoryTmp);
 	}
+	
 	
 	public void sendInventory() throws IOException {	
 		JSONObject json = new JSONObject();
@@ -215,6 +233,24 @@ public class serverClass extends Thread {
 		sendToClient(discounts);
 	}
 	
+	public void updatePrices(JSONObject json)
+	{
+		shop.replace("Price", json.get("newPrices"));
+	}
+	
+	public void sendPrices() throws IOException
+	{
+		JSONObject prices = new JSONObject();
+		prices.put("Prices", shop.get("Price"));
+		sendToClient(prices);
+	}
+	
+	public void sendStats()
+	{
+		JSONObject stats = new JSONObject();
+		stats.put("TotalSelles", shop.get("TotalSelles").toString());
+	}
+	
 	public void logout() throws IOException {
 		 JSONArray workerDetails = new JSONArray();
 		 workerDetails = (JSONArray) workers.get(""+logedInUserID);
@@ -231,6 +267,12 @@ public class serverClass extends Thread {
 	{
 		PrintWriter printWriter = new PrintWriter(socket.getOutputStream(),true);
 		printWriter.println(json);
+	}
+	
+	public void sendSellsRepoet(JSONObject json) throws FileNotFoundException, IOException, ParseException
+	{
+		GenerateReports gr = new GenerateReports();
+		gr.createSellReport(this, shop.get("shopName").toString(), json);
 	}
 	
 	public void run() {

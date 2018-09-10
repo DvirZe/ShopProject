@@ -1,14 +1,25 @@
 package clientSide;
 
+import java.awt.Desktop;
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.Random;
 
 import javax.net.ssl.SSLSocketFactory;
 
+import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
+import org.apache.poi.xwpf.usermodel.UnderlinePatterns;
+import org.apache.poi.xwpf.usermodel.VerticalAlign;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -60,7 +71,6 @@ public class ClientSideConnection extends Thread {
 		json.put("password", password);
 		SendToServer(json);
 		String msg = socketBufferedReader.readLine();
-		//System.out.println(msg);
 		JSONParser parser = new JSONParser();
 		json = (JSONObject)parser.parse(msg);
 		int status = Integer.parseInt(json.get("Status").toString());
@@ -78,7 +88,6 @@ public class ClientSideConnection extends Thread {
 	{
 		JSONObject json = new JSONObject();
 		String msg = socketBufferedReader.readLine();
-		//System.out.println(msg);
 		JSONParser parser = new JSONParser();
 		json = (JSONObject)parser.parse(msg);
 		return json;
@@ -121,7 +130,6 @@ public class ClientSideConnection extends Thread {
 		{
 			return null;
 		}
-		System.out.println(json);
 		return new Customer(id,
 						  json.get("name").toString(),
 						  json.get("phoneNr").toString(),
@@ -144,7 +152,6 @@ public class ClientSideConnection extends Thread {
 		workerJson.put("job", worker.getJob());
 		workerJson.put("password", worker.getPassword());
 		workerJson.put("login", worker.getLoginStatus());
-		System.out.println(workerJson);
 		SendToServer(workerJson);
 	}
 	
@@ -155,7 +162,6 @@ public class ClientSideConnection extends Thread {
 		customerJson.put("name", customer.getName());
 		customerJson.put("phoneNr", customer.getPhoneNr());
 		customerJson.put("customerType", customer.getType());
-		System.out.println(customerJson);
 		SendToServer(customerJson);
 	}
 	
@@ -184,11 +190,98 @@ public class ClientSideConnection extends Thread {
 	{
 		JSONObject json = new JSONObject();
 		json.put("Action", action.updateDiscounts());
-		System.out.println(json);
 		SendToServer(json);
 		JSONObject updatedDiscounts = getFromServer();
-		System.out.println(updatedDiscounts);
 		shop.setDiscount(Double.parseDouble(updatedDiscounts.get("VIP").toString()), Double.parseDouble(updatedDiscounts.get("Return").toString()));
+	}
+	
+	public void setPrices(int[] prices)
+	{
+		JSONObject json = new JSONObject();
+		json.put("Action", action.setPrices());
+		JSONArray pricesArr = new JSONArray();
+		for (int i = 0; i<4 ; ++i)
+		{
+			pricesArr.add(prices[i]);
+		}
+		json.put("newPrices", pricesArr);
+		SendToServer(json);
+	}
+	
+	public void updatePrices() throws IOException, ParseException
+	{
+		JSONObject json = new JSONObject();
+		json.put("Action", action.updatePrices());
+		SendToServer(json);
+		JSONObject updatedPrices = getFromServer();
+		JSONArray tmpJsonArr = new JSONArray();
+		tmpJsonArr = (JSONArray) updatedPrices.get("Prices");
+		int[] tmpPriceArr = new int[4];
+		for (int i = 0; i < 4; ++i )
+		{
+			tmpPriceArr[i] = Integer.parseInt(tmpJsonArr.get(i).toString());
+		}
+		shop.setPrices(tmpPriceArr);
+	}
+	
+	public void saveSimpleSaveReport() throws IOException, ParseException
+	{
+		JSONObject json = new JSONObject();
+		json.put("Action", action.sellsRepoet());
+		SendToServer(json);
+		JSONObject simpleReport = getFromServer();
+		simpleReport.put("fileName", "SimpleReport");
+		simpleReport.put("title", "Simple Sell Report");
+		createWordFile(simpleReport);
+	}
+	
+	public void saveReportByItem(String item) throws IOException, ParseException
+	{
+		JSONObject json = new JSONObject();
+		json.put("Action", action.sellsRepoet());
+		json.put("Item", item);
+		SendToServer(json);
+		JSONObject Report = getFromServer();
+		Report.put("title", item + " Sell Report");
+		item.replace(" ", "_");
+		Report.put("fileName", item +"_Report");
+		createWordFile(Report);
+	}
+	
+	public void createWordFile(JSONObject json) throws IOException
+	{
+		String fileName = json.get("fileName").toString() + "_" + new Random().nextInt(Integer.MAX_VALUE);
+		json.remove("fileName");
+		XWPFDocument document = new XWPFDocument(); 
+		FileOutputStream out = new FileOutputStream( new File(".\\"+ fileName +".docx"));
+		
+	    XWPFParagraph title = document.createParagraph();
+	    XWPFRun titleText = title.createRun();
+	    
+	    titleText.setText(json.get("title").toString());
+	    titleText.setBold(true);
+	    title.setAlignment(ParagraphAlignment.CENTER);
+	    titleText.addBreak();
+	    titleText.setUnderline(UnderlinePatterns.SINGLE);
+	    titleText.setFontSize(20);
+	    
+		XWPFParagraph paragraph = document.createParagraph();
+		XWPFRun run = paragraph.createRun();	    
+	    
+	    paragraph.setAlignment(ParagraphAlignment.RIGHT);
+	    
+	    System.out.println(json);
+
+	    for (int i = 1 ; i< json.size() ; ++i)
+	    {
+	    	 run.setText("#"+ i + " - " + json.get(""+i).toString());
+	    	 run.addBreak();
+	    }
+	    
+	    document.write(out);
+	    out.close();
+	    
+	    Desktop.getDesktop().open(new File(".\\"+ fileName + ".docx"));
 	}
 	
 	public void endSell() { 

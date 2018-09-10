@@ -54,7 +54,6 @@ public class Shop {
 		{
 			int curInv = Inventory.get(i+1).get(0);
 			Inventory.get(i+1).set(0, curInv-shopCart.getCartItems(i));
-			System.out.println("curInv: " + curInv +"   now:" + Inventory.get(i+1).get(0));
 		}
 		JSONObject sell = new JSONObject();
 		sell.put("shopName", this.shopName);
@@ -85,11 +84,7 @@ public class Shop {
 	
 	
 	public Double getDiscountForCustomer(String type)
-	{
-		
-		System.out.println(customerTypeReturn.getCustomerTypeName());
-		System.out.println(customerTypeVip.getCustomerTypeName());
-		
+	{		
 		switch(type)
 		{
 			case "Return":
@@ -105,6 +100,15 @@ public class Shop {
 	{
 		customerTypeReturn.setCustomerTypeDiscount(returned);
 		customerTypeVip.setCustomerTypeDiscount(vip);
+	}
+	
+	public void setPrices(int newPriceArr[])
+	{ 
+		for (int i = 1; i<= 4; ++i)
+		{
+			Inventory.get(i).set(1, newPriceArr[i-1]);
+		}
+		
 	}
 	
 	public int getWorkerOnline() { return workerOnline; }
