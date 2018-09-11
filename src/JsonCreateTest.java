@@ -1,3 +1,5 @@
+import java.awt.List;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -6,17 +8,20 @@ import java.security.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.TreeMap;
 import java.util.Vector;
+import java.util.ArrayList;
 import java.util.Date;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 public class JsonCreateTest {
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException, ParseException {
 		// TODO Auto-generated method stub
 		//TreeMap<String,Object> tmpShop = new TreeMap<String,Object>();
 		////JSONObject json = new JSONObject();
@@ -73,14 +78,35 @@ public class JsonCreateTest {
 				e.printStackTrace();
 			}*/
 
-		FileWriter log = new FileWriter("./files/sales.log",true);
+		/*FileWriter log = new FileWriter("./files/sales.log",true);
 		log.write(
 				 new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date())
 		+ "\n"
 				
 				
 				);
-		log.close();
+		log.close();*/
+		JSONObject json = new JSONObject();
+		JSONArray jsonArray = new JSONArray();
+		
+		int i = 1;
+		Scanner sc = new Scanner(new File("./files/sells.log"));
+		ArrayList<String> lines = new ArrayList<String>();
+		while (sc.hasNextLine()) {
+		  lines.add(sc.nextLine());
+		}
+
+		String[] arr = lines.toArray(new String[0]);
+		
+		for (String index : arr)
+		{
+			if (index.contains("Shop2"))
+			{
+				String sb = index.substring(index.indexOf("Customer:"));
+				json.put(i++, sb);
+			}
+		}
+		System.out.println(json);
 	}
 
 }

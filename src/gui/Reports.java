@@ -123,6 +123,51 @@ public class Reports {
 			}
 		});
 		
+		RepBtn[1].addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					clientSideConnection.saveReportByItem("Pants 1");
+				} catch (IOException | ParseException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				RepBtn[1].setEnabled(false);
+				
+			}
+		});
+		
+		RepBtn[2].addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					clientSideConnection.saveReportByType("Pants");
+				} catch (IOException | ParseException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				RepBtn[2].setEnabled(false);
+				
+			}
+		});
+		
+		RepBtn[3].addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					clientSideConnection.saveReportByDate("10-09-2018");
+				} catch (IOException | ParseException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				RepBtn[3].setEnabled(false);
+				
+			}
+		});
+		
 		RepMenu.setPreferredSize(new Dimension(400,260));
 		RepMenu.add(RepMain);
 		RepMenu.pack();

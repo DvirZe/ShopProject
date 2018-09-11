@@ -89,6 +89,7 @@ public class serverClass extends Thread {
 			 answer.put("Job", workerDetails.get(5));
 			 System.out.println("Send ok to client!");
 			 workerDetails.set(7, 1); //Set user as logged in
+			 workerDetails.set(8, socket.getPort()); //Save connection port
 			 workers.get(json.get("personalID"));
 			 JSONParser parser = new JSONParser();
 			 String shopName = workerDetails.get(4).toString();
@@ -206,6 +207,12 @@ public class serverClass extends Thread {
 		sellesHistoryTmp.set(2, Integer.parseInt(sellesHistoryTmp.get(2).toString()) + Integer.parseInt(json.get("pants1").toString()));
 		sellesHistoryTmp.set(3, Integer.parseInt(sellesHistoryTmp.get(3).toString()) + Integer.parseInt(json.get("pants2").toString()));
 		shop.replace("sellesHistory",sellesHistoryTmp);
+		JSONArray coustomer = (JSONArray) customers.get(json.get("customerId"));
+		if (coustomer.get(2).equals("New")) //Change coustomer Type from new to return after the first buy
+		{
+			coustomer.set(2, "Return");
+			customers.replace("customerId", coustomer);
+		}
 	}
 	
 	
@@ -255,6 +262,7 @@ public class serverClass extends Thread {
 		 JSONArray workerDetails = new JSONArray();
 		 workerDetails = (JSONArray) workers.get(""+logedInUserID);
 		 workerDetails.set(7, 0); //Set user as logged out 
+		 workerDetails.set(8, 0); //Set user port as 0 (offline)
 		 JSONObject logout = new JSONObject();
 		 logout.put("shopName", workerDetails.get(4));
 		 logout.put("personalID", logedInUserID);

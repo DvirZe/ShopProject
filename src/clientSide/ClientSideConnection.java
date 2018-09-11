@@ -243,14 +243,38 @@ public class ClientSideConnection extends Thread {
 		SendToServer(json);
 		JSONObject Report = getFromServer();
 		Report.put("title", item + " Sell Report");
-		item.replace(" ", "_");
+		item = item.replace(" ", "_");
 		Report.put("fileName", item +"_Report");
+		createWordFile(Report);
+	}
+	
+	public void saveReportByType(String type) throws IOException, ParseException
+	{
+		JSONObject json = new JSONObject();
+		json.put("Action", action.sellsRepoet());
+		json.put("Type", type);
+		SendToServer(json);
+		JSONObject Report = getFromServer();
+		Report.put("title", type + " Sell Report");
+		Report.put("fileName", type +"_Report");
+		createWordFile(Report);
+	}
+	
+	public void saveReportByDate(String date) throws IOException, ParseException
+	{
+		JSONObject json = new JSONObject();
+		json.put("Action", action.sellsRepoet());
+		json.put("Date", date);
+		SendToServer(json);
+		JSONObject Report = getFromServer();
+		Report.put("title", date + " Sell Report");
+		Report.put("fileName", date +"_Report");
 		createWordFile(Report);
 	}
 	
 	public void createWordFile(JSONObject json) throws IOException
 	{
-		String fileName = json.get("fileName").toString() + "_" + new Random().nextInt(Integer.MAX_VALUE);
+		String fileName = json.get("fileName").toString() + "_" + new Random().nextInt(Integer.MAX_VALUE);		
 		json.remove("fileName");
 		XWPFDocument document = new XWPFDocument(); 
 		FileOutputStream out = new FileOutputStream( new File(".\\"+ fileName +".docx"));
@@ -269,8 +293,6 @@ public class ClientSideConnection extends Thread {
 		XWPFRun run = paragraph.createRun();	    
 	    
 	    paragraph.setAlignment(ParagraphAlignment.RIGHT);
-	    
-	    System.out.println(json);
 
 	    for (int i = 1 ; i< json.size() ; ++i)
 	    {
@@ -287,7 +309,6 @@ public class ClientSideConnection extends Thread {
 	public void endSell() { 
 		JSONObject sell = shop.endSell();
 		sell.put("Action", action.sellAction());
-		System.out.println(sell);
 		SendToServer(sell);
 	}
 	

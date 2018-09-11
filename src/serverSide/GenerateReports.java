@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import javax.sound.sampled.Line;
+
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -24,8 +26,9 @@ public class GenerateReports {
 		
 		String[] sellsRecords = lines.toArray(new String[0]);
 		
-		if (json.containsKey("Item")) { reportByType(sc, shop, json, sellsRecords); } 
-		else if (json.containsKey("type")) {}
+		if (json.containsKey("Item")) { reportByItem(sc, shop, json, sellsRecords); } 
+		else if (json.containsKey("Type")) { reportByType(sc, shop, json, sellsRecords); }
+		else if (json.containsKey("Date")) {reportByDate(sc, shop, json, sellsRecords); }
 		else { simpleReport(sc, shop, json, sellsRecords); }
 	}
 	
@@ -45,7 +48,7 @@ public class GenerateReports {
 		sc.sendToClient(report);
 	}
 	
-	public void reportByType(serverClass sc, String shop, JSONObject json, String[] sellsRecords) throws IOException
+	public void reportByItem(serverClass sc, String shop, JSONObject json, String[] sellsRecords) throws IOException
 	{
 		JSONObject report = new JSONObject();
 		int i = 1;
@@ -53,8 +56,67 @@ public class GenerateReports {
 		{
 			if (index.contains(shop) && index.contains("Sell") && !index.contains(json.get("Item").toString()+": 0"))
 			{
-				String sb = index.substring(index.indexOf("Customer:"));
+				String sb = index.substring(index.indexOf("Customer:"), index.indexOf(" Shirt 1:"));
+				String[] spliting = index.split(",");
+				for (String s : spliting)
+				{
+					if (s.contains(json.get("Item").toString()))
+					{
+						sb = sb.concat(s + " - ");
+					}
+				}
+				sb = sb.concat(index.substring(index.length()-19));
 				report.put(i++, sb);
+			}
+		}
+		sc.sendToClient(report);
+	}
+	
+	public void reportByType(serverClass sc, String shop, JSONObject json, String[] sellsRecords) throws IOException
+	{
+		JSONObject report = new JSONObject();
+		String[] inTypes = new String[2];
+		int i = 1;
+		if (json.get("Type") == "Shirt")
+		{
+			inTypes[0] = "Shirt 1";
+			inTypes[1] = "Shirt 2";
+		}
+		else
+		{
+			inTypes[0] = "Pants 1";
+			inTypes[1] = "Pants 2";
+		}
+		for (String index : sellsRecords)
+		{
+			if (index.contains(shop) && index.contains("Sell") && (!index.contains(inTypes[0]+": 0") || !index.contains(inTypes[1]+": 0")))
+			{
+				String sb = index.substring(index.indexOf("Customer:"), index.indexOf(" Shirt 1:"));
+				String[] spliting = index.split(",");
+				for (String s : spliting)
+				{
+					if (s.contains(json.get("Type").toString()))
+					{
+						sb = sb.concat(s + " - ");
+					}
+				}
+				sb = sb.concat(index.substring(index.length()-19));
+				sb = sb.replace(" -  ", ", ");
+				report.put(i++, sb);
+			}
+		}
+		sc.sendToClient(report);
+	}
+	
+	public void reportByDate(serverClass sc, String shop, JSONObject json, String[] sellsRecords) throws IOException
+	{
+		JSONObject report = new JSONObject();
+		int i = 1;
+		for (String index : sellsRecords)
+		{
+			if (index.contains(shop) && index.contains("Sell") && index.contains(json.get("Date").toString()))
+			{
+				report.put(i++, index);
 			}
 		}
 		sc.sendToClient(report);
