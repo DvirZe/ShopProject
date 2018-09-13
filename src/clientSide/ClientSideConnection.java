@@ -8,6 +8,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Random;
@@ -25,6 +26,8 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import chat.GetConnection;
+import chat.OpenConnection;
 import gui.Login;
 
 
@@ -59,7 +62,7 @@ public class ClientSideConnection extends Thread {
 			e.printStackTrace();
 		}
 		commandBufferedReader = new BufferedReader(new InputStreamReader(System.in));
-		shopGui = new Login(this);
+		shopGui = new Login(this);	
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -69,13 +72,24 @@ public class ClientSideConnection extends Thread {
 		json.put("Action",action.loginAction());
 		json.put("personalID", id);
 		json.put("password", password);
+		
+		try {
+			ServerSocket newPort = new ServerSocket(0);
+			int portForChat = newPort.getLocalPort()+2000;
+			new GetConnection(portForChat).start(); //Get new Random free port for chat
+			json.put("portForChat", portForChat);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		SendToServer(json);
 		String msg = socketBufferedReader.readLine();
 		JSONParser parser = new JSONParser();
 		json = (JSONObject)parser.parse(msg);
 		int status = Integer.parseInt(json.get("Status").toString());
 		if (status == 1)
-			shop = new Shop(json);
+			shop = new Shop(json);	
 		return Integer.parseInt(json.get("Status").toString());
 	}
 	
@@ -306,10 +320,27 @@ public class ClientSideConnection extends Thread {
 	    Desktop.getDesktop().open(new File(".\\"+ fileName + ".docx"));
 	}
 	
-	public void endSell() { 
+	public void endSell() {
 		JSONObject sell = shop.endSell();
 		sell.put("Action", action.sellAction());
 		SendToServer(sell);
+	}
+	
+	public void startChat() throws IOException, ParseException {
+		JSONObject json = new JSONObject();
+		json.put("Action", action.startChat());
+		SendToServer(json);
+		JSONObject details = getFromServer();
+		if (details.containsKey("User2Port")) {
+			new OpenConnection(Integer.parseInt(details.get("User2Port").toString())).start();
+		} else System.out.println("No Online");
+		
+	}
+	
+	public void agreeChat() throws IOException {
+		ServerSocket chatAgree = new ServerSocket(socket.getPort());
+		System.out.println("Ready for connaction...");
+		//new GetConnection(chatAgree.accept()).start();
 	}
 	
 	public static void main(String[] args) throws UnknownHostException, IOException

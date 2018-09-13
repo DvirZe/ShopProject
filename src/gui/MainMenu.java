@@ -92,14 +92,19 @@ public class MainMenu {
 			}
 		});
 		
-				JButton Chat = new JButton("Start Chat with other branch");
+		JButton Chat = new JButton("Start Chat with other branch");
 		Main.add(Chat);
 		Chat.setFont(font2);
 		Chat.addActionListener(new ActionListener() {
 			public void actionPerformed (ActionEvent ae) {
-				Main.dispose();
-				new	MainMenu(clientSideConnection);
-				
+				//Main.dispose();
+				//new	MainMenu(clientSideConnection);
+				try {
+					clientSideConnection.startChat();
+				} catch (IOException | ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		});
 		Main.setVisible(true);

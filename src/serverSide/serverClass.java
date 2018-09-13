@@ -8,6 +8,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.Iterator;
+import java.util.Set;
+
+import javax.swing.JComboBox.KeySelectionManager;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -71,6 +75,9 @@ public class serverClass extends Thread {
 		case "12":
 			sendSellsRepoet(json);
 			break;
+		case "13":
+			chatLookup();
+			break;
 		default:
 			break;
 		}
@@ -89,7 +96,7 @@ public class serverClass extends Thread {
 			 answer.put("Job", workerDetails.get(5));
 			 System.out.println("Send ok to client!");
 			 workerDetails.set(7, 1); //Set user as logged in
-			 workerDetails.set(8, socket.getPort()); //Save connection port
+			 workerDetails.set(8, json.get("portForChat")); //Save connection port
 			 workers.get(json.get("personalID"));
 			 JSONParser parser = new JSONParser();
 			 String shopName = workerDetails.get(4).toString();
@@ -107,6 +114,7 @@ public class serverClass extends Thread {
 		 }
 		 sendToClient(answer);
 		 logs.loginsLog(answer);
+		 System.out.println(workers);
 	}
 	
 	public void findWorker(JSONObject json) throws IOException
@@ -214,8 +222,7 @@ public class serverClass extends Thread {
 			customers.replace("customerId", coustomer);
 		}
 	}
-	
-	
+
 	public void sendInventory() throws IOException {	
 		JSONObject json = new JSONObject();
 		JSONArray curInventory = (JSONArray) shop.get("Inventory");
@@ -270,7 +277,6 @@ public class serverClass extends Thread {
 		 workers.replace(logedInUserID, workerDetails);
 	}
 
-	
 	public void sendToClient(JSONObject json) throws IOException
 	{
 		PrintWriter printWriter = new PrintWriter(socket.getOutputStream(),true);
@@ -281,6 +287,19 @@ public class serverClass extends Thread {
 	{
 		GenerateReports gr = new GenerateReports();
 		gr.createSellReport(this, shop.get("shopName").toString(), json);
+	}
+	
+	public void chatLookup() throws IOException {
+		Set<String> keys = workers.keySet();
+		JSONObject answer = new JSONObject();
+		JSONArray loginWorker = (JSONArray) workers.get(""+logedInUserID);
+		for (String id : keys) {
+			JSONArray worker = (JSONArray) workers.get(id);
+			if ((Integer.parseInt(worker.get(7).toString()) == 1) && (Integer.parseInt(worker.get(9).toString()) == 0) && (worker.equals(loginWorker)) ) {
+				answer.put("User2Port", worker.get(8));
+			} else answer.put("notFound", 1);
+		}
+		sendToClient(answer);
 	}
 	
 	public void run() {

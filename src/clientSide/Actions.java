@@ -26,4 +26,6 @@ public class Actions { //to organized
 	
 	public int sellsRepoet() { return 12; }
 	
+	public int startChat() { return 13; }
+	
 }
