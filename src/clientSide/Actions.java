@@ -28,4 +28,7 @@ public class Actions { //to organized
 	
 	public int startChat() { return 13; }
 	
+	public int getStats() { return 14; }
+
+	
 }

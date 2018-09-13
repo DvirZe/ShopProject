@@ -11,6 +11,9 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Random;
 
 import javax.net.ssl.SSLSocketFactory;
@@ -247,6 +250,21 @@ public class ClientSideConnection extends Thread {
 		simpleReport.put("fileName", "SimpleReport");
 		simpleReport.put("title", "Simple Sell Report");
 		createWordFile(simpleReport);
+	}
+
+	public LinkedHashMap<String, String> getStats() throws IOException, ParseException {
+		LinkedHashMap<String, String> stats = new LinkedHashMap<String, String>();
+		JSONObject request = new JSONObject();
+		request.put("Action", action.getStats());
+		SendToServer(request);
+		JSONObject answer = getFromServer();
+		stats.put("TotalSelles", answer.get("TotalSelles").toString());
+		JSONArray sellesHistory = (JSONArray) answer.get("sellesHistory");
+		stats.put("Shirt 1",sellesHistory.get(0).toString());
+		stats.put("Shirt 2",sellesHistory.get(1).toString());
+		stats.put("Pants 1",sellesHistory.get(2).toString());
+		stats.put("Pants 2",sellesHistory.get(3).toString());
+		return stats;
 	}
 	
 	public void saveReportByItem(String item) throws IOException, ParseException

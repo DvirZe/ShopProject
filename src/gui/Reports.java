@@ -11,9 +11,13 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Stack;
 import java.util.spi.CalendarDataProvider;
 
@@ -39,9 +43,20 @@ public class Reports {
 
 	Reports(ClientSideConnection clientSideConnection){
 		
+		LinkedHashMap<String, String> stats = new LinkedHashMap<String, String>();
+		try { //Get the info for the screen
+			stats = clientSideConnection.getStats();
+		} catch (IOException e2) {
+			e2.printStackTrace();
+		} catch (ParseException e2) {
+			e2.printStackTrace();
+		}
+		
+		System.out.println(stats);
+		
 		JComboBox<String> ItemType , Item;
 		ItemType = new JComboBox<String>(new String[] {"Shirt","Pants"} );
-		Item = new JComboBox<String>(new String[] {"White Shirt", "Black Shirt","White Pants" , "Black Pants"} );
+		Item = new JComboBox<String>(new String[] {"Shirt 1", "Shirt 2","Pants 1" , "Pants 2"} );
 		Font font2 = new Font("Ariel",Font.BOLD,14);
 		JFrame RepMenu = new JFrame();
 		RepMenu.setTitle("Generatre reports");
@@ -59,6 +74,7 @@ public class Reports {
 		Date currDate = new Date();
 		Date.setDate(currDate);
 		Date.setPreferredSize(new Dimension(100, 20));
+		Date.setMaxSelectableDate(currDate);
 		JButton[] RepBtn = new JButton[4];
 		JTextField[] DataField = new JTextField[7];
 		JPanel RepMain = new JPanel();
@@ -67,14 +83,6 @@ public class Reports {
 		RepMain.add(Date);
 		RepMain.add(ItemType);
 		RepMain.add(Item);
-		
-		Date.addPropertyChangeListener(new PropertyChangeListener() {
-
-		    @Override
-		    public void propertyChange(PropertyChangeEvent e) {
-		        RepBtn[3].setEnabled(true); 
-		    }
-		});
 		
 		
 		for (int j =1 ; j<=7 ; ++j) {
@@ -218,14 +226,13 @@ public class Reports {
 			}
 		});
 		
-		RepBtn[0].addActionListener(new ActionListener() {
+		RepBtn[0].addActionListener(new ActionListener() { //General reports
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
 					clientSideConnection.saveSimpleSaveReport();
 				} catch (IOException | ParseException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 				RepBtn[0].setEnabled(false);
@@ -233,14 +240,13 @@ public class Reports {
 			}
 		});
 		
-		RepBtn[1].addActionListener(new ActionListener() {
+		RepBtn[1].addActionListener(new ActionListener() { //Report by Item
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					clientSideConnection.saveReportByItem("Pants 1");
+					clientSideConnection.saveReportByItem(Item.getSelectedItem().toString());
 				} catch (IOException | ParseException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 				RepBtn[1].setEnabled(false);
@@ -248,14 +254,13 @@ public class Reports {
 			}
 		});
 		
-		RepBtn[2].addActionListener(new ActionListener() {
+		RepBtn[2].addActionListener(new ActionListener() { //Report by Type
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					clientSideConnection.saveReportByType("Pants");
+					clientSideConnection.saveReportByType(ItemType.getSelectedItem().toString());
 				} catch (IOException | ParseException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 				RepBtn[2].setEnabled(false);
@@ -263,14 +268,13 @@ public class Reports {
 			}
 		});
 		
-		RepBtn[3].addActionListener(new ActionListener() {
+		RepBtn[3].addActionListener(new ActionListener() { //Report by Date
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					clientSideConnection.saveReportByDate("10-09-2018");
+					clientSideConnection.saveReportByDate(new SimpleDateFormat("dd-MM-yyyy").format(Date.getDate()));
 				} catch (IOException | ParseException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 				RepBtn[3].setEnabled(false);
@@ -278,7 +282,40 @@ public class Reports {
 			}
 		});
 		
+		////Update text fields
+		DataField[0].setText(stats.get("TotalSelles"));
+		DataField[1].setText(""+(Integer.parseInt(stats.get("Shirt 1").toString()) + Integer.parseInt(stats.get("Shirt 2").toString())));
+		DataField[2].setText(stats.get("Shirt 1"));
+		DataField[3].setText(stats.get("Shirt 2"));
+		DataField[4].setText(""+(Integer.parseInt(stats.get("Pants 1").toString()) + Integer.parseInt(stats.get("Pants 2").toString())));
+		DataField[5].setText(stats.get("Pants 1"));
+		DataField[6].setText(stats.get("Pants 2"));
 		
+		//Reactivate Export Button
+		Date.addPropertyChangeListener(new PropertyChangeListener() { //When change date
+
+		    @Override
+		    public void propertyChange(PropertyChangeEvent e) {
+		        RepBtn[3].setEnabled(true); 
+		    }
+		});
+		
+		Item.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				RepBtn[1].setEnabled(true);
+			}
+		});
+		
+		ItemType.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				RepBtn[2].setEnabled(true);
+			}
+		});
+
 		RepMenu.setPreferredSize(new Dimension(400,480));
 		RepMenu.add(RepMain);
 		RepMenu.pack();

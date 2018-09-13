@@ -78,6 +78,9 @@ public class serverClass extends Thread {
 		case "13":
 			chatLookup();
 			break;
+		case "14":
+			sendStats();
+			break;
 		default:
 			break;
 		}
@@ -114,7 +117,6 @@ public class serverClass extends Thread {
 		 }
 		 sendToClient(answer);
 		 logs.loginsLog(answer);
-		 System.out.println(workers);
 	}
 	
 	public void findWorker(JSONObject json) throws IOException
@@ -216,7 +218,7 @@ public class serverClass extends Thread {
 		sellesHistoryTmp.set(3, Integer.parseInt(sellesHistoryTmp.get(3).toString()) + Integer.parseInt(json.get("pants2").toString()));
 		shop.replace("sellesHistory",sellesHistoryTmp);
 		JSONArray coustomer = (JSONArray) customers.get(json.get("customerId"));
-		if (coustomer.get(2).equals("New")) //Change coustomer Type from new to return after the first buy
+		if (coustomer != null && coustomer.get(2).equals("New")) //Change coustomer Type from new to return after the first buy
 		{
 			coustomer.set(2, "Return");
 			customers.replace("customerId", coustomer);
@@ -259,10 +261,13 @@ public class serverClass extends Thread {
 		sendToClient(prices);
 	}
 	
-	public void sendStats()
+	public void sendStats() throws IOException
 	{
 		JSONObject stats = new JSONObject();
 		stats.put("TotalSelles", shop.get("TotalSelles").toString());
+		JSONArray sellesHistory = (JSONArray)shop.get("sellesHistory");
+		stats.put("sellesHistory",sellesHistory);
+		sendToClient(stats);
 	}
 	
 	public void logout() throws IOException {
