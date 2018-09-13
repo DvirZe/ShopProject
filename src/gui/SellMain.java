@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.Stack;
 
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -34,7 +35,6 @@ public class SellMain {
 	
 	public  SellMain(ClientSideConnection clientSideConnection) {
 		discount = 0; //Full price
-		JComboBox<String> ItemType,ItemType2, ItemType3, ItemType4;
 		Font font1 = new Font("Ariel",Font.PLAIN,10);
 		Font font2 = new Font("Ariel",Font.BOLD,14);
 		
@@ -77,6 +77,19 @@ public class SellMain {
 		}
 		
 		
+		JLabel shirt1 = new JLabel();
+		shirt1.setIcon(new ImageIcon("./files/whiteshirtSell.jpg"));
+		SellButtons.add(shirt1);
+		JLabel shirt2 = new JLabel();
+		shirt2.setIcon(new ImageIcon("./files/blackshirtSell.jpg"));
+		SellButtons.add(shirt2);
+		JLabel pants1 = new JLabel();
+		pants1.setIcon(new ImageIcon("./files/whitepantsSell.jpg"));
+		SellButtons.add(pants1);
+		JLabel pants2 = new JLabel();
+		pants2.setIcon(new ImageIcon("./files/blackpantsSell.jpg"));
+		SellButtons.add(pants2);
+		
 		SellButtons.setBorder(BorderFactory.createTitledBorder("Sell Menu"));
 		SellButtons.setBackground(Color.white);
 		SellButtons.setPreferredSize(new Dimension (730 , 510));
@@ -102,20 +115,18 @@ public class SellMain {
 		SellButtons.add(Type);
 		SellLayout.putConstraint(SpringLayout.WEST, Type, 20, SpringLayout.WEST, SellButtons);
 		SellLayout.putConstraint(SpringLayout.NORTH, Type, 40, SpringLayout.SOUTH, CusID);
-		ItemType = new JComboBox<String>(new String[] {"To be Connected to File","shirt","Pants"} );
-		ItemType.setFont(font1);
-		SellButtons.add(ItemType);
-		SellLayout.putConstraint(SpringLayout.NORTH, ItemType, 20, SpringLayout.SOUTH, Type);
+		SellLayout.putConstraint(SpringLayout.NORTH, shirt1, 20, SpringLayout.SOUTH, Type);
+		SellLayout.putConstraint(SpringLayout.WEST, shirt1, 25, SpringLayout.WEST, SellButtons);
 		JLabel Quantity = new JLabel("Quantity:");
 		Quantity.setFont(font1);
 		SellButtons.add(Quantity);
-		SellLayout.putConstraint(SpringLayout.WEST, Quantity, 100, SpringLayout.EAST, Type);
+		SellLayout.putConstraint(SpringLayout.WEST, Quantity, 50, SpringLayout.EAST, Type);
 		SellLayout.putConstraint(SpringLayout.NORTH, Quantity, 40, SpringLayout.SOUTH, CusID);
 		ItemQuantity[0].setFont(font1);
 		JLabel Price = new JLabel("Item Price:");
 		Price.setFont(font1);
 		SellButtons.add(Price);
-		SellLayout.putConstraint(SpringLayout.WEST, Price, 200, SpringLayout.EAST, Quantity);
+		SellLayout.putConstraint(SpringLayout.WEST, Price, 250, SpringLayout.EAST, Quantity);
 		SellLayout.putConstraint(SpringLayout.NORTH, Price, 40, SpringLayout.SOUTH, CusID);
 		JLabel ItemTotalPrice = new JLabel("Item total price");
 		ItemTotalPrice.setFont(font1);
@@ -135,63 +146,53 @@ public class SellMain {
 	
 
 		SellButtons.add(ItemQuantity[0]);
-		SellLayout.putConstraint(SpringLayout.WEST, ItemQuantity[0], 100, SpringLayout.EAST, Type);
+		SellLayout.putConstraint(SpringLayout.WEST, ItemQuantity[0], 50, SpringLayout.EAST, Type);
 		SellLayout.putConstraint(SpringLayout.NORTH, ItemQuantity[0], 20, SpringLayout.SOUTH, Quantity);
 		ItemPrice[0].setEditable(false);
 		SellButtons.add(ItemPrice[0]);
-		SellLayout.putConstraint(SpringLayout.WEST, ItemPrice[0], 200, SpringLayout.EAST, Quantity);
+		SellLayout.putConstraint(SpringLayout.WEST, ItemPrice[0], 250, SpringLayout.EAST, Quantity);
 		SellLayout.putConstraint(SpringLayout.NORTH, ItemPrice[0], 20, SpringLayout.SOUTH, Price);
 		SellButtons.add(ItemTotal[0]);
 		SellLayout.putConstraint(SpringLayout.WEST, ItemTotal[0], 0, SpringLayout.WEST, ItemTotalPrice);
 		SellLayout.putConstraint(SpringLayout.NORTH, ItemTotal[0], 20, SpringLayout.SOUTH, Price);
 
-		
-		ItemType2 = new JComboBox<String>(new String[] {"To be Connected to File","shirt","Pants"} );
-		ItemType2.setFont(font1);
-		SellButtons.add(ItemType2);
-		SellLayout.putConstraint(SpringLayout.NORTH, ItemType2, 50, SpringLayout.SOUTH, ItemType);
-		SellLayout.putConstraint(SpringLayout.WEST, Quantity, 100, SpringLayout.EAST, ItemType);
+		SellLayout.putConstraint(SpringLayout.NORTH, shirt2, 30, SpringLayout.SOUTH, shirt1);
+		SellLayout.putConstraint(SpringLayout.WEST, shirt2, 0, SpringLayout.WEST, shirt1);
 		ItemQuantity[1].setFont(font1);
 		SellButtons.add(ItemQuantity[1]);
-		SellLayout.putConstraint(SpringLayout.WEST, ItemQuantity[1], 100, SpringLayout.EAST, Type);
+		SellLayout.putConstraint(SpringLayout.WEST, ItemQuantity[1], 50, SpringLayout.EAST, Type);
 		SellLayout.putConstraint(SpringLayout.NORTH, ItemQuantity[1], 50, SpringLayout.SOUTH, ItemQuantity[0]);
 		ItemPrice[1].setEditable(false);
 		SellButtons.add(ItemPrice[1]);
-		SellLayout.putConstraint(SpringLayout.WEST, ItemPrice[1], 200, SpringLayout.EAST, Quantity);
+		SellLayout.putConstraint(SpringLayout.WEST, ItemPrice[1], 250, SpringLayout.EAST, Quantity);
 		SellLayout.putConstraint(SpringLayout.NORTH, ItemPrice[1], 50, SpringLayout.SOUTH, ItemPrice[0]);
 		SellButtons.add(ItemTotal[1]);
 		SellLayout.putConstraint(SpringLayout.WEST, ItemTotal[1], 0, SpringLayout.WEST, ItemTotalPrice);
 		SellLayout.putConstraint(SpringLayout.NORTH, ItemTotal[1], 50, SpringLayout.SOUTH, ItemPrice[0]);
 		
-		ItemType3 = new JComboBox<String>(new String[] {"To be Connected to File","shirt","Pants"} );
-		ItemType3.setFont(font1);
-		SellButtons.add(ItemType3);
-		SellLayout.putConstraint(SpringLayout.NORTH, ItemType3, 50, SpringLayout.SOUTH, ItemType2);
-		SellLayout.putConstraint(SpringLayout.WEST, Quantity, 100, SpringLayout.EAST, ItemType);
+		SellLayout.putConstraint(SpringLayout.NORTH, pants1, 30, SpringLayout.SOUTH, shirt2);
+		SellLayout.putConstraint(SpringLayout.WEST, pants1, 10, SpringLayout.WEST, shirt2);
 		ItemQuantity[2].setFont(font1);
 		SellButtons.add(ItemQuantity[2]);
-		SellLayout.putConstraint(SpringLayout.WEST, ItemQuantity[2], 100, SpringLayout.EAST, Type);
+		SellLayout.putConstraint(SpringLayout.WEST, ItemQuantity[2], 50, SpringLayout.EAST, Type);
 		SellLayout.putConstraint(SpringLayout.NORTH, ItemQuantity[2], 50, SpringLayout.SOUTH, ItemQuantity[1]);
 		ItemPrice[2].setEditable(false);
 		SellButtons.add(ItemPrice[2]);
-		SellLayout.putConstraint(SpringLayout.WEST, ItemPrice[2], 200, SpringLayout.EAST, Quantity);
+		SellLayout.putConstraint(SpringLayout.WEST, ItemPrice[2], 250, SpringLayout.EAST, Quantity);
 		SellLayout.putConstraint(SpringLayout.NORTH, ItemPrice[2], 50, SpringLayout.SOUTH, ItemPrice[1]);
 		SellButtons.add(ItemTotal[2]);
 		SellLayout.putConstraint(SpringLayout.WEST, ItemTotal[2], 0, SpringLayout.WEST, ItemTotalPrice);
 		SellLayout.putConstraint(SpringLayout.NORTH, ItemTotal[2], 50, SpringLayout.SOUTH, ItemPrice[1]);
 		
-		ItemType4 = new JComboBox<String>(new String[] {"To be Connected to File","shirt","Pants"} );
-		ItemType4.setFont(font1);
-		SellButtons.add(ItemType4);
-		SellLayout.putConstraint(SpringLayout.NORTH, ItemType4, 50, SpringLayout.SOUTH, ItemType3);
-		SellLayout.putConstraint(SpringLayout.WEST, Quantity, 100 , SpringLayout.EAST, ItemType);
+		SellLayout.putConstraint(SpringLayout.NORTH, pants2, 20, SpringLayout.SOUTH, pants1);
+		SellLayout.putConstraint(SpringLayout.WEST, pants2, 0, SpringLayout.WEST, pants1);
 		ItemQuantity[3].setFont(font1);
 		SellButtons.add(ItemQuantity[3]);
-		SellLayout.putConstraint(SpringLayout.WEST, ItemQuantity[3], 100, SpringLayout.EAST, Type);
+		SellLayout.putConstraint(SpringLayout.WEST, ItemQuantity[3], 50, SpringLayout.EAST, Type);
 		SellLayout.putConstraint(SpringLayout.NORTH, ItemQuantity[3], 50, SpringLayout.SOUTH, ItemQuantity[2]);
 		ItemPrice[3].setEditable(false);
 		SellButtons.add(ItemPrice[3]);
-		SellLayout.putConstraint(SpringLayout.WEST, ItemPrice[3], 200, SpringLayout.EAST, Quantity);
+		SellLayout.putConstraint(SpringLayout.WEST, ItemPrice[3], 250, SpringLayout.EAST, Quantity);
 		SellLayout.putConstraint(SpringLayout.NORTH, ItemPrice[3], 50, SpringLayout.SOUTH, ItemPrice[2]);
 		SellButtons.add(ItemTotal[3]);
 		SellLayout.putConstraint(SpringLayout.WEST, ItemTotal[3], 0, SpringLayout.WEST, ItemTotalPrice);
