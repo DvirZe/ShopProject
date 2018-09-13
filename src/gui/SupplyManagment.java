@@ -69,7 +69,7 @@ public class SupplyManagment {
 	{
 		quantity[i-1] = new JTextField("" + ClientSideConnection.getShop().getInventory(i), 4);
 		QuantityMain.add(quantity[i-1]);
-		quantity[i-1].setEnabled(false);
+		quantity[i-1].setEnabled(true);
 		item[i-1] = new JLabel("Item Quantity:");
 		QuantityMain.add(item[i-1]);
 	}
