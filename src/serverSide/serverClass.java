@@ -300,8 +300,10 @@ public class serverClass extends Thread {
 		JSONArray loginWorker = (JSONArray) workers.get(""+logedInUserID);
 		for (String id : keys) {
 			JSONArray worker = (JSONArray) workers.get(id);
-			if ((Integer.parseInt(worker.get(7).toString()) == 1) && (Integer.parseInt(worker.get(9).toString()) == 0) && (worker.equals(loginWorker)) ) {
+			if ((Integer.parseInt(worker.get(7).toString()) == 1) && (Integer.parseInt(worker.get(9).toString()) == 0) && !(worker.equals(loginWorker)) && !(worker.get(4).equals(loginWorker.get(4)))) {
 				answer.put("User2Port", worker.get(8));
+				System.out.println(worker);
+				System.out.println(loginWorker);
 			} else answer.put("notFound", 1);
 		}
 		sendToClient(answer);
