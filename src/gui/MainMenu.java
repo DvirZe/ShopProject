@@ -100,7 +100,7 @@ public class MainMenu {
 			public void actionPerformed (ActionEvent ae) {
 				//Main.dispose();
 				try {
-					new ChatScreen(clientSideConnection);
+					new ChatGui(clientSideConnection);
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
