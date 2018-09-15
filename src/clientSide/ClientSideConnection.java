@@ -3,7 +3,6 @@ package clientSide;
 import java.awt.Desktop;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -11,16 +10,13 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Random;
-
 import javax.net.ssl.SSLSocketFactory;
-
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.apache.poi.xwpf.usermodel.UnderlinePatterns;
-import org.apache.poi.xwpf.usermodel.VerticalAlign;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
@@ -29,8 +25,10 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import chat.ChatRoom;
 import chat.GetConnection;
 import chat.OpenConnection;
+import chat.User;
 import gui.Login;
 
 
@@ -43,6 +41,8 @@ public class ClientSideConnection extends Thread {
 	private Login shopGui;
 	private Shop shop;
 	public int NextWorkerCounter;
+	private Map<String, String> workerOnline;
+	private Socket chatSocket = null;
 	
 	public ClientSideConnection() {
 		socket = null;
@@ -79,10 +79,13 @@ public class ClientSideConnection extends Thread {
 		try {
 			ServerSocket newPort = new ServerSocket(0);
 			int portForChat = newPort.getLocalPort()+2000;
-			new GetConnection(portForChat).start(); //Get new Random free port for chat
+			while (portForChat >= 65535) // make sure keep the port below the max port
+			{
+				portForChat-= 1500; 
+			}
+			new GetConnection(portForChat, this).start(); //Get new Random free port for chat
 			json.put("portForChat", portForChat);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -92,7 +95,13 @@ public class ClientSideConnection extends Thread {
 		json = (JSONObject)parser.parse(msg);
 		int status = Integer.parseInt(json.get("Status").toString());
 		if (status == 1)
+		{
 			shop = new Shop(json);	
+			workerOnline = new HashMap<String,String>();
+			workerOnline.put("personalID", id);
+			workerOnline.put("name", json.get("name").toString());
+		}
+		
 		return Integer.parseInt(json.get("Status").toString());
 	}
 	
@@ -344,21 +353,31 @@ public class ClientSideConnection extends Thread {
 		SendToServer(sell);
 	}
 	
-	public void startChat() throws IOException, ParseException {
+	public String startChat() throws IOException, ParseException {
 		JSONObject json = new JSONObject();
 		json.put("Action", action.startChat());
 		SendToServer(json);
 		JSONObject details = getFromServer();
 		if (details.containsKey("User2Port")) {
-			new OpenConnection(Integer.parseInt(details.get("User2Port").toString())).start();
-		} else System.out.println("No Online");
+			return details.get("User2Port").toString();
+			//ChatRoom room = new ChatRoom();
+			//User thisUser = new User(room, workerOnline.get("name"), this);
+			//room.addUser(thisUser);
+		} else return "0";
 		
 	}
 	
 	public void agreeChat() throws IOException {
 		ServerSocket chatAgree = new ServerSocket(socket.getPort());
 		System.out.println("Ready for connaction...");
-		//new GetConnection(chatAgree.accept()).start();
+	}
+	
+	public void setChatSocket(Socket socket) {
+		chatSocket = socket;
+	}
+	
+	public Socket getChatSocket() {
+		return chatSocket;
 	}
 	
 	public static void main(String[] args) throws UnknownHostException, IOException

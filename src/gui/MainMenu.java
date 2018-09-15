@@ -85,7 +85,7 @@ public class MainMenu {
 		
 		JButton Reports = new JButton("Generate reports");
 		Main.add(Reports);
-		Reports.setFont(font2);
+		Reports.setFont(font2);	
 		Reports.addActionListener(new ActionListener() {
 			public void actionPerformed (ActionEvent ae) {
 				Main.dispose();
@@ -99,10 +99,9 @@ public class MainMenu {
 		Chat.addActionListener(new ActionListener() {
 			public void actionPerformed (ActionEvent ae) {
 				//Main.dispose();
-				//new	MainMenu(clientSideConnection);
 				try {
-					clientSideConnection.startChat();
-				} catch (IOException | ParseException e) {
+					new ChatScreen(clientSideConnection);
+				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}

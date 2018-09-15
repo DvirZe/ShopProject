@@ -26,10 +26,7 @@ public class Login extends JPanel{
 		details.setLocationRelativeTo(null);
 		Image img = Toolkit.getDefaultToolkit().getImage("./files/store_icon.jpg");
 		details.setIconImage(img);
-		details.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
-		//Login.setBorder(BorderFactory.createTitledBorder(Login, "Your Details", TitledBorder.LEADING, TitledBorder.TOP, new Font("Ariel", Font.BOLD,20), Color.BLACK));
-		
+		details.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);		
 		
 		JPanel Login = new JPanel();
 		Login.setBorder(BorderFactory.createTitledBorder("Your Details"));
@@ -51,11 +48,6 @@ public class Login extends JPanel{
 		JTextField Ntext = new JTextField("" , 20);
 		Ntext.setFont(font);
 		Login.add(Ntext);
-		Ntext.addActionListener(new ActionListener(){
-			   public void actionPerformed(ActionEvent ae){
-			      //String user = Ntext.getText();
-			   }
-			});
 		
 		
 		JLabel Pass = new JLabel("Password:");

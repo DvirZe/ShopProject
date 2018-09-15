@@ -8,8 +8,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 
 import javax.swing.JComboBox.KeySelectionManager;
 
@@ -18,6 +22,9 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import chat.ChatRoom;
+import chat.User;
+
 
 public class serverClass extends Thread {
 	private Socket socket;
@@ -25,6 +32,7 @@ public class serverClass extends Thread {
 	private serverConnection serverConnection;
 	private int logedInUserID;
 	private Logs logs;
+	private ArrayList<ChatRoom> rooms;
 	
 	public serverClass() {}
 	
@@ -34,6 +42,7 @@ public class serverClass extends Thread {
 		workers = serverConnection.getWorkers();
 		customers = serverConnection.getCustomers();
 		logs = new Logs();
+		rooms = new ArrayList<ChatRoom>();
 	}
 	
 	public void actionChoose(JSONObject json) throws IOException, ParseException
@@ -95,6 +104,7 @@ public class serverClass extends Thread {
 		 if ((workerDetails != null) && (workerDetails.get(6).equals(json.get("password"))) && (Integer.parseInt(workerDetails.get(7).toString()) == 0))
 		 {
 			 answer.put("Status", 1);
+			 answer.put("name",workerDetails.get(0));
 			 answer.put("Shop", workerDetails.get(4));
 			 answer.put("Job", workerDetails.get(5));
 			 System.out.println("Send ok to client!");
@@ -302,10 +312,16 @@ public class serverClass extends Thread {
 			JSONArray worker = (JSONArray) workers.get(id);
 			if ((Integer.parseInt(worker.get(7).toString()) == 1) && (Integer.parseInt(worker.get(9).toString()) == 0) && !(worker.equals(loginWorker)) && !(worker.get(4).equals(loginWorker.get(4)))) {
 				answer.put("User2Port", worker.get(8));
-				System.out.println(worker);
-				System.out.println(loginWorker);
-			} else answer.put("notFound", 1);
+				ChatRoom room = new ChatRoom();
+				User tryUser = new User(room, loginWorker.get(0).toString(), loginWorker.get(8).toString());
+				User connectUser = new User(room, worker.get(0).toString(), worker.get(8).toString());
+				room.addUser(tryUser);
+				room.addUser(connectUser);
+				rooms.add(room);
+				break;
+			}
 		}
+		if (!answer.isEmpty()) answer.put("notFound", 1);
 		sendToClient(answer);
 	}
 	
