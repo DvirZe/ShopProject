@@ -151,7 +151,7 @@ public class SellMain {
 		ItemPrice[0].setEditable(false);
 		SellButtons.add(ItemPrice[0]);
 		SellLayout.putConstraint(SpringLayout.WEST, ItemPrice[0], 250, SpringLayout.EAST, Quantity);
-		SellLayout.putConstraint(SpringLayout.NORTH, ItemPrice[0], 20, SpringLayout.SOUTH, Price);
+		SellLayout.putConstraint(SpringLayout.NORTH, ItemPrice[0], 0, SpringLayout.NORTH, ItemQuantity[0]);
 		SellButtons.add(ItemTotal[0]);
 		SellLayout.putConstraint(SpringLayout.WEST, ItemTotal[0], 0, SpringLayout.WEST, ItemTotalPrice);
 		SellLayout.putConstraint(SpringLayout.NORTH, ItemTotal[0], 20, SpringLayout.SOUTH, Price);
@@ -165,7 +165,7 @@ public class SellMain {
 		ItemPrice[1].setEditable(false);
 		SellButtons.add(ItemPrice[1]);
 		SellLayout.putConstraint(SpringLayout.WEST, ItemPrice[1], 250, SpringLayout.EAST, Quantity);
-		SellLayout.putConstraint(SpringLayout.NORTH, ItemPrice[1], 50, SpringLayout.SOUTH, ItemPrice[0]);
+		SellLayout.putConstraint(SpringLayout.NORTH, ItemPrice[1], 0, SpringLayout.NORTH, ItemQuantity[1]);
 		SellButtons.add(ItemTotal[1]);
 		SellLayout.putConstraint(SpringLayout.WEST, ItemTotal[1], 0, SpringLayout.WEST, ItemTotalPrice);
 		SellLayout.putConstraint(SpringLayout.NORTH, ItemTotal[1], 50, SpringLayout.SOUTH, ItemPrice[0]);
@@ -179,7 +179,7 @@ public class SellMain {
 		ItemPrice[2].setEditable(false);
 		SellButtons.add(ItemPrice[2]);
 		SellLayout.putConstraint(SpringLayout.WEST, ItemPrice[2], 250, SpringLayout.EAST, Quantity);
-		SellLayout.putConstraint(SpringLayout.NORTH, ItemPrice[2], 50, SpringLayout.SOUTH, ItemPrice[1]);
+		SellLayout.putConstraint(SpringLayout.NORTH, ItemPrice[2], 0, SpringLayout.NORTH, ItemQuantity[2]);
 		SellButtons.add(ItemTotal[2]);
 		SellLayout.putConstraint(SpringLayout.WEST, ItemTotal[2], 0, SpringLayout.WEST, ItemTotalPrice);
 		SellLayout.putConstraint(SpringLayout.NORTH, ItemTotal[2], 50, SpringLayout.SOUTH, ItemPrice[1]);
@@ -193,7 +193,7 @@ public class SellMain {
 		ItemPrice[3].setEditable(false);
 		SellButtons.add(ItemPrice[3]);
 		SellLayout.putConstraint(SpringLayout.WEST, ItemPrice[3], 250, SpringLayout.EAST, Quantity);
-		SellLayout.putConstraint(SpringLayout.NORTH, ItemPrice[3], 50, SpringLayout.SOUTH, ItemPrice[2]);
+		SellLayout.putConstraint(SpringLayout.NORTH, ItemPrice[3], 0, SpringLayout.NORTH, ItemQuantity[3]);
 		SellButtons.add(ItemTotal[3]);
 		SellLayout.putConstraint(SpringLayout.WEST, ItemTotal[3], 0, SpringLayout.WEST, ItemTotalPrice);
 		SellLayout.putConstraint(SpringLayout.NORTH, ItemTotal[3], 50, SpringLayout.SOUTH, ItemPrice[2]);
