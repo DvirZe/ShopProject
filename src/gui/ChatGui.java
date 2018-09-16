@@ -6,6 +6,8 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -25,17 +27,18 @@ import javax.swing.text.DefaultCaret;
 import org.json.simple.parser.ParseException;
 
 import chat.OpenConnection;
+import chat.User;
 import clientSide.ClientSideConnection;
 
 public class ChatGui extends JPanel{
 	
-	
-		private static final long serialVersionUID = 4188117811193390502L;
-		private OpenConnection connection;
-		private Socket socket;
+	private static final long serialVersionUID = 4188117811193390502L;
+	private OpenConnection connection;
+	private Socket socket;
 	private BufferedReader bufferedReader;
+	private User chatUser = null;
 	
-	ChatGui(ClientSideConnection clientSideConnection) throws IOException{
+	public ChatGui(ClientSideConnection clientSideConnection, Boolean isConnectToChatAlready) throws IOException{
 		
 		JFrame chatFrame = new JFrame();
 		chatFrame.setTitle("Chat with other branch");
@@ -43,7 +46,54 @@ public class ChatGui extends JPanel{
 		chatFrame.setLocationRelativeTo(null);
 		Image img = Toolkit.getDefaultToolkit().getImage("./files/ChatIcon.png");
 		chatFrame.setIconImage(img);
-		chatFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		chatFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+		
+		chatFrame.addWindowListener(new WindowListener() {
+			
+			@Override
+			public void windowOpened(WindowEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void windowIconified(WindowEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void windowDeiconified(WindowEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void windowDeactivated(WindowEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void windowClosing(WindowEvent e) {
+				clientSideConnection.freeToChatStatusChange(true);
+				if (!clientSideConnection.isFreeToChat())
+					chatUser.stopReceive();
+				chatFrame.dispose();
+			}
+			
+			@Override
+			public void windowClosed(WindowEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void windowActivated(WindowEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
 		
 		
 		JPanel chatPanel = new JPanel();
@@ -60,17 +110,15 @@ public class ChatGui extends JPanel{
 		
 		JButton searchChat = new JButton("Start new chat");
 		searchChat.setPreferredSize(new Dimension(join.getPreferredSize()));
+		searchChat.setEnabled(!isConnectToChatAlready);
 		chatPanel.add(searchChat);
 		
 		JButton send = new JButton("Send!");
+		send.setEnabled(false);
 		chatPanel.add(send);
 		
-		JButton back = new JButton("Back");
-		chatPanel.add(back);
-		
-
-		
-		
+		JButton leave = new JButton("Leave");
+		chatPanel.add(leave);	
 		
 		JTextArea chatLog = new JTextArea();
 		chatLog.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
@@ -83,11 +131,11 @@ public class ChatGui extends JPanel{
 		JTextField sendMessage = new JTextField();
 		sendMessage.setPreferredSize(new Dimension(300, 30));
 		sendMessage.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
+		sendMessage.setEnabled(false);
 		chatPanel.add(sendMessage);
 		
 		DefaultCaret caret = (DefaultCaret) chatLog.getCaret();
-		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
-		
+		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);		
 		
 		imcomingChatLayout.putConstraint(SpringLayout.WEST, searchChat, 5, SpringLayout.EAST, chatLog);
 		imcomingChatLayout.putConstraint(SpringLayout.NORTH, searchChat, 0, SpringLayout.NORTH, chatLog);
@@ -104,8 +152,8 @@ public class ChatGui extends JPanel{
 		imcomingChatLayout.putConstraint(SpringLayout.WEST, send, 5, SpringLayout.EAST, sendMessage);
 		imcomingChatLayout.putConstraint(SpringLayout.NORTH, send, 0, SpringLayout.NORTH, sendMessage);
 		
-		imcomingChatLayout.putConstraint(SpringLayout.EAST, back, 0, SpringLayout.EAST, chatPanel);
-		imcomingChatLayout.putConstraint(SpringLayout.SOUTH, back, 0, SpringLayout.SOUTH, chatPanel);
+		imcomingChatLayout.putConstraint(SpringLayout.EAST, leave, 0, SpringLayout.EAST, chatPanel);
+		imcomingChatLayout.putConstraint(SpringLayout.SOUTH, leave, 0, SpringLayout.SOUTH, chatPanel);
 		
 		
 		searchChat.addActionListener(new ActionListener() {
@@ -117,71 +165,59 @@ public class ChatGui extends JPanel{
 					chatLog.setText("Try to connect..");
 					String answer = clientSideConnection.startChat();
 					if (!answer.equals("0"))
+					{
+						clientSideConnection.freeToChatStatusChange(false);
 						port = Integer.parseInt(answer);
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				} catch (ParseException e1) {
-					e1.printStackTrace();
-				}
-				if (port != 0)
-				{
-					try {
 						connection = new OpenConnection(port, clientSideConnection);
-						connection.start();
 						clientSideConnection.setChatSocket(connection.getSocket());
 						socket = connection.getSocket();
-						bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-						chatLog.setText(chatLog.getText() + "\nStart Chatting..");
-						
-						Thread chatText = new Thread(new Runnable() {
-							public void run() {
-								String msg = null;
-								try {
-									msg = bufferedReader.readLine();
-									System.out.println("xxx: "+msg);
-								} catch (IOException e) {e.printStackTrace();}
-								while (true)
-								{			
-									if (!msg.equals(""))
-									{
-										System.out.println("xxx: "+msg);
-										chatLog.setText(msg);
-									}
-									try {
-										while ((msg = bufferedReader.readLine()) == null) {}
-									} catch (IOException e) {e.printStackTrace();}
-								}
-							}
-						});
-						
-						chatText.start();
-					} catch (IOException e1) {
-						e1.printStackTrace();
-					}
-				} else chatLog.append("\nNo one available.");
+						chatUser = connection.getUser();
+						chatUser.receiveMessage(chatLog,true);
+						searchChat.setEnabled(false);
+						sendMessage.setEnabled(true);
+						send.setEnabled(true);
+					} else chatLog.append("\nNo one available.");
+				} catch (ParseException | IOException e1) {e1.printStackTrace(); }
 			}
 		});
 		
+		//if its the worker who get the chat
+		if (isConnectToChatAlready)
+		{
+			chatUser = clientSideConnection.getConnection().getUser();
+			chatUser.receiveMessage(chatLog, false);
+			chatLog.setText("Start to chat..");
+			sendMessage.setEnabled(true);
+			send.setEnabled(true);
+		}
 		
-		back.addActionListener(new ActionListener() {
+		leave.addActionListener(new ActionListener() {
 					
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						
+						clientSideConnection.freeToChatStatusChange(true);
+						if (!clientSideConnection.isFreeToChat())
+							chatUser.stopReceive();
 						chatFrame.dispose();
-						new MainMenu(clientSideConnection);
 					}
 				});
 				
-		send.addActionListener(new ActionListener() {
+		
+		ActionListener sendActions = new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				chatLog.append("\n"+sendMessage.getText());
+				if(isConnectToChatAlready)
+				{
+					chatLog.append("\n"+ clientSideConnection.getWorkerOnline().get("name") + " >> " +sendMessage.getText().toString());
+				}
+				chatUser.sendMessage(sendMessage.getText().toString());
 				sendMessage.setText("");
-				
 			}
-		});
+		};
+		
+		send.addActionListener(sendActions);
+		sendMessage.addActionListener(sendActions);
 		
 		join.addActionListener(new ActionListener() {
 			
@@ -192,22 +228,10 @@ public class ChatGui extends JPanel{
 			}
 		});
 		
-		sendMessage.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				//chatLog.setText(chatLog.getText() + "\n" + sendMessage.getText());
-				//System.out.println(connection.getPort());
-				//connection.sendMessege(sendMessage.getText().toString());
-				chatLog.append("\n"+sendMessage.getText());
-				sendMessage.setText("");
-			}
-		});
-				
 		chatFrame.add(chatPanel);
 		chatFrame.pack();
 		chatFrame.setVisible(true);
 		
 	}
-
+	
 }

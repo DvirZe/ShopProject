@@ -24,11 +24,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-
-import chat.ChatRoom;
 import chat.GetConnection;
-import chat.OpenConnection;
-import chat.User;
 import gui.Login;
 
 
@@ -43,6 +39,8 @@ public class ClientSideConnection extends Thread {
 	public int NextWorkerCounter;
 	private Map<String, String> workerOnline;
 	private Socket chatSocket = null;
+	private GetConnection getConnection;
+	private Boolean freeToChat = true;
 	
 	public ClientSideConnection() {
 		socket = null;
@@ -83,7 +81,8 @@ public class ClientSideConnection extends Thread {
 			{
 				portForChat-= 1500; 
 			}
-			new GetConnection(portForChat, this).start(); //Get new Random free port for chat
+			getConnection = new GetConnection(portForChat, this); //Get new Random free port for chat
+			getConnection.start();
 			json.put("portForChat", portForChat);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -360,9 +359,6 @@ public class ClientSideConnection extends Thread {
 		JSONObject details = getFromServer();
 		if (details.containsKey("User2Port")) {
 			return details.get("User2Port").toString();
-			//ChatRoom room = new ChatRoom();
-			//User thisUser = new User(room, workerOnline.get("name"), this);
-			//room.addUser(thisUser);
 		} else return "0";
 		
 	}
@@ -385,4 +381,21 @@ public class ClientSideConnection extends Thread {
 		ClientSideConnection clientSideConnection = new ClientSideConnection();
 		clientSideConnection.start();
 	}
+
+	public Map<String, String> getWorkerOnline() {
+		return workerOnline;
+	}
+	
+	public GetConnection getConnection() {
+		return getConnection;
+	}
+	
+	public void freeToChatStatusChange(Boolean changeTo) {
+		freeToChat = changeTo;
+	}
+	
+	public Boolean isFreeToChat() {
+		return freeToChat;
+	}
 }
+

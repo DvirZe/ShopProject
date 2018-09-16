@@ -69,10 +69,10 @@ public class PopupIncomingChat extends JPanel {
 		incomingChat.add(getChat);
 		
 		getChat.addActionListener(new ActionListener() {
-			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				connection.newChatAccpet(popupFrame);
+				popupFrame.dispose();
+				connection.newChatAccpet();
 			}
 		});
 		

@@ -98,11 +98,9 @@ public class MainMenu {
 		Chat.setFont(font2);
 		Chat.addActionListener(new ActionListener() {
 			public void actionPerformed (ActionEvent ae) {
-				//Main.dispose();
 				try {
-					new ChatGui(clientSideConnection);
+					new ChatGui(clientSideConnection, false);
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}

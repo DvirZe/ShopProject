@@ -10,7 +10,7 @@ public class ChatRoom implements Conversation {
 	public void sendMessage(String message, ChatUser chatUser) {
 		for(ChatUser u : chatUsers){
 			if(u != chatUser){
-				u.receiveMessage(message);
+				//u.receiveMessage(message);
 			}
 		}
 	}

@@ -3,12 +3,14 @@ package chat;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.LinkedList;
 import javax.swing.JFrame;
 
 import clientSide.ClientSideConnection;
+import gui.ChatGui;
 import gui.PopupIncomingChat;
 
 public class GetConnection extends Thread {
@@ -16,8 +18,12 @@ public class GetConnection extends Thread {
 	int port;
 	ServerSocket serverSocket;
 	LinkedList<Socket> sockets;
-	boolean freeToChat = true;
 	ClientSideConnection clientSideConnection;
+	BufferedReader bufferedReader;
+	PrintWriter printWriter;
+	Socket curSocket;
+	private User chatUser;
+	
 	
 	public GetConnection (int port, ClientSideConnection clientSideConnection)
 	{
@@ -40,7 +46,7 @@ public class GetConnection extends Thread {
 					while (true)
 					{
 						Thread.sleep(0);
-						if (!sockets.isEmpty() && freeToChat)
+						if (!sockets.isEmpty() && clientSideConnection.isFreeToChat())
 						{
 							chatAlert();
 						}
@@ -66,54 +72,46 @@ public class GetConnection extends Thread {
 	}
 	
 	public void chatAlert() throws InterruptedException, IOException {
-		freeToChatStatusChange();
+		clientSideConnection.freeToChatStatusChange(false);		
 		Socket socket = sockets.removeFirst();
-		/*Thread m = new Thread(new Runnable() {
-			
-			@Override
-			public void run() {
-				try {
-					getMessage(socket);
-				} catch (IOException e) {
-					e.printStackTrace();
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-		});
-		m.start();*/
-		System.out.println("Start chat with: " + socket.getPort());
-		PopupIncomingChat newChat = new PopupIncomingChat(this);
-	}
-	
-	public void getMessage(Socket socket) throws IOException, InterruptedException
-	{
-		Thread.sleep(0);
-		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-		String msg = bufferedReader.readLine();
-		while(true) {
-			if (!msg.equals(""))
-				{
-					System.out.println(msg);
-				}
-			while ((msg = bufferedReader.readLine()) == null) {}
+		curSocket = socket;
+		System.out.println(socket);
+		if (curSocket.isConnected())
+		{
+			bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			printWriter = new PrintWriter(socket.getOutputStream(),true);
+			System.out.println("Start chat with: " + socket.getPort());
+			PopupIncomingChat newChat = new PopupIncomingChat(this);
 		}
+		else clientSideConnection.freeToChatStatusChange(true);	
 	}
 	
-	public void freeToChatStatusChange()
-	{
-		freeToChat = !freeToChat;
-	}
 	
 	public void newChatClose(JFrame openFrame) {
 		openFrame.dispose();
-		freeToChatStatusChange();
+		clientSideConnection.freeToChatStatusChange(true);
 	}
 	
-	public void newChatAccpet(JFrame openFrame) {
-		openFrame.dispose();
+	public void newChatAccpet() {
+		printWriter.println("Chat Accepted.");
+		chatUser = new User(clientSideConnection.getWorkerOnline().get("name"), printWriter, bufferedReader);
+		System.out.println(chatUser);
+		try {
+			new ChatGui(clientSideConnection, true);
+		} catch (IOException e) {
+			System.out.println("Chat Screen is close now.");
+		}
 	}
 	
 	public ClientSideConnection getClientSideConnection() { return clientSideConnection; }
+	
+	public User getUser() {
+		return chatUser;
+	}
+	
+	public void sendMessege(String message)
+	{
+		chatUser.sendMessage(message);
+	}
 	
 }
