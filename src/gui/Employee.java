@@ -205,6 +205,7 @@ ActionListener findWorkerAction = new ActionListener() {
 			PositionText.setSelectedItem(worker.getJob());
 			isWorkerfound = true;
 			workerFound = worker;
+			passwordValidation = true;
 		}
 		else
 		{

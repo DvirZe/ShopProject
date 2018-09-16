@@ -397,5 +397,10 @@ public class ClientSideConnection extends Thread {
 	public Boolean isFreeToChat() {
 		return freeToChat;
 	}
+
+	public void setInventory(JSONObject json) {
+		json.put("Action", action.setInventory());
+		SendToServer(json);
+	}
 }
 

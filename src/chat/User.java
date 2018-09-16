@@ -50,7 +50,7 @@ public class User implements ChatUser {
 					try {
 						Thread.sleep(0);
 					} catch (InterruptedException e1) {
-						e1.printStackTrace();
+						new Exception("Chat stoppet");
 					}
 					while(true) {
 						if (!msg.equals(""))

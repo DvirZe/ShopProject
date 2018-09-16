@@ -90,6 +90,9 @@ public class serverClass extends Thread {
 		case "14":
 			sendStats();
 			break;
+		case "15":
+			updateInventory(json);
+			break;
 		default:
 			break;
 		}
@@ -181,10 +184,15 @@ public class serverClass extends Thread {
 		workerDetails.add(7, json.get("login"));
 		if (workers.containsKey(json.get("personalID")))
 		{//Update worker
+			JSONArray oldDetails = (JSONArray) workers.get(json.get("personalID"));
+			workerDetails.add(8, oldDetails.get(8));
+			workerDetails.add(9, oldDetails.get(9));
 			workers.replace(json.get("personalID"), workerDetails);
 			json.put("Status", "Update");
 		}
 		else { //new worker
+			workerDetails.add(8, 0); //workerPort
+			workerDetails.add(9, 0); //is free to chat
 			workers.put(json.get("personalID"), workerDetails);
 			json.put("Status", "Create");
 		}
@@ -243,6 +251,15 @@ public class serverClass extends Thread {
 		json.put("pants1", curInventory.get(2));
 		json.put("pants2", curInventory.get(3));
 		sendToClient(json);
+	}
+	
+	public void updateInventory(JSONObject json) {
+		JSONArray updatedInventory = new JSONArray();
+		updatedInventory.add(json.get("shirt1").toString());
+		updatedInventory.add(json.get("shirt2").toString());
+		updatedInventory.add(json.get("pants1").toString());
+		updatedInventory.add(json.get("pants2").toString());
+		shop.replace("Inventory", updatedInventory);
 	}
 	
 	public void updateDiscounts(JSONObject json)

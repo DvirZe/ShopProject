@@ -30,5 +30,5 @@ public class Actions { //to organized
 	
 	public int getStats() { return 14; }
 
-	
+	public int setInventory() { return 15; }
 }

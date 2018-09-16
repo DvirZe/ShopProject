@@ -29,6 +29,7 @@ import org.json.simple.parser.ParseException;
 import chat.OpenConnection;
 import chat.User;
 import clientSide.ClientSideConnection;
+import clientSide.CustomerTypeReturn;
 
 public class ChatGui extends JPanel{
 	
@@ -76,9 +77,12 @@ public class ChatGui extends JPanel{
 			
 			@Override
 			public void windowClosing(WindowEvent e) {
-				clientSideConnection.freeToChatStatusChange(true);
 				if (!clientSideConnection.isFreeToChat())
+				{
+					chatUser.sendMessage("Leaved the chat.");
 					chatUser.stopReceive();
+				}
+				clientSideConnection.freeToChatStatusChange(true);
 				chatFrame.dispose();
 			}
 			
@@ -176,6 +180,7 @@ public class ChatGui extends JPanel{
 						searchChat.setEnabled(false);
 						sendMessage.setEnabled(true);
 						send.setEnabled(true);
+						join.setEnabled(false);
 					} else chatLog.append("\nNo one available.");
 				} catch (ParseException | IOException e1) {e1.printStackTrace(); }
 			}
@@ -189,15 +194,19 @@ public class ChatGui extends JPanel{
 			chatLog.setText("Start to chat..");
 			sendMessage.setEnabled(true);
 			send.setEnabled(true);
+			join.setEnabled(false);
 		}
 		
 		leave.addActionListener(new ActionListener() {
 					
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						clientSideConnection.freeToChatStatusChange(true);
 						if (!clientSideConnection.isFreeToChat())
+						{
+							chatUser.sendMessage("Leaved the chat.");
 							chatUser.stopReceive();
+						}
+						clientSideConnection.freeToChatStatusChange(true);
 						chatFrame.dispose();
 					}
 				});

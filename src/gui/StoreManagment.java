@@ -55,6 +55,15 @@ public class StoreManagment {
 		Supply.addActionListener(new ActionListener() {
 			public void actionPerformed (ActionEvent ae) {
 				StoreMgr.dispose();
+				try {
+					clientSideConnection.updateInventory();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				new	SupplyManagment(clientSideConnection);
 			}
 		});
