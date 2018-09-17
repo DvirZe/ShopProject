@@ -38,263 +38,265 @@ public class SellMain {
 		Font font1 = new Font("Ariel",Font.PLAIN,10);
 		Font font2 = new Font("Ariel",Font.BOLD,14);
 		
-		JFrame SellMenu = new JFrame();
-		SellMenu.setTitle("Sales managment menu");
+		JFrame sellMenu = new JFrame();
+		sellMenu.setTitle("Sales managment menu");
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		Point middle = new Point(screenSize.width / 2, screenSize.height / 2);
 		Point newLocation = new Point(middle.x - (600 / 2), 
 		                              middle.y - (700 / 2));
-		SellMenu.setLocation(newLocation);
-		Image img = Toolkit.getDefaultToolkit().getImage("./files/SellIcon.png");
-		SellMenu.setIconImage(img);
-		SellMenu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		sellMenu.setLocation(newLocation);
+		Image img = Toolkit.getDefaultToolkit().getImage("./files/sellIcon.png");
+		sellMenu.setIconImage(img);
+		sellMenu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		JComboBox[] ItemQuantity = new JComboBox[4];
-		JTextField[] ItemPrice = new JTextField[4] , ItemTotal = new JTextField[4];
-		JPanel SellButtons = new JPanel();
-		SpringLayout SellLayout = new SpringLayout();
-		SellButtons.setLayout(SellLayout);			
+		JComboBox[] itemQuantity = new JComboBox[4];
+		JTextField[] itemprice = new JTextField[4] , itemTotal = new JTextField[4];
+		JPanel sellButtons = new JPanel();
+		SpringLayout sellLayout = new SpringLayout();
+		sellButtons.setLayout(sellLayout);			
 		
 		for (int i = 0; i<4 ; ++i)
 		{
-			ItemQuantity[i] = new JComboBox<>();
-			ItemQuantity[i].setPrototypeDisplayValue("How many from this item whold you like to buy ?"); //for comboBox size
-			ItemQuantity[i].setToolTipText("How many from this item whold you like to buy ?");
+			itemQuantity[i] = new JComboBox<>();
+			itemQuantity[i].setPrototypeDisplayValue("How many from this item would you like to buy ?"); //for comboBox size
+			itemQuantity[i].setToolTipText("How many from this item would you like to buy ?");
 		}
 		
 		Shop shop = clientSideConnection.getShop();
 		for (int i = 1; i<=4 ; ++i)
 		{
-			ItemPrice[i-1] = new JTextField(""+shop.getPrices(i), 5);
+			itemprice[i-1] = new JTextField(""+shop.getPrices(i), 5);//gets the list of the prices
 			for (int j = 0; j<= shop.getInventory(i) ;++j )
 			{
-				ItemQuantity[i-1].addItem(j);
+				itemQuantity[i-1].addItem(j);//gets the quantity of each item
 			}
-			ItemTotal[i-1] = new JTextField("",5);
-			ItemTotal[i-1].setEditable(false);
-			ItemTotal[i-1].setText("0");
+			itemTotal[i-1] = new JTextField("",5);
+			itemTotal[i-1].setEditable(false);
+			itemTotal[i-1].setText("0");
 			
 		}
 		
 		
 		JLabel shirt1 = new JLabel();
-		shirt1.setIcon(new ImageIcon("./files/whiteshirtSell.jpg"));
-		SellButtons.add(shirt1);
+		shirt1.setIcon(new ImageIcon("./files/whiteshirtsell.jpg"));
+		sellButtons.add(shirt1);
 		JLabel shirt2 = new JLabel();
-		shirt2.setIcon(new ImageIcon("./files/blackshirtSell.jpg"));
-		SellButtons.add(shirt2);
+		shirt2.setIcon(new ImageIcon("./files/blackshirtsell.jpg"));
+		sellButtons.add(shirt2);
 		JLabel pants1 = new JLabel();
-		pants1.setIcon(new ImageIcon("./files/whitepantsSell.jpg"));
-		SellButtons.add(pants1);
+		pants1.setIcon(new ImageIcon("./files/whitepantssell.jpg"));
+		sellButtons.add(pants1);
 		JLabel pants2 = new JLabel();
-		pants2.setIcon(new ImageIcon("./files/blackpantsSell.jpg"));
-		SellButtons.add(pants2);
+		pants2.setIcon(new ImageIcon("./files/blackpantssell.jpg"));
+		sellButtons.add(pants2);
 		
-		SellButtons.setBorder(BorderFactory.createTitledBorder("Sell Menu"));
-		SellButtons.setBackground(Color.white);
-		SellButtons.setPreferredSize(new Dimension (730 , 510));
-		JLabel CusID = new JLabel("Customer ID:");
-		SellButtons.add(CusID);
-		SellLayout.putConstraint(SpringLayout.WEST, CusID, 0, SpringLayout.WEST, SellButtons);
-		SellLayout.putConstraint(SpringLayout.NORTH, CusID, 10, SpringLayout.NORTH, SellButtons);
+		sellButtons.setBorder(BorderFactory.createTitledBorder("sell Menu"));
+		sellButtons.setBackground(Color.white);
+		sellButtons.setPreferredSize(new Dimension (730 , 510));
+		JLabel cusID = new JLabel("Customer ID:");
+		sellButtons.add(cusID);
+		sellLayout.putConstraint(SpringLayout.WEST, cusID, 0, SpringLayout.WEST, sellButtons);
+		sellLayout.putConstraint(SpringLayout.NORTH, cusID, 10, SpringLayout.NORTH, sellButtons);
 		
-		JTextField CusIDText = new JTextField("", 20);
-		SellButtons.add(CusIDText);
-		SellLayout.putConstraint(SpringLayout.WEST, CusIDText, 20, SpringLayout.EAST, CusID);
-		SellLayout.putConstraint(SpringLayout.NORTH, CusIDText, 10, SpringLayout.NORTH, SellButtons);
-
-		
-		JButton SearchCus = new JButton("Search Customer");
-		SearchCus.setFont(font2);
-		SellButtons.add(SearchCus);
-		SellLayout.putConstraint(SpringLayout.WEST,SearchCus , 50, SpringLayout.EAST, CusIDText);
-		SellLayout.putConstraint(SpringLayout.NORTH, SearchCus, 10, SpringLayout.NORTH, SellButtons);
-		
-		JLabel Type = new JLabel("Item Type:");
-		Type.setFont(font1);
-		SellButtons.add(Type);
-		SellLayout.putConstraint(SpringLayout.WEST, Type, 20, SpringLayout.WEST, SellButtons);
-		SellLayout.putConstraint(SpringLayout.NORTH, Type, 40, SpringLayout.SOUTH, CusID);
-		SellLayout.putConstraint(SpringLayout.NORTH, shirt1, 20, SpringLayout.SOUTH, Type);
-		SellLayout.putConstraint(SpringLayout.WEST, shirt1, 25, SpringLayout.WEST, SellButtons);
-		JLabel Quantity = new JLabel("Quantity:");
-		Quantity.setFont(font1);
-		SellButtons.add(Quantity);
-		SellLayout.putConstraint(SpringLayout.WEST, Quantity, 50, SpringLayout.EAST, Type);
-		SellLayout.putConstraint(SpringLayout.NORTH, Quantity, 40, SpringLayout.SOUTH, CusID);
-		ItemQuantity[0].setFont(font1);
-		JLabel Price = new JLabel("Item Price:");
-		Price.setFont(font1);
-		SellButtons.add(Price);
-		SellLayout.putConstraint(SpringLayout.WEST, Price, 250, SpringLayout.EAST, Quantity);
-		SellLayout.putConstraint(SpringLayout.NORTH, Price, 40, SpringLayout.SOUTH, CusID);
-		JLabel ItemTotalPrice = new JLabel("Item total price");
-		ItemTotalPrice.setFont(font1);
-		SellButtons.add(ItemTotalPrice);
-		SellLayout.putConstraint(SpringLayout.WEST, ItemTotalPrice, 100, SpringLayout.EAST, Price);
-		SellLayout.putConstraint(SpringLayout.NORTH, ItemTotalPrice, 40, SpringLayout.SOUTH, CusID);
-		JLabel Sum = new JLabel("Total price:");
-		Sum.setFont(font2);
-		SellButtons.add(Sum);
-		SellLayout.putConstraint(SpringLayout.WEST, Sum, 20, SpringLayout.EAST, Price);
-		SellLayout.putConstraint(SpringLayout.NORTH, Sum, 50, SpringLayout.SOUTH, ItemPrice[3]);
-		JLabel DiscPrec = new JLabel("Discount precentage:");
-		DiscPrec.setFont(font2);
-		SellButtons.add(DiscPrec);
-		SellLayout.putConstraint(SpringLayout.EAST, DiscPrec, 0, SpringLayout.WEST, Price);
-		SellLayout.putConstraint(SpringLayout.NORTH, DiscPrec, 50, SpringLayout.SOUTH, ItemPrice[3]);
+		JTextField cusIDText = new JTextField("", 20);
+		sellButtons.add(cusIDText);
+		sellLayout.putConstraint(SpringLayout.WEST, cusIDText, 20, SpringLayout.EAST, cusID);
+		sellLayout.putConstraint(SpringLayout.NORTH, cusIDText, 10, SpringLayout.NORTH, sellButtons);
 	
+		JButton searchCus = new JButton("Search Customer");
+		searchCus.setFont(font2);
+		sellButtons.add(searchCus);
+		sellLayout.putConstraint(SpringLayout.WEST,searchCus , 50, SpringLayout.EAST, cusIDText);
+		sellLayout.putConstraint(SpringLayout.NORTH, searchCus, 10, SpringLayout.NORTH, sellButtons);
+		
+		JLabel type = new JLabel("Item type:");
+		type.setFont(font1);
+		sellButtons.add(type);
+		sellLayout.putConstraint(SpringLayout.WEST, type, 20, SpringLayout.WEST, sellButtons);
+		sellLayout.putConstraint(SpringLayout.NORTH, type, 40, SpringLayout.SOUTH, cusID);
+		sellLayout.putConstraint(SpringLayout.NORTH, shirt1, 20, SpringLayout.SOUTH, type);
+		sellLayout.putConstraint(SpringLayout.WEST, shirt1, 25, SpringLayout.WEST, sellButtons);
+		JLabel quantity = new JLabel("quantity:");
+		quantity.setFont(font1);
+		sellButtons.add(quantity);
+		sellLayout.putConstraint(SpringLayout.WEST, quantity, 50, SpringLayout.EAST, type);
+		sellLayout.putConstraint(SpringLayout.NORTH, quantity, 40, SpringLayout.SOUTH, cusID);
+		itemQuantity[0].setFont(font1);
+		JLabel price = new JLabel("Item price:");
+		price.setFont(font1);
+		sellButtons.add(price);
+		sellLayout.putConstraint(SpringLayout.WEST, price, 250, SpringLayout.EAST, quantity);
+		sellLayout.putConstraint(SpringLayout.NORTH, price, 40, SpringLayout.SOUTH, cusID);
+		JLabel itemTotalPrice = new JLabel("Item total price");
+		itemTotalPrice.setFont(font1);
+		sellButtons.add(itemTotalPrice);
+		sellLayout.putConstraint(SpringLayout.WEST, itemTotalPrice, 100, SpringLayout.EAST, price);
+		sellLayout.putConstraint(SpringLayout.NORTH, itemTotalPrice, 40, SpringLayout.SOUTH, cusID);
+		JLabel sum = new JLabel("Total price:");
+		sum.setFont(font2);
+		sellButtons.add(sum);
+		sellLayout.putConstraint(SpringLayout.WEST, sum, 20, SpringLayout.EAST, price);
+		sellLayout.putConstraint(SpringLayout.NORTH, sum, 50, SpringLayout.SOUTH, itemprice[3]);
+		JLabel discPrec = new JLabel("Discount precentage:");
+		discPrec.setFont(font2);
+		sellButtons.add(discPrec);
+		sellLayout.putConstraint(SpringLayout.EAST, discPrec, 0, SpringLayout.WEST, price);
+		sellLayout.putConstraint(SpringLayout.NORTH, discPrec, 50, SpringLayout.SOUTH, itemprice[3]);
+	
+		sellButtons.add(itemQuantity[0]);
+		sellLayout.putConstraint(SpringLayout.WEST, itemQuantity[0], 50, SpringLayout.EAST, type);
+		sellLayout.putConstraint(SpringLayout.NORTH, itemQuantity[0], 20, SpringLayout.SOUTH, quantity);
+		itemprice[0].setEditable(false);
+		sellButtons.add(itemprice[0]);
+		sellLayout.putConstraint(SpringLayout.WEST, itemprice[0], 250, SpringLayout.EAST, quantity);
+		sellLayout.putConstraint(SpringLayout.NORTH, itemprice[0], 0, SpringLayout.NORTH, itemQuantity[0]);
+		sellButtons.add(itemTotal[0]);
+		sellLayout.putConstraint(SpringLayout.WEST, itemTotal[0], 0, SpringLayout.WEST, itemTotalPrice);
+		sellLayout.putConstraint(SpringLayout.NORTH, itemTotal[0], 20, SpringLayout.SOUTH, price);
 
-		SellButtons.add(ItemQuantity[0]);
-		SellLayout.putConstraint(SpringLayout.WEST, ItemQuantity[0], 50, SpringLayout.EAST, Type);
-		SellLayout.putConstraint(SpringLayout.NORTH, ItemQuantity[0], 20, SpringLayout.SOUTH, Quantity);
-		ItemPrice[0].setEditable(false);
-		SellButtons.add(ItemPrice[0]);
-		SellLayout.putConstraint(SpringLayout.WEST, ItemPrice[0], 250, SpringLayout.EAST, Quantity);
-		SellLayout.putConstraint(SpringLayout.NORTH, ItemPrice[0], 0, SpringLayout.NORTH, ItemQuantity[0]);
-		SellButtons.add(ItemTotal[0]);
-		SellLayout.putConstraint(SpringLayout.WEST, ItemTotal[0], 0, SpringLayout.WEST, ItemTotalPrice);
-		SellLayout.putConstraint(SpringLayout.NORTH, ItemTotal[0], 20, SpringLayout.SOUTH, Price);
-
-		SellLayout.putConstraint(SpringLayout.NORTH, shirt2, 30, SpringLayout.SOUTH, shirt1);
-		SellLayout.putConstraint(SpringLayout.WEST, shirt2, 0, SpringLayout.WEST, shirt1);
-		ItemQuantity[1].setFont(font1);
-		SellButtons.add(ItemQuantity[1]);
-		SellLayout.putConstraint(SpringLayout.WEST, ItemQuantity[1], 50, SpringLayout.EAST, Type);
-		SellLayout.putConstraint(SpringLayout.NORTH, ItemQuantity[1], 50, SpringLayout.SOUTH, ItemQuantity[0]);
-		ItemPrice[1].setEditable(false);
-		SellButtons.add(ItemPrice[1]);
-		SellLayout.putConstraint(SpringLayout.WEST, ItemPrice[1], 250, SpringLayout.EAST, Quantity);
-		SellLayout.putConstraint(SpringLayout.NORTH, ItemPrice[1], 0, SpringLayout.NORTH, ItemQuantity[1]);
-		SellButtons.add(ItemTotal[1]);
-		SellLayout.putConstraint(SpringLayout.WEST, ItemTotal[1], 0, SpringLayout.WEST, ItemTotalPrice);
-		SellLayout.putConstraint(SpringLayout.NORTH, ItemTotal[1], 50, SpringLayout.SOUTH, ItemPrice[0]);
+		sellLayout.putConstraint(SpringLayout.NORTH, shirt2, 30, SpringLayout.SOUTH, shirt1);
+		sellLayout.putConstraint(SpringLayout.WEST, shirt2, 0, SpringLayout.WEST, shirt1);
+		itemQuantity[1].setFont(font1);
+		sellButtons.add(itemQuantity[1]);
+		sellLayout.putConstraint(SpringLayout.WEST, itemQuantity[1], 50, SpringLayout.EAST, type);
+		sellLayout.putConstraint(SpringLayout.NORTH, itemQuantity[1], 50, SpringLayout.SOUTH, itemQuantity[0]);
+		itemprice[1].setEditable(false);
+		sellButtons.add(itemprice[1]);
+		sellLayout.putConstraint(SpringLayout.WEST, itemprice[1], 250, SpringLayout.EAST, quantity);
+		sellLayout.putConstraint(SpringLayout.NORTH, itemprice[1], 0, SpringLayout.NORTH, itemQuantity[1]);
+		sellButtons.add(itemTotal[1]);
+		sellLayout.putConstraint(SpringLayout.WEST, itemTotal[1], 0, SpringLayout.WEST, itemTotalPrice);
+		sellLayout.putConstraint(SpringLayout.NORTH, itemTotal[1], 50, SpringLayout.SOUTH, itemprice[0]);
 		
-		SellLayout.putConstraint(SpringLayout.NORTH, pants1, 30, SpringLayout.SOUTH, shirt2);
-		SellLayout.putConstraint(SpringLayout.WEST, pants1, 10, SpringLayout.WEST, shirt2);
-		ItemQuantity[2].setFont(font1);
-		SellButtons.add(ItemQuantity[2]);
-		SellLayout.putConstraint(SpringLayout.WEST, ItemQuantity[2], 50, SpringLayout.EAST, Type);
-		SellLayout.putConstraint(SpringLayout.NORTH, ItemQuantity[2], 50, SpringLayout.SOUTH, ItemQuantity[1]);
-		ItemPrice[2].setEditable(false);
-		SellButtons.add(ItemPrice[2]);
-		SellLayout.putConstraint(SpringLayout.WEST, ItemPrice[2], 250, SpringLayout.EAST, Quantity);
-		SellLayout.putConstraint(SpringLayout.NORTH, ItemPrice[2], 0, SpringLayout.NORTH, ItemQuantity[2]);
-		SellButtons.add(ItemTotal[2]);
-		SellLayout.putConstraint(SpringLayout.WEST, ItemTotal[2], 0, SpringLayout.WEST, ItemTotalPrice);
-		SellLayout.putConstraint(SpringLayout.NORTH, ItemTotal[2], 50, SpringLayout.SOUTH, ItemPrice[1]);
+		sellLayout.putConstraint(SpringLayout.NORTH, pants1, 30, SpringLayout.SOUTH, shirt2);
+		sellLayout.putConstraint(SpringLayout.WEST, pants1, 10, SpringLayout.WEST, shirt2);
+		itemQuantity[2].setFont(font1);
+		sellButtons.add(itemQuantity[2]);
+		sellLayout.putConstraint(SpringLayout.WEST, itemQuantity[2], 50, SpringLayout.EAST, type);
+		sellLayout.putConstraint(SpringLayout.NORTH, itemQuantity[2], 50, SpringLayout.SOUTH, itemQuantity[1]);
+		itemprice[2].setEditable(false);
+		sellButtons.add(itemprice[2]);
+		sellLayout.putConstraint(SpringLayout.WEST, itemprice[2], 250, SpringLayout.EAST, quantity);
+		sellLayout.putConstraint(SpringLayout.NORTH, itemprice[2], 0, SpringLayout.NORTH, itemQuantity[2]);
+		sellButtons.add(itemTotal[2]);
+		sellLayout.putConstraint(SpringLayout.WEST, itemTotal[2], 0, SpringLayout.WEST, itemTotalPrice);
+		sellLayout.putConstraint(SpringLayout.NORTH, itemTotal[2], 50, SpringLayout.SOUTH, itemprice[1]);
 		
-		SellLayout.putConstraint(SpringLayout.NORTH, pants2, 20, SpringLayout.SOUTH, pants1);
-		SellLayout.putConstraint(SpringLayout.WEST, pants2, 0, SpringLayout.WEST, pants1);
-		ItemQuantity[3].setFont(font1);
-		SellButtons.add(ItemQuantity[3]);
-		SellLayout.putConstraint(SpringLayout.WEST, ItemQuantity[3], 50, SpringLayout.EAST, Type);
-		SellLayout.putConstraint(SpringLayout.NORTH, ItemQuantity[3], 50, SpringLayout.SOUTH, ItemQuantity[2]);
-		ItemPrice[3].setEditable(false);
-		SellButtons.add(ItemPrice[3]);
-		SellLayout.putConstraint(SpringLayout.WEST, ItemPrice[3], 250, SpringLayout.EAST, Quantity);
-		SellLayout.putConstraint(SpringLayout.NORTH, ItemPrice[3], 0, SpringLayout.NORTH, ItemQuantity[3]);
-		SellButtons.add(ItemTotal[3]);
-		SellLayout.putConstraint(SpringLayout.WEST, ItemTotal[3], 0, SpringLayout.WEST, ItemTotalPrice);
-		SellLayout.putConstraint(SpringLayout.NORTH, ItemTotal[3], 50, SpringLayout.SOUTH, ItemPrice[2]);
-		JTextField SumText = new JTextField("0" , 5);
-		SumText.setEditable(false);
-		SellLayout.putConstraint(SpringLayout.WEST, SumText, 0, SpringLayout.WEST, ItemTotalPrice);
-		SellLayout.putConstraint(SpringLayout.NORTH, SumText, 50, SpringLayout.SOUTH, ItemPrice[3]);
-		SellButtons.add(SumText);
-		JTextField DiscPrecText = new JTextField("0.0%" , 5);
-		DiscPrecText.setEditable(false);
-		SellLayout.putConstraint(SpringLayout.WEST, DiscPrecText, 0, SpringLayout.WEST, ItemPrice[0]);
-		SellLayout.putConstraint(SpringLayout.NORTH, DiscPrecText, 50, SpringLayout.SOUTH, ItemPrice[3]);
-		SellButtons.add(DiscPrecText);
-
+		sellLayout.putConstraint(SpringLayout.NORTH, pants2, 20, SpringLayout.SOUTH, pants1);
+		sellLayout.putConstraint(SpringLayout.WEST, pants2, 0, SpringLayout.WEST, pants1);
+		itemQuantity[3].setFont(font1);
+		sellButtons.add(itemQuantity[3]);
+		sellLayout.putConstraint(SpringLayout.WEST, itemQuantity[3], 50, SpringLayout.EAST, type);
+		sellLayout.putConstraint(SpringLayout.NORTH, itemQuantity[3], 50, SpringLayout.SOUTH, itemQuantity[2]);
+		itemprice[3].setEditable(false);
+		sellButtons.add(itemprice[3]);
+		sellLayout.putConstraint(SpringLayout.WEST, itemprice[3], 250, SpringLayout.EAST, quantity);
+		sellLayout.putConstraint(SpringLayout.NORTH, itemprice[3], 0, SpringLayout.NORTH, itemQuantity[3]);
+		sellButtons.add(itemTotal[3]);
+		sellLayout.putConstraint(SpringLayout.WEST, itemTotal[3], 0, SpringLayout.WEST, itemTotalPrice);
+		sellLayout.putConstraint(SpringLayout.NORTH, itemTotal[3], 50, SpringLayout.SOUTH, itemprice[2]);
+		JTextField sumText = new JTextField("0" , 5);
+		sumText.setEditable(false);
+		sellLayout.putConstraint(SpringLayout.WEST, sumText, 0, SpringLayout.WEST, itemTotalPrice);
+		sellLayout.putConstraint(SpringLayout.NORTH, sumText, 50, SpringLayout.SOUTH, itemprice[3]);
+		sellButtons.add(sumText);
+		JTextField discPrecText = new JTextField("0.0%" , 5);
+		discPrecText.setEditable(false);
+		sellLayout.putConstraint(SpringLayout.WEST, discPrecText, 0, SpringLayout.WEST, itemprice[0]);
+		sellLayout.putConstraint(SpringLayout.NORTH, discPrecText, 50, SpringLayout.SOUTH, itemprice[3]);
+		sellButtons.add(discPrecText);
 		
-		
-		JButton Sell = new JButton("Sell");
-		Sell.setFont(font2);
-		SellButtons.add(Sell);
-		SellLayout.putConstraint(SpringLayout.WEST,Sell , 35, SpringLayout.WEST,ItemPrice[3] );
-		SellLayout.putConstraint(SpringLayout.NORTH, Sell, 100, SpringLayout.SOUTH, ItemPrice[3]);
-		Sell.setEnabled(false);
+		JButton sell = new JButton("sell");
+		sell.setFont(font2);
+		sellButtons.add(sell);
+		sellLayout.putConstraint(SpringLayout.WEST,sell , 35, SpringLayout.WEST,itemprice[3] );
+		sellLayout.putConstraint(SpringLayout.NORTH, sell, 100, SpringLayout.SOUTH, itemprice[3]);
+		sell.setEnabled(false);
 		
 		JButton Back = new JButton("Back");
 		Back.setFont(font2);
-		SellButtons.add(Back);
-		SellLayout.putConstraint(SpringLayout.WEST,Back , 50, SpringLayout.EAST, Sell);
-		SellLayout.putConstraint(SpringLayout.NORTH, Back, 100, SpringLayout.SOUTH, ItemPrice[3]);
+		sellButtons.add(Back);
+		sellLayout.putConstraint(SpringLayout.WEST,Back , 50, SpringLayout.EAST, sell);
+		sellLayout.putConstraint(SpringLayout.NORTH, Back, 100, SpringLayout.SOUTH, itemprice[3]);
+		//////////////////back ActionListener////////////////
 		Back.addActionListener(new ActionListener() {
 			public void actionPerformed (ActionEvent ae) {
-				SellMenu.dispose();
+				sellMenu.dispose();
 				new	MainMenu(clientSideConnection);
 			}
 		});
+		//////////////////End of back ActionListener////////////////
 		
 		JLabel clientNotFound = new JLabel("Client not found");
-		SellLayout.putConstraint(SpringLayout.WEST,clientNotFound , 150, SpringLayout.WEST, SellButtons);
-		SellLayout.putConstraint(SpringLayout.NORTH, clientNotFound, 30, SpringLayout.NORTH, SellButtons);
+		sellLayout.putConstraint(SpringLayout.WEST,clientNotFound , 150, SpringLayout.WEST, sellButtons);
+		sellLayout.putConstraint(SpringLayout.NORTH, clientNotFound, 30, SpringLayout.NORTH, sellButtons);
 		clientNotFound.setFont(font2);
 		clientNotFound.setForeground(Color.RED);
-		SellButtons.add(clientNotFound);
+		sellButtons.add(clientNotFound);
 		clientNotFound.setVisible(false);
 		
 		for (int i =0; i < 4; i++) 
 		{
 		    final int index = i; // assign to temporary variable
-		    ItemQuantity[index].addActionListener(new ActionListener() 
+			//////////////////itemQuantity ActionListener////////////////
+		    itemQuantity[index].addActionListener(new ActionListener() 
 		    {
 		        @Override
 		        public void actionPerformed(ActionEvent e) 
 		        {
-		        	if (ItemQuantity[index].getItemCount() != 0)
+		        	if (itemQuantity[index].getItemCount() != 0)//calculates the price, total item price and total sell price
 		        	{
-			    		int MyPrice = Integer.valueOf(ItemPrice[index].getText());
-						int MyQuantity = Integer.parseInt(ItemQuantity[index].getSelectedItem().toString());
-						ItemTotal[index].setText(""+MyPrice*MyQuantity);
-						double sum = (Integer.parseInt(ItemTotal[0].getText()) + Integer.parseInt(ItemTotal[1].getText()) + Integer.parseInt(ItemTotal[2].getText()) + Integer.parseInt(ItemTotal[3].getText())) * (1-discount);
-						SumText.setText(new String(""+sum));
-						clientSideConnection.getShop().getCart().cartUpdate(index, MyQuantity);
+			    		int Myprice = Integer.valueOf(itemprice[index].getText());
+						int Myquantity = Integer.parseInt(itemQuantity[index].getSelectedItem().toString());
+						itemTotal[index].setText(""+Myprice*Myquantity);
+						double sum = (Integer.parseInt(itemTotal[0].getText()) + Integer.parseInt(itemTotal[1].getText()) + Integer.parseInt(itemTotal[2].getText()) + Integer.parseInt(itemTotal[3].getText())) * (1-discount);
+						sumText.setText(new String(""+sum));
+						clientSideConnection.getShop().getCart().cartUpdate(index, Myquantity);
 						if (sum != 0.0)
-							Sell.setEnabled(true);
+							sell.setEnabled(true);
 						else
-							Sell.setEnabled(false);
+							sell.setEnabled(false);
 		        	}
 					
 		        }
 		    });
+			//////////////////End of itemQuantity ActionListener////////////////
 		}
 
-//////////////////////Get Customer for discount/////////////////////////
-		SearchCus.addActionListener(new ActionListener() {
+		//////////////////////Get Customer for discount/////////////////////////
+		searchCus.addActionListener(new ActionListener() {
 			public void actionPerformed (ActionEvent ae) {
 				Customer customer = null;
 					try {
-						System.out.println(CusIDText.getText());
-						customer = clientSideConnection.findCustomer(CusIDText.getText());
+						System.out.println(cusIDText.getText());
+						customer = clientSideConnection.findCustomer(cusIDText.getText());
 					} catch (IOException | ParseException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					
-					if (customer != null)
+					if (customer != null)//if the client is already exists gets the discount percentage
 					{
 						discount = clientSideConnection.getShop().getDiscountForCustomer(customer.getType());
-						clientSideConnection.getShop().getCart().setCustomer(CusIDText.getText());
+						clientSideConnection.getShop().getCart().setCustomer(cusIDText.getText());
 						clientNotFound.setVisible(false);
 					}
-					else 
+					else //if the client is not exists sets the discount percentage to 0
 					{
 						discount = 0.0;
 						clientNotFound.setVisible(true);
 					}
-					DiscPrecText.setText(discount+"%");
-					double sum = (Integer.parseInt(ItemTotal[0].getText()) + Integer.parseInt(ItemTotal[1].getText()) + Integer.parseInt(ItemTotal[2].getText()) + Integer.parseInt(ItemTotal[3].getText())) * (1-discount);
-					SumText.setText(new String(""+sum));
+					discPrecText.setText(discount+"%");
+					double sum = (Integer.parseInt(itemTotal[0].getText()) + Integer.parseInt(itemTotal[1].getText()) + Integer.parseInt(itemTotal[2].getText()) + Integer.parseInt(itemTotal[3].getText())) * (1-discount);
+					sumText.setText(new String(""+sum));
 
 			}
 		});
-////////////////////End Get Customer for discount//////////////////////
+		////////////////////End Get Customer for discount//////////////////////
 		
-		ActionListener sell = new ActionListener() {
+		
+		
+		//////////////////////sellActionListener/////////////////////////
+		ActionListener sellActionListener = new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -302,12 +304,11 @@ public class SellMain {
 				try {
 					clientSideConnection.updateInventory();
 				} catch (IOException | ParseException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 				for (int i=1;i<=4;++i)
 				{
-					if (Integer.parseInt(ItemQuantity[i-1].getSelectedItem().toString()) > clientSideConnection.getShop().getInventory(i))
+					if (Integer.parseInt(itemQuantity[i-1].getSelectedItem().toString()) > clientSideConnection.getShop().getInventory(i))//checks if you try to sell more items than you have in the supply
 					{
 						quantityTest = false;
 						JOptionPane pane = new JOptionPane();
@@ -317,26 +318,28 @@ public class SellMain {
 				}
 				if (quantityTest == true)
 				{
-					clientSideConnection.getShop().getCart().setTotalPrice(Double.parseDouble(SumText.getText().toString()));
+					clientSideConnection.getShop().getCart().setTotalPrice(Double.parseDouble(sumText.getText().toString()));
 					clientSideConnection.endSell();
-					CusIDText.setText("");
+					cusIDText.setText("");
 				}
-				for (int i = 0; i<4 ; ++i)
+				for (int i = 0; i<4 ; ++i)//rebuilding the itemQuantity array after the sell
 				{
-					ItemQuantity[i].removeAllItems();
+					itemQuantity[i].removeAllItems();
 					for (int j = 0; j<= shop.getInventory(i+1) ;++j )
 					{
-						ItemQuantity[i].addItem(j);
+						itemQuantity[i].addItem(j);
 					}
 				}
 			}
 		};	
 		
-		Sell.addActionListener(sell);
+		//////////////////////End of sellActionListener/////////////////////////
 		
-		SellMenu.add(SellButtons);
-		SellMenu.pack();
-		SellMenu.setVisible(true);
+		sell.addActionListener(sellActionListener);
+		
+		sellMenu.add(sellButtons);
+		sellMenu.pack();
+		sellMenu.setVisible(true);
 		
 	}
 }

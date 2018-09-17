@@ -21,40 +21,41 @@ public class StoreManagment {
 	
 	public StoreManagment(ClientSideConnection clientSideConnection) {
 		Font font2 = new Font("Ariel",Font.BOLD,20);
-		JFrame StoreMgr = new JFrame();
-		StoreMgr.setTitle("Store Managment");
-		StoreMgr.setSize(800, 420);
-		StoreMgr.setLocationRelativeTo(null);
+		JFrame storeMgr = new JFrame();
+		storeMgr.setTitle("Store Managment");
+		storeMgr.setSize(800, 420);
+		storeMgr.setLocationRelativeTo(null);
 		Image img = Toolkit.getDefaultToolkit().getImage("./files/store_icon.jpg");
-		StoreMgr.setIconImage(img);
-		StoreMgr.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		StoreMgr.setLayout( new BorderLayout());
+		storeMgr.setIconImage(img);
+		storeMgr.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		storeMgr.setLayout( new BorderLayout());
 		
 		
 	
-		JButton DiscountMgr = new JButton("Manage Discounts");
-		StoreMgr.add(DiscountMgr , BorderLayout.WEST);
-		DiscountMgr.setFont(font2);
-		DiscountMgr.addActionListener(new ActionListener() {
+		JButton discountMgr = new JButton("Manage Discounts");
+		storeMgr.add(discountMgr , BorderLayout.WEST);
+		discountMgr.setFont(font2);
+		////////////////////discount manager ActionListener///////////////
+		discountMgr.addActionListener(new ActionListener() {
 			public void actionPerformed (ActionEvent ae) {
-				StoreMgr.dispose();
+				storeMgr.dispose();
 				try {
 					clientSideConnection.updateDicounts();
 				} catch (IOException | ParseException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				new	Discount(clientSideConnection);
 			}
 		});
-		
+		//////////////////End of discount manager ActionListener///////////////
 
-		JButton Supply = new JButton("Manage Supplys");
-		StoreMgr.add(Supply,BorderLayout.CENTER);
-		Supply.setFont(font2);
-		Supply.addActionListener(new ActionListener() {
+		JButton supply = new JButton("Manage supplys");
+		storeMgr.add(supply,BorderLayout.CENTER);
+		supply.setFont(font2);
+		////////////////supply ActionListener///////////////
+		supply.addActionListener(new ActionListener() {
 			public void actionPerformed (ActionEvent ae) {
-				StoreMgr.dispose();
+				storeMgr.dispose();
 				try {
 					clientSideConnection.updateInventory();
 				} catch (IOException e) {
@@ -67,34 +68,36 @@ public class StoreManagment {
 				new	SupplyManagment(clientSideConnection);
 			}
 		});
-		
-		JButton Prices = new JButton("Manage Pricess");
-		StoreMgr.add(Prices,BorderLayout.EAST);
-		Prices.setFont(font2);
-		Prices.addActionListener(new ActionListener() {
+		////////////////End of supply ActionListener///////////////
+		JButton prices = new JButton("Manage pricess");
+		storeMgr.add(prices,BorderLayout.EAST);
+		prices.setFont(font2);
+		////////////////prices ActionListener///////////////
+		prices.addActionListener(new ActionListener() {
 			public void actionPerformed (ActionEvent ae) {
 				try {
 					clientSideConnection.updatePrices();
 				} catch (IOException | ParseException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				StoreMgr.dispose();
+				storeMgr.dispose();
 				new	PriceManagment(clientSideConnection);
 			}
 		});
-		
-		JButton Back = new JButton("Back to Main Menu");
-		Back.setFont(font2);
-		StoreMgr.add(Back,BorderLayout.SOUTH);
-		Back.addActionListener(new ActionListener() {
+		////////////////End of prices ActionListener///////////////
+		JButton back = new JButton("back to Main Menu");
+		back.setFont(font2);
+		storeMgr.add(back,BorderLayout.SOUTH);
+		////////////////Back ActionListener///////////////
+		back.addActionListener(new ActionListener() {
 			public void actionPerformed (ActionEvent ae) {
-				StoreMgr.dispose();
+				storeMgr.dispose();
 				new	MainMenu(clientSideConnection);
 			}
 		});
+		////////////////End of Back ActionListener///////////////
 		
-		StoreMgr.setVisible(true);
+		storeMgr.setVisible(true);
 	}
 
 }

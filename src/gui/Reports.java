@@ -54,20 +54,19 @@ public class Reports {
 		
 		System.out.println(stats);
 		
-		JComboBox<String> ItemType , Item;
-		ItemType = new JComboBox<String>(new String[] {"Shirt","Pants"} );
-		Item = new JComboBox<String>(new String[] {"Shirt 1", "Shirt 2","Pants 1" , "Pants 2"} );
-		Font font2 = new Font("Ariel",Font.BOLD,14);
-		JFrame RepMenu = new JFrame();
-		RepMenu.setTitle("Generatre reports");
+		JComboBox<String> itemType , item;
+		itemType = new JComboBox<String>(new String[] {"Shirt","Pants"} );
+		item = new JComboBox<String>(new String[] {"Shirt 1", "Shirt 2","Pants 1" , "Pants 2"} );
+		JFrame repMenu = new JFrame();
+		repMenu.setTitle("Generatre reports");
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		Point middle = new Point(screenSize.width / 2, screenSize.height / 2);
 		Point newLocation = new Point(middle.x - (600 / 2), 
 		                              middle.y - (700 / 2));
-		RepMenu.setLocation(newLocation);
+		repMenu.setLocation(newLocation);
 		Image img = Toolkit.getDefaultToolkit().getImage("./files/RepIcon.png");
-		RepMenu.setIconImage(img);
-		RepMenu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		repMenu.setIconImage(img);
+		repMenu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		JDateChooser Date = new JDateChooser();
 		Date.setDateFormatString("dd-MM-yyyy");
@@ -81,8 +80,8 @@ public class Reports {
 		SpringLayout RepLayout = new SpringLayout();
 		RepMain.setLayout(RepLayout);
 		RepMain.add(Date);
-		RepMain.add(ItemType);
-		RepMain.add(Item);
+		RepMain.add(itemType);
+		RepMain.add(item);
 		
 		
 		for (int j =1 ; j<=7 ; ++j) {
@@ -130,8 +129,8 @@ public class Reports {
 		JLabel catRep = new JLabel("Report by category:");
 		RepMain.add(catRep);
 		
-		JLabel ItemRep = new JLabel ("Report by item:");
-		RepMain.add(ItemRep);
+		JLabel itemRep = new JLabel ("Report by item:");
+		RepMain.add(itemRep);
 		
 		JButton Back = new JButton("Back");
 		RepMain.add(Back);
@@ -180,8 +179,8 @@ public class Reports {
 		RepLayout.putConstraint(SpringLayout.WEST, DataField[6], 30, SpringLayout.EAST, BlackPants);
 		RepLayout.putConstraint(SpringLayout.NORTH, DataField[6], 0, SpringLayout.NORTH, BlackPants);
 		
-		RepLayout.putConstraint(SpringLayout.WEST, ItemRep, 0, SpringLayout.WEST, RepMain);
-		RepLayout.putConstraint(SpringLayout.NORTH, ItemRep, 20, SpringLayout.SOUTH, ItemType);	
+		RepLayout.putConstraint(SpringLayout.WEST, itemRep, 0, SpringLayout.WEST, RepMain);
+		RepLayout.putConstraint(SpringLayout.NORTH, itemRep, 20, SpringLayout.SOUTH, itemType);	
 		
 		RepLayout.putConstraint(SpringLayout.WEST, catRep, 0, SpringLayout.WEST, RepMain);
 		RepLayout.putConstraint(SpringLayout.NORTH, catRep, 20, SpringLayout.SOUTH, Date);		
@@ -195,20 +194,20 @@ public class Reports {
 		RepLayout.putConstraint(SpringLayout.WEST, Date, 0, SpringLayout.WEST, RepMain);
 		RepLayout.putConstraint(SpringLayout.NORTH, Date, 5 ,SpringLayout.SOUTH, dateRep);
 		
-		RepLayout.putConstraint(SpringLayout.WEST, ItemType, 0, SpringLayout.WEST, RepMain);
-		RepLayout.putConstraint(SpringLayout.NORTH, ItemType, 5, SpringLayout.SOUTH, catRep);
+		RepLayout.putConstraint(SpringLayout.WEST, itemType, 0, SpringLayout.WEST, RepMain);
+		RepLayout.putConstraint(SpringLayout.NORTH, itemType, 5, SpringLayout.SOUTH, catRep);
 		
-		RepLayout.putConstraint(SpringLayout.WEST, Item, 0, SpringLayout.WEST, RepMain);
-		RepLayout.putConstraint(SpringLayout.NORTH, Item, 5, SpringLayout.SOUTH, ItemRep);
+		RepLayout.putConstraint(SpringLayout.WEST, item, 0, SpringLayout.WEST, RepMain);
+		RepLayout.putConstraint(SpringLayout.NORTH, item, 5, SpringLayout.SOUTH, itemRep);
 		
 		RepLayout.putConstraint(SpringLayout.WEST, RepBtn[3], 0, SpringLayout.WEST, RepBtn[2]);
 		RepLayout.putConstraint(SpringLayout.NORTH, RepBtn[3], -5, SpringLayout.NORTH, Date);
 		
 		RepLayout.putConstraint(SpringLayout.WEST, RepBtn[2], 20, SpringLayout.EAST, catRep);
-		RepLayout.putConstraint(SpringLayout.NORTH, RepBtn[2], -5, SpringLayout.NORTH, ItemType);
+		RepLayout.putConstraint(SpringLayout.NORTH, RepBtn[2], -5, SpringLayout.NORTH, itemType);
 				
 		RepLayout.putConstraint(SpringLayout.WEST, RepBtn[1], 0, SpringLayout.WEST, RepBtn[2]);
-		RepLayout.putConstraint(SpringLayout.NORTH, RepBtn[1], -5, SpringLayout.NORTH, Item);
+		RepLayout.putConstraint(SpringLayout.NORTH, RepBtn[1], -5, SpringLayout.NORTH, item);
 		
 		RepLayout.putConstraint(SpringLayout.WEST, RepBtn[0], 0, SpringLayout.WEST, RepBtn[2]);
 		RepLayout.putConstraint(SpringLayout.NORTH, RepBtn[0], -5, SpringLayout.NORTH, branchRep);
@@ -221,7 +220,7 @@ public class Reports {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				
-				RepMenu.dispose();
+				repMenu.dispose();
 				new MainMenu(clientSideConnection);
 			}
 		});
@@ -240,12 +239,12 @@ public class Reports {
 			}
 		});
 		
-		RepBtn[1].addActionListener(new ActionListener() { //Report by Item
+		RepBtn[1].addActionListener(new ActionListener() { //Report by item
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					clientSideConnection.saveReportByItem(Item.getSelectedItem().toString());
+					clientSideConnection.saveReportByItem(item.getSelectedItem().toString());
 				} catch (IOException | ParseException e1) {
 					e1.printStackTrace();
 				}
@@ -259,7 +258,7 @@ public class Reports {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					clientSideConnection.saveReportByType(ItemType.getSelectedItem().toString());
+					clientSideConnection.saveReportByType(itemType.getSelectedItem().toString());
 				} catch (IOException | ParseException e1) {
 					e1.printStackTrace();
 				}
@@ -300,7 +299,7 @@ public class Reports {
 		    }
 		});
 		
-		Item.addActionListener(new ActionListener() {
+		item.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -308,7 +307,7 @@ public class Reports {
 			}
 		});
 		
-		ItemType.addActionListener(new ActionListener() {
+		itemType.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -316,9 +315,9 @@ public class Reports {
 			}
 		});
 
-		RepMenu.setPreferredSize(new Dimension(400,480));
-		RepMenu.add(RepMain);
-		RepMenu.pack();
-		RepMenu.setVisible(true);
+		repMenu.setPreferredSize(new Dimension(400,480));
+		repMenu.add(RepMain);
+		repMenu.pack();
+		repMenu.setVisible(true);
 	}
 }
