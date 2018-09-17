@@ -40,147 +40,147 @@ public class Employee {
 	public  Employee(ClientSideConnection clientSideConnection) {
 		Font font1 = new Font("Ariel",Font.PLAIN,10);
 		Font font2 = new Font("Ariel",Font.BOLD,14);
-		JFrame EmpMenu = new JFrame();
-		EmpMenu.setTitle("Employee managment menu");
+		JFrame empMenu = new JFrame();
+		empMenu.setTitle("Employee managment menu");
 		//Set the Panel on the middle
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		Point middle = new Point(screenSize.width / 2, screenSize.height / 2);
 		Point newLocation = new Point(middle.x - (600 / 2), 
 		                              middle.y - (700 / 2));
-		EmpMenu.setLocation(newLocation);
+		empMenu.setLocation(newLocation);
 		Image img = Toolkit.getDefaultToolkit().getImage("./files/EmpIcon.png");
-		EmpMenu.setIconImage(img);
-		EmpMenu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		empMenu.setIconImage(img);
+		empMenu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 
 				
-		JPanel EmpMgr = new JPanel();
-		SpringLayout EmpLayout = new SpringLayout();
-		EmpMgr.setLayout(EmpLayout);
-		JComboBox<String> PositionText;
+		JPanel empMgr = new JPanel();
+		SpringLayout empLayout = new SpringLayout();
+		empMgr.setLayout(empLayout);
+		JComboBox<String> positionText;
 		
-		EmpMgr.setBorder(BorderFactory.createTitledBorder("Employee Menu"));
-		EmpMgr.setBackground(Color.white);
-		EmpMgr.setPreferredSize(new Dimension (550 , 650));
+		empMgr.setBorder(BorderFactory.createTitledBorder("Employee Menu"));
+		empMgr.setBackground(Color.white);
+		empMgr.setPreferredSize(new Dimension (550 , 650));
 
-		JButton Save = new JButton("Save");
-		Save.setFont(font2);
-		EmpMgr.add(Save);
-		Save.setEnabled(false);
-		EmpLayout.putConstraint(SpringLayout.WEST, Save, 100, SpringLayout.WEST, EmpMgr);
-		EmpLayout.putConstraint(SpringLayout.NORTH, Save, 540, SpringLayout.NORTH, EmpMgr);
+		JButton save = new JButton("save");
+		save.setFont(font2);
+		empMgr.add(save);
+		save.setEnabled(false);
+		empLayout.putConstraint(SpringLayout.WEST, save, 100, SpringLayout.WEST, empMgr);
+		empLayout.putConstraint(SpringLayout.NORTH, save, 540, SpringLayout.NORTH, empMgr);
 		
-		JButton Back = new JButton("Back");
-		Back.setFont(font2);
-		EmpMgr.add(Back);
-		EmpLayout.putConstraint(SpringLayout.WEST,Back , 12, SpringLayout.EAST, Save);
-		EmpLayout.putConstraint(SpringLayout.NORTH, Back, 540, SpringLayout.NORTH, EmpMgr);
-		Back.addActionListener(new ActionListener() {
+		JButton back = new JButton("back");
+		back.setFont(font2);
+		empMgr.add(back);
+		empLayout.putConstraint(SpringLayout.WEST,back , 12, SpringLayout.EAST, save);
+		empLayout.putConstraint(SpringLayout.NORTH, back, 540, SpringLayout.NORTH, empMgr);
+		back.addActionListener(new ActionListener() {
 			public void actionPerformed (ActionEvent ae) {
-				EmpMenu.dispose();
+				empMenu.dispose();
 				new	MainMenu(clientSideConnection);
 			}
 		});
 		
-		JButton Search = new JButton("Search employee");
-		Search.setFont(font2);
-		Search.setEnabled(false);
-		EmpMgr.add(Search);
-		EmpLayout.putConstraint(SpringLayout.WEST, Search, 380, SpringLayout.WEST, EmpMgr);
+		JButton search = new JButton("search employee");
+		search.setFont(font2);
+		search.setEnabled(false);
+		empMgr.add(search);
+		empLayout.putConstraint(SpringLayout.WEST, search, 380, SpringLayout.WEST, empMgr);
 
-		JLabel ID = new JLabel("Employee ID:");
-		ID.setFont(font2);
-		EmpMgr.add(ID);
-		EmpLayout.putConstraint(SpringLayout.WEST, ID, 20, SpringLayout.WEST, EmpMgr);
+		JLabel id = new JLabel("Employee id:");
+		id.setFont(font2);
+		empMgr.add(id);
+		empLayout.putConstraint(SpringLayout.WEST, id, 20, SpringLayout.WEST, empMgr);
 		
 		NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.getDefault());
 		DecimalFormat decimalFormat = (DecimalFormat) numberFormat;
 		decimalFormat.setGroupingUsed(false);
 		
-		JTextField IDNum = new JFormattedTextField(decimalFormat);
-		IDNum.setColumns(20);
-		IDNum.setFont(font1);
-		EmpMgr.add(IDNum);
-		EmpLayout.putConstraint(SpringLayout.WEST, IDNum, 150, SpringLayout.WEST, ID);
+		JTextField idNum = new JFormattedTextField(decimalFormat);
+		idNum.setColumns(20);
+		idNum.setFont(font1);
+		empMgr.add(idNum);
+		empLayout.putConstraint(SpringLayout.WEST, idNum, 150, SpringLayout.WEST, id);
 
 		
-		JLabel Fn = new JLabel("Full name:");
-		Fn.setFont(font2);
-		EmpMgr.add(Fn);
-		EmpLayout.putConstraint(SpringLayout.WEST, Fn, 20, SpringLayout.WEST, EmpMgr);
-		EmpLayout.putConstraint(SpringLayout.NORTH, Fn, 60, SpringLayout.SOUTH, ID);
+		JLabel fn = new JLabel("Full name:");
+		fn.setFont(font2);
+		empMgr.add(fn);
+		empLayout.putConstraint(SpringLayout.WEST, fn, 20, SpringLayout.WEST, empMgr);
+		empLayout.putConstraint(SpringLayout.NORTH, fn, 60, SpringLayout.SOUTH, id);
 		
-		JTextField FnText = new JTextField("",20);
-		FnText.setFont(font1);
+		JTextField fnText = new JTextField("",20);
+		fnText.setFont(font1);
 
-		EmpMgr.add(FnText);
-		EmpLayout.putConstraint(SpringLayout.WEST, FnText, 150, SpringLayout.WEST, ID);
-		EmpLayout.putConstraint(SpringLayout.NORTH, FnText, 60, SpringLayout.SOUTH, IDNum);
+		empMgr.add(fnText);
+		empLayout.putConstraint(SpringLayout.WEST, fnText, 150, SpringLayout.WEST, id);
+		empLayout.putConstraint(SpringLayout.NORTH, fnText, 60, SpringLayout.SOUTH, idNum);
 		
 
 		
-		JLabel Pass = new JLabel("Password:");
-		Pass.setFont(font2);
-		EmpMgr.add(Pass);
-		EmpLayout.putConstraint(SpringLayout.WEST, Pass, 20, SpringLayout.WEST, EmpMgr);
-		EmpLayout.putConstraint(SpringLayout.NORTH, Pass, 60, SpringLayout.SOUTH, Fn);
-		JPasswordField PassText = new JPasswordField("",20);
-		PassText.setFont(font1);
+		JLabel pass = new JLabel("password:");
+		pass.setFont(font2);
+		empMgr.add(pass);
+		empLayout.putConstraint(SpringLayout.WEST, pass, 20, SpringLayout.WEST, empMgr);
+		empLayout.putConstraint(SpringLayout.NORTH, pass, 60, SpringLayout.SOUTH, fn);
+		JPasswordField passText = new JPasswordField("",20);
+		passText.setFont(font1);
 
-		EmpMgr.add(PassText);
-		EmpLayout.putConstraint(SpringLayout.WEST, PassText, 150, SpringLayout.WEST, Fn);
-		EmpLayout.putConstraint(SpringLayout.NORTH, PassText, 60, SpringLayout.SOUTH, FnText);
+		empMgr.add(passText);
+		empLayout.putConstraint(SpringLayout.WEST, passText, 150, SpringLayout.WEST, fn);
+		empLayout.putConstraint(SpringLayout.NORTH, passText, 60, SpringLayout.SOUTH, fnText);
 		
-		JLabel PhnNum = new JLabel("Phone number:");
-		PhnNum.setFont(font2);
-		EmpMgr.add(PhnNum);
-		EmpLayout.putConstraint(SpringLayout.WEST, PhnNum, 20, SpringLayout.WEST, EmpMgr);
-		EmpLayout.putConstraint(SpringLayout.NORTH, PhnNum, 60, SpringLayout.SOUTH, Pass);
-		JTextField PhnNumText = new JTextField("",20);
-		PhnNumText.setFont(font1);
-		EmpMgr.add(PhnNumText);
-		EmpLayout.putConstraint(SpringLayout.WEST, PhnNumText, 150, SpringLayout.WEST, Pass);
-		EmpLayout.putConstraint(SpringLayout.NORTH, PhnNumText, 60, SpringLayout.SOUTH, PassText);
+		JLabel phnNum = new JLabel("Phone number:");
+		phnNum.setFont(font2);
+		empMgr.add(phnNum);
+		empLayout.putConstraint(SpringLayout.WEST, phnNum, 20, SpringLayout.WEST, empMgr);
+		empLayout.putConstraint(SpringLayout.NORTH, phnNum, 60, SpringLayout.SOUTH, pass);
+		JTextField phnNumText = new JTextField("",20);
+		phnNumText.setFont(font1);
+		empMgr.add(phnNumText);
+		empLayout.putConstraint(SpringLayout.WEST, phnNumText, 150, SpringLayout.WEST, pass);
+		empLayout.putConstraint(SpringLayout.NORTH, phnNumText, 60, SpringLayout.SOUTH, passText);
 		
-		JLabel AccNum = new JLabel("Account number:");
-		AccNum.setFont(font2);
-		EmpMgr.add(AccNum);
-		EmpLayout.putConstraint(SpringLayout.WEST, AccNum, 20, SpringLayout.WEST, EmpMgr);
-		EmpLayout.putConstraint(SpringLayout.NORTH, AccNum, 60, SpringLayout.SOUTH, PhnNum);
-		JTextField AccNumText = new JTextField("",20);
-		AccNumText.setFont(font1);
+		JLabel accNum = new JLabel("Account number:");
+		accNum.setFont(font2);
+		empMgr.add(accNum);
+		empLayout.putConstraint(SpringLayout.WEST, accNum, 20, SpringLayout.WEST, empMgr);
+		empLayout.putConstraint(SpringLayout.NORTH, accNum, 60, SpringLayout.SOUTH, phnNum);
+		JTextField accNumText = new JTextField("",20);
+		accNumText.setFont(font1);
 
-		EmpMgr.add(AccNumText);
-		EmpLayout.putConstraint(SpringLayout.WEST, AccNumText, 150, SpringLayout.WEST, PhnNum);
-		EmpLayout.putConstraint(SpringLayout.NORTH, AccNumText, 60, SpringLayout.SOUTH, PhnNumText);
+		empMgr.add(accNumText);
+		empLayout.putConstraint(SpringLayout.WEST, accNumText, 150, SpringLayout.WEST, phnNum);
+		empLayout.putConstraint(SpringLayout.NORTH, accNumText, 60, SpringLayout.SOUTH, phnNumText);
 
-		JLabel EmpNum = new JLabel("Employee number:");
-		EmpNum.setFont(font2);
-		EmpMgr.add(EmpNum);
-		EmpLayout.putConstraint(SpringLayout.WEST, EmpNum, 20, SpringLayout.WEST, EmpMgr);
-		EmpLayout.putConstraint(SpringLayout.NORTH, EmpNum, 60, SpringLayout.SOUTH, AccNum);
-		JTextField EmpNumText = new JTextField("0"	,20);
-		EmpNumText.setFont(font1);
+		JLabel empNum = new JLabel("Employee number:");
+		empNum.setFont(font2);
+		empMgr.add(empNum);
+		empLayout.putConstraint(SpringLayout.WEST, empNum, 20, SpringLayout.WEST, empMgr);
+		empLayout.putConstraint(SpringLayout.NORTH, empNum, 60, SpringLayout.SOUTH, accNum);
+		JTextField empNumText = new JTextField("0"	,20);
+		empNumText.setFont(font1);
 
-		EmpNumText.setEditable(false);
-		EmpMgr.add(EmpNumText);
-		EmpLayout.putConstraint(SpringLayout.WEST, EmpNumText, 150, SpringLayout.WEST, EmpNum);
-		EmpLayout.putConstraint(SpringLayout.NORTH, EmpNumText, 60, SpringLayout.SOUTH, AccNumText);
+		empNumText.setEditable(false);
+		empMgr.add(empNumText);
+		empLayout.putConstraint(SpringLayout.WEST, empNumText, 150, SpringLayout.WEST, empNum);
+		empLayout.putConstraint(SpringLayout.NORTH, empNumText, 60, SpringLayout.SOUTH, accNumText);
 		
 		
 		
-		JLabel Position = new JLabel("Position:");
-		Position.setFont(font2);
-		EmpMgr.add(Position);
-		EmpLayout.putConstraint(SpringLayout.WEST, Position, 20, SpringLayout.WEST, EmpMgr);
-		EmpLayout.putConstraint(SpringLayout.NORTH, Position, 60, SpringLayout.SOUTH, EmpNum);
-		PositionText = new JComboBox<String>(new String[] {"Manager","Seller","Cashier"} );
-		PositionText.setSelectedItem("Seller");
-		PositionText.setFont(font1);
+		JLabel position = new JLabel("position:");
+		position.setFont(font2);
+		empMgr.add(position);
+		empLayout.putConstraint(SpringLayout.WEST, position, 20, SpringLayout.WEST, empMgr);
+		empLayout.putConstraint(SpringLayout.NORTH, position, 60, SpringLayout.SOUTH, empNum);
+		positionText = new JComboBox<String>(new String[] {"Manager","Seller","Cashier"} );
+		positionText.setSelectedItem("Seller");
+		positionText.setFont(font1);
 
-		EmpMgr.add(PositionText);
-		EmpLayout.putConstraint(SpringLayout.WEST, PositionText, 150, SpringLayout.WEST, Position);
-		EmpLayout.putConstraint(SpringLayout.NORTH, PositionText, 60, SpringLayout.SOUTH, EmpNumText);
+		empMgr.add(positionText);
+		empLayout.putConstraint(SpringLayout.WEST, positionText, 150, SpringLayout.WEST, position);
+		empLayout.putConstraint(SpringLayout.NORTH, positionText, 60, SpringLayout.SOUTH, empNumText);
 		
 		isWorkerfound = false;
 ////////////////////////ActionListener For finding worker/////////////////////////		
@@ -188,34 +188,34 @@ ActionListener findWorkerAction = new ActionListener() {
 	public void actionPerformed (ActionEvent ae) {
 		Worker worker = null;
 		try {
-			worker = clientSideConnection.findWorker(IDNum.getText());
+			worker = clientSideConnection.findWorker(idNum.getText()); //getting the workers id.
 			
 		} catch (ParseException | IOException e) {
 			e.printStackTrace();
 		}
 		
-		if (worker != null)
+		if (worker != null)	//if an id was typed get the employee data
 		{
-			FnText.setText(worker.getName());
-			PassText.setText(worker.getPassword());
-			PhnNumText.setText(worker.getPhoneNr());
-			AccNumText.setText(worker.getBankAcc());
+			fnText.setText(worker.getName());
+			passText.setText(worker.getPassword());
+			phnNumText.setText(worker.getPhoneNr());
+			accNumText.setText(worker.getBankAcc());
 			String workerId = Integer.toString(worker.getWorkerId());
-			EmpNumText.setText(workerId);
-			PositionText.setSelectedItem(worker.getJob());
+			empNumText.setText(workerId);
+			positionText.setSelectedItem(worker.getJob());
 			isWorkerfound = true;
 			workerFound = worker;
 			passwordValidation = true;
 		}
-		else
+		else // if an id was'nt typed or employee was'nt found erase all of the text fields in the form.
 		{
-			EmpNumText.setText("");
-			EmpNumText.setText(""+clientSideConnection.getNewWorkerID());
-			FnText.setText("");
-			PassText.setText("");
-			PhnNumText.setText("");
-			AccNumText.setText("");
-			PositionText.setSelectedItem("Seller");
+			empNumText.setText("");
+			empNumText.setText(""+clientSideConnection.getNewWorkerID());
+			fnText.setText("");
+			passText.setText("");
+			phnNumText.setText("");
+			accNumText.setText("");
+			positionText.setSelectedItem("Seller");
 		}
 	}
 };
@@ -224,118 +224,121 @@ ActionListener findWorkerAction = new ActionListener() {
 
 
 
-///////////////////Save Enable Action/////////////////////////
-DocumentListener SaveEnabler = new DocumentListener(){
+///////////////////save Enable Action/////////////////////////
+DocumentListener saveEnabler = new DocumentListener(){
 
 	@Override
 	public void changedUpdate(DocumentEvent e) {
-		SaveEnable();
+		saveEnable();
 		
 	}
 
 	@Override
 	public void insertUpdate(DocumentEvent e) {
-		SaveEnable();
+		saveEnable();
 		
 	}
 
 	@Override
 	public void removeUpdate(DocumentEvent e) {
-		SaveEnable();
+		saveEnable();
 		
 	}
-	public void SaveEnable(){
-		if (!IDNum.getText().isEmpty()
-				&& !FnText.getText().isEmpty()
-				&& (PassText.getPassword().length != 0)
-				&& !PhnNumText.getText().isEmpty()
-				&& !AccNumText.getText().isEmpty()
+	public void saveEnable(){ //checks if all of the following fields contains data.
+		if (!idNum.getText().isEmpty()
+				&& !fnText.getText().isEmpty()
+				&& (passText.getPassword().length != 0)
+				&& !phnNumText.getText().isEmpty()
+				&& !accNumText.getText().isEmpty()
 				&& passwordValidation)
-			Save.setEnabled(true);
+			save.setEnabled(true);
 		else
-			Save.setEnabled(false);
+			save.setEnabled(false);
 		}
 	
 };
+///////////////////End of save Enable Action///////////////////
 
-DocumentListener SearchEnabler = new DocumentListener(){
+///////////////////search Enable Action/////////////////////////
+DocumentListener searchEnabler = new DocumentListener(){
 
 	@Override
 	public void changedUpdate(DocumentEvent e) {
-		SearchEnable();
+		searchEnable();
 		
 	}
 
 	@Override
 	public void insertUpdate(DocumentEvent e) {
-		SearchEnable();
+		searchEnable();
 		
 	}
 
 	@Override
 	public void removeUpdate(DocumentEvent e) {
-		SearchEnable();
+		searchEnable();
 		
 	}
-	public void SearchEnable(){
-		Search.setEnabled(true);
+	public void searchEnable(){
+		search.setEnabled(true);
 	}
 };
-///////////////////End Save Enable Action///////////////////
+///////////////////End of search Enable Action///////////////////
 
 
 ////////////////////Clear fields on save//////////////////
 
-Save.addActionListener(new ActionListener() {
-	public void actionPerformed (ActionEvent ae) {
-		IDNum.setText("");
-		EmpNumText.setText("");
-		FnText.setText("");
-		PassText.setText("");
-		PhnNumText.setText("");
-		AccNumText.setText("");
-		PositionText.setSelectedItem("Seller");
+save.addActionListener(new ActionListener() {
+	public void actionPerformed (ActionEvent ae) {//clears all of the text fields after search button was pressed
+		idNum.setText("");
+		empNumText.setText("");
+		fnText.setText("");
+		passText.setText("");
+		phnNumText.setText("");
+		accNumText.setText("");
+		positionText.setSelectedItem("Seller");
 	}
 });
-
 //////////////////End Clear fields on save//////////////////
 
 
-////////////Password Rules///////////////////
+////////////password Rules///////////////////
 
 passwordValidation = false;
 
 JLabel[] passwordRules = new JLabel[3];
-passwordRules[0] = new JLabel(new String("<html><u>Password Rules:</u></html>"));
-passwordRules[1] = new JLabel(new String("Length of 8 charcters"));
-passwordRules[2] = new JLabel(new String("At least 1 number, big letter and spacial charcter."));
+passwordRules[0] = new JLabel(new String("<html><u>password Rules:</u></html>"));
+passwordRules[1] = new JLabel(new String("Length of 8 to 16 characters"));
+passwordRules[2] = new JLabel(new String("At least 1 number, big letter and spacial character."));
 
-EmpMgr.add(passwordRules[0]);
-EmpLayout.putConstraint(SpringLayout.WEST, passwordRules[0], 150, SpringLayout.WEST, Fn);
-EmpLayout.putConstraint(SpringLayout.NORTH, passwordRules[0], 0, SpringLayout.SOUTH, PassText);
-EmpMgr.add(passwordRules[1]);
-EmpLayout.putConstraint(SpringLayout.WEST, passwordRules[1], 150, SpringLayout.WEST, Fn);
-EmpLayout.putConstraint(SpringLayout.NORTH, passwordRules[1], 0, SpringLayout.SOUTH, passwordRules[0]);
-EmpMgr.add(passwordRules[2]);
-EmpLayout.putConstraint(SpringLayout.WEST, passwordRules[2], 150, SpringLayout.WEST, Fn);
-EmpLayout.putConstraint(SpringLayout.NORTH, passwordRules[2], 0, SpringLayout.SOUTH, passwordRules[1]);
+empMgr.add(passwordRules[0]);
+empLayout.putConstraint(SpringLayout.WEST, passwordRules[0], 150, SpringLayout.WEST, fn);
+empLayout.putConstraint(SpringLayout.NORTH, passwordRules[0], 0, SpringLayout.SOUTH, passText);
+empMgr.add(passwordRules[1]);
+empLayout.putConstraint(SpringLayout.WEST, passwordRules[1], 150, SpringLayout.WEST, fn);
+empLayout.putConstraint(SpringLayout.NORTH, passwordRules[1], 0, SpringLayout.SOUTH, passwordRules[0]);
+empMgr.add(passwordRules[2]);
+empLayout.putConstraint(SpringLayout.WEST, passwordRules[2], 150, SpringLayout.WEST, fn);
+empLayout.putConstraint(SpringLayout.NORTH, passwordRules[2], 0, SpringLayout.SOUTH, passwordRules[1]);
 
-PassText.addFocusListener(new FocusListener() {
+
+
+passText.addFocusListener(new FocusListener() {
 	
 	@Override
 	public void focusLost(FocusEvent e) {
-		String pattern = "(?=.*[0-9])(?=.*[A-Z])(?=.*[@#$%^&+!=])(?=\\S+$).{8,}";
-		System.out.println(new String(PassText.getPassword()));
-		String password = new String(PassText.getPassword());
+		String pattern = "(?=.*[0-9])(?=.*[A-Z])(?=.*[@#$%^&+!=])(?=\\S+$).{8,16}"; //determine the policy of the password
+		System.out.println(new String(passText.getPassword()));
+		String password = new String(passText.getPassword());
 		if (password.matches(pattern) == false)
 		{
-			PassText.setBackground(Color.red);
-			Save.setEnabled(false);
+			passText.setBackground(Color.red);
+			save.setEnabled(false);
 			passwordValidation = false;
 		}
 		else
 		{
-			PassText.setBackground(Color.green);
+			passText.setBackground(Color.green);
 			passwordValidation = true;
 		}
 		
@@ -347,40 +350,42 @@ PassText.addFocusListener(new FocusListener() {
 
 
 
-//////////End Password Rules////////////////
-
-		FnText.getDocument().addDocumentListener(SaveEnabler);
-		PassText.getDocument().addDocumentListener(SaveEnabler);
-		EmpNumText.getDocument().addDocumentListener(SaveEnabler);
-		AccNumText.getDocument().addDocumentListener(SaveEnabler);
-		PhnNumText.getDocument().addDocumentListener(SaveEnabler);
-		IDNum.getDocument().addDocumentListener(SearchEnabler);
+//////////End password Rules////////////////
 
 
-		Save.addActionListener(new ActionListener() {
+		/////////////adding save and search enabler to the relevant text fields/////////////
+		fnText.getDocument().addDocumentListener(saveEnabler);
+		passText.getDocument().addDocumentListener(saveEnabler);
+		empNumText.getDocument().addDocumentListener(saveEnabler);
+		accNumText.getDocument().addDocumentListener(saveEnabler);
+		phnNumText.getDocument().addDocumentListener(saveEnabler);
+		idNum.getDocument().addDocumentListener(searchEnabler);
+		/////////////End of adding save and search enabler to the relevant text fields/////////////
+
+		////////////save button listener///////////////////
+		save.addActionListener(new ActionListener() {
 			
 			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				Worker worker = new Worker(IDNum.getText(),
-						Integer.parseInt(EmpNumText.getText()),
-						FnText.getText(),
-						PhnNumText.getText(),
-						AccNumText.getText(),
+			public void actionPerformed(ActionEvent e) {// get the text from the fields and sends them to the worker constructor
+				Worker worker = new Worker(idNum.getText(),
+						Integer.parseInt(empNumText.getText()),
+						fnText.getText(),
+						phnNumText.getText(),
+						accNumText.getText(),
 						isWorkerfound?workerFound.getShopName():clientSideConnection.getShop().getShopName(),
-						PositionText.getSelectedItem().toString(),
-						new String(PassText.getPassword()));
+						positionText.getSelectedItem().toString(),
+						new String(passText.getPassword()));
 				clientSideConnection.saveWorker(worker);
 			}
 		});
-		
+		////////////End of save button listener///////////////////
 
-		IDNum.addActionListener(findWorkerAction);
-		Search.addActionListener(findWorkerAction);
+		idNum.addActionListener(findWorkerAction);
+		search.addActionListener(findWorkerAction);
 
-		EmpMenu.add(EmpMgr);
-		EmpMenu.pack();
-		EmpMenu.setVisible(true);
+		empMenu.add(empMgr);
+		empMenu.pack();
+		empMenu.setVisible(true);
 	}
 	
 	

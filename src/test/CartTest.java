@@ -2,11 +2,9 @@ package test;
 
 import static org.junit.Assert.assertEquals;
 
-
 import org.junit.Test;
 
 import clientSide.Cart;
-import clientSide.Worker;
 
 public class CartTest {
 	private Cart cart;

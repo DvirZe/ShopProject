@@ -1,12 +1,10 @@
 package test;
 import static org.junit.Assert.assertNotEquals;
-
 import org.junit.Test;
-
 import clientSide.*;
 
 public class WorkerTest {
-	private Worker worker;
+
 	
 	@Test
 	public void workerTest() {

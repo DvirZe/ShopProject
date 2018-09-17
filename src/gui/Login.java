@@ -28,54 +28,54 @@ public class Login extends JPanel{
 		details.setIconImage(img);
 		details.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);		
 		
-		JPanel Login = new JPanel();
-		Login.setBorder(BorderFactory.createTitledBorder("Your Details"));
-		Login.setBackground(Color.WHITE);
-		Login.setPreferredSize(new Dimension (400 , 260));
-		Login.setLayout(new BoxLayout(Login, BoxLayout.Y_AXIS));
-		JLabel Name = new JLabel("Username:");
-		Name.setFont(font2);
-		Login.add(Name);
-		SpringLayout LogLayout = new SpringLayout();
-		Login.setLayout(LogLayout);
+		JPanel login = new JPanel();
+		login.setBorder(BorderFactory.createTitledBorder("Your Details"));
+		login.setBackground(Color.WHITE);
+		login.setPreferredSize(new Dimension (400 , 260));
+		login.setLayout(new BoxLayout(login, BoxLayout.Y_AXIS));
+		JLabel name = new JLabel("Username:");
+		name.setFont(font2);
+		login.add(name);
+		SpringLayout logLayout = new SpringLayout();
+		login.setLayout(logLayout);
 		
-		JLabel LogIcon = new JLabel();
-		LogIcon.setIcon(new ImageIcon("./files/login-icon.png"));
-		Login.add(LogIcon);
+		JLabel logIcon = new JLabel();
+		logIcon.setIcon(new ImageIcon("./files/login-icon.png"));
+		login.add(logIcon);
 		
 
 		
-		JTextField Ntext = new JTextField("" , 20);
-		Ntext.setFont(font);
-		Login.add(Ntext);
+		JTextField nText = new JTextField("" , 20);
+		nText.setFont(font);
+		login.add(nText);
 		
 		
-		JLabel Pass = new JLabel("Password:");
-		Pass.setFont(font2);
-		Login.add(Pass);
+		JLabel pass = new JLabel("password:");
+		pass.setFont(font2);
+		login.add(pass);
 		
-		JPasswordField Ptext = new JPasswordField("" , 20);
-		Ptext.setFont(font);
-		Login.add(Ptext);
+		JPasswordField pText = new JPasswordField("" , 20);
+		pText.setFont(font);
+		login.add(pText);
 		
-		LogLayout.putConstraint(SpringLayout.WEST, Name, 10, SpringLayout.WEST, Login);
-		LogLayout.putConstraint(SpringLayout.NORTH, Name, 10, SpringLayout.NORTH, Login);
+		logLayout.putConstraint(SpringLayout.WEST, name, 10, SpringLayout.WEST, login);
+		logLayout.putConstraint(SpringLayout.NORTH, name, 10, SpringLayout.NORTH, login);
 		
-		LogLayout.putConstraint(SpringLayout.WEST, Ntext, 0, SpringLayout.WEST, Name);
-		LogLayout.putConstraint(SpringLayout.NORTH, Ntext, 10, SpringLayout.SOUTH, Name);
+		logLayout.putConstraint(SpringLayout.WEST, nText, 0, SpringLayout.WEST, name);
+		logLayout.putConstraint(SpringLayout.NORTH, nText, 10, SpringLayout.SOUTH, name);
 		
-		LogLayout.putConstraint(SpringLayout.WEST, Pass, 10, SpringLayout.WEST, Login);
-		LogLayout.putConstraint(SpringLayout.NORTH, Pass, 20, SpringLayout.SOUTH, Ntext);
+		logLayout.putConstraint(SpringLayout.WEST, pass, 10, SpringLayout.WEST, login);
+		logLayout.putConstraint(SpringLayout.NORTH, pass, 20, SpringLayout.SOUTH, nText);
 		
-		LogLayout.putConstraint(SpringLayout.WEST, Ptext, 0, SpringLayout.WEST, Pass);
-		LogLayout.putConstraint(SpringLayout.NORTH, Ptext, 10, SpringLayout.SOUTH, Pass);
+		logLayout.putConstraint(SpringLayout.WEST, pText, 0, SpringLayout.WEST, pass);
+		logLayout.putConstraint(SpringLayout.NORTH, pText, 10, SpringLayout.SOUTH, pass);
 		
 ////////////////////////ActionListener For login panel/////////////////////////		
 		ActionListener logAction = new ActionListener() {
 			public void actionPerformed (ActionEvent ae) {
 				int status = 0;
 				try {
-					status = clientSideConnection.login(Ntext.getText(), ""+new String(Ptext.getPassword()));
+					status = clientSideConnection.login(nText.getText(), ""+new String(pText.getPassword()));//checks the credentials supplied by the user
 				} catch (ParseException | IOException e) {
 					e.printStackTrace();
 				}
@@ -86,8 +86,8 @@ public class Login extends JPanel{
 				else {
 					JOptionPane.showMessageDialog(null,"Wrong username or password!");
 					if (JOptionPane.OK_OPTION == 0) {
-						Ntext.setText("");
-						Ptext.setText("");
+						nText.setText("");
+						pText.setText("");
 					}
 				}
 			}
@@ -95,24 +95,21 @@ public class Login extends JPanel{
 ////////////////////End of ActionListener For login panel/////////////////////			
 		
 		
-		Ptext.addActionListener(logAction);
+		JButton enter = new JButton("login");
+		enter.setFont(font2);
+		logLayout.putConstraint(SpringLayout.WEST, enter, -40, SpringLayout.EAST, pText);
+		logLayout.putConstraint(SpringLayout.NORTH, enter, 20, SpringLayout.SOUTH, pText);
 		
-		JButton Enter = new JButton("Login");
-		Enter.setFont(font2);
-		LogLayout.putConstraint(SpringLayout.WEST, Enter, -40, SpringLayout.EAST, Ptext);
-		LogLayout.putConstraint(SpringLayout.NORTH, Enter, 20, SpringLayout.SOUTH, Ptext);
-		
-		LogLayout.putConstraint(SpringLayout.WEST, LogIcon, 160, SpringLayout.WEST, Login);
-		LogLayout.putConstraint(SpringLayout.NORTH, LogIcon, -10 , SpringLayout.NORTH, Enter);
-		
-		Login.add(Enter);
+		logLayout.putConstraint(SpringLayout.WEST, logIcon, 160, SpringLayout.WEST, login);
+		logLayout.putConstraint(SpringLayout.NORTH, logIcon, -10 , SpringLayout.NORTH, enter);
+		login.add(enter);
 
-				
-		details.add(Login);
+		enter.addActionListener(logAction);
+		pText.addActionListener(logAction);
+		
+		details.add(login);
 		details.pack();
 		details.setVisible(true);
-				
-		Enter.addActionListener(logAction);
 
 	}
 }

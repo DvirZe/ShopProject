@@ -30,125 +30,131 @@ import clientSide.Worker;
 public class Discount {
 	public Discount(ClientSideConnection clientSideConnection) {
 		
-		Font font2 = new Font("Ariel",Font.BOLD,14);
-		JFrame DiscMenu = new JFrame();
-		DiscMenu.setTitle("Discount managment menu");
+		JFrame discMenu = new JFrame();
+		discMenu.setTitle("Discount managment menu");
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		Point middle = new Point(screenSize.width / 2, screenSize.height / 2);
 		Point newLocation = new Point(middle.x - (600 / 2), 
 		                              middle.y - (700 / 2));
-		DiscMenu.setLocation(newLocation);
+		discMenu.setLocation(newLocation);
 		Image img = Toolkit.getDefaultToolkit().getImage("./files/DiscIcon.png");
-		DiscMenu.setIconImage(img);
-		DiscMenu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		discMenu.setIconImage(img);
+		discMenu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		JTextField[] DiscPrec = new JTextField[4];
-		JPanel DiscMain = new JPanel();
-		SpringLayout DiscLayout = new SpringLayout();
-		DiscMain.setLayout(DiscLayout);
+		JTextField[] discPrec = new JTextField[4];
+		JPanel discMain = new JPanel();
+		SpringLayout discLayout = new SpringLayout();
+		discMain.setLayout(discLayout);
 		
 		for (int i = 1; i<=2 ; ++i)
 		{
-			DiscPrec[i-1] = new JTextField("", 4);
-			DiscMain.add(DiscPrec[i-1]);
+			discPrec[i-1] = new JTextField("", 4);
+			discMain.add(discPrec[i-1]);
 		}
-		DiscPrec[0].setText(clientSideConnection.getShop().getDiscountForCustomer("VIP").toString());
-		DiscPrec[1].setText(clientSideConnection.getShop().getDiscountForCustomer("Return").toString());
+		discPrec[0].setText(clientSideConnection.getShop().getDiscountForCustomer("VIP").toString());
+		discPrec[1].setText(clientSideConnection.getShop().getDiscountForCustomer("Return").toString());
 
-		DiscMain.setBorder(BorderFactory.createTitledBorder("Discount Menu"));
-		DiscMain.setBackground(Color.white);
-		DiscMain.setPreferredSize(new Dimension (730 , 510));
-		JLabel VIPDisc = new JLabel("VIP Customer Discount:");
-		DiscMain.add(VIPDisc);
+		discMain.setBorder(BorderFactory.createTitledBorder("Discount Menu"));
+		discMain.setBackground(Color.white);
+		discMain.setPreferredSize(new Dimension (730 , 510));
+		JLabel vipDisc = new JLabel("VIP Customer Discount:");
+		discMain.add(vipDisc);
 		
-		JLabel ReturnDisc = new JLabel("Retuened Customer Discount:");
-		DiscMain.add(ReturnDisc);
+		JLabel returnDisc = new JLabel("Retuened Customer Discount:");
+		discMain.add(returnDisc);
 		
-		JButton Save = new JButton("Save");
-		Save.setEnabled(false);
-		DiscMain.add(Save);
+		JButton save = new JButton("save");
+		save.setEnabled(false);
+		discMain.add(save);
 		
-		JButton Back = new JButton("Back");
-		DiscMain.add(Back);
+		JButton back = new JButton("back");
+		discMain.add(back);
 		
 		
-		DiscLayout.putConstraint(SpringLayout.WEST, ReturnDisc, 0, SpringLayout.WEST, DiscMain);
-		DiscLayout.putConstraint(SpringLayout.NORTH, ReturnDisc, 30, SpringLayout.NORTH, VIPDisc);
+		discLayout.putConstraint(SpringLayout.WEST, returnDisc, 0, SpringLayout.WEST, discMain);
+		discLayout.putConstraint(SpringLayout.NORTH, returnDisc, 30, SpringLayout.NORTH, vipDisc);
 		
-		DiscLayout.putConstraint(SpringLayout.WEST, VIPDisc, 0, SpringLayout.WEST, DiscMain);
-		DiscLayout.putConstraint(SpringLayout.NORTH, VIPDisc, 10, SpringLayout.NORTH, DiscMain);
+		discLayout.putConstraint(SpringLayout.WEST, vipDisc, 0, SpringLayout.WEST, discMain);
+		discLayout.putConstraint(SpringLayout.NORTH, vipDisc, 10, SpringLayout.NORTH, discMain);
 		
-		DiscLayout.putConstraint(SpringLayout.WEST, DiscPrec[1], 15, SpringLayout.EAST, ReturnDisc);
-		DiscLayout.putConstraint(SpringLayout.NORTH, DiscPrec[1], 0, SpringLayout.NORTH, ReturnDisc);
+		discLayout.putConstraint(SpringLayout.WEST, discPrec[1], 15, SpringLayout.EAST, returnDisc);
+		discLayout.putConstraint(SpringLayout.NORTH, discPrec[1], 0, SpringLayout.NORTH, returnDisc);
 		
-		DiscLayout.putConstraint(SpringLayout.WEST, DiscPrec[0], 0, SpringLayout.WEST, DiscPrec[1]);
-		DiscLayout.putConstraint(SpringLayout.NORTH, DiscPrec[0], 0, SpringLayout.NORTH, VIPDisc);
+		discLayout.putConstraint(SpringLayout.WEST, discPrec[0], 0, SpringLayout.WEST, discPrec[1]);
+		discLayout.putConstraint(SpringLayout.NORTH, discPrec[0], 0, SpringLayout.NORTH, vipDisc);
 		
-		DiscLayout.putConstraint(SpringLayout.WEST, Save, 0, SpringLayout.WEST, DiscPrec[1]);
-		DiscLayout.putConstraint(SpringLayout.NORTH, Save, 10, SpringLayout.SOUTH, DiscPrec[1]);
+		discLayout.putConstraint(SpringLayout.WEST, save, 0, SpringLayout.WEST, discPrec[1]);
+		discLayout.putConstraint(SpringLayout.NORTH, save, 10, SpringLayout.SOUTH, discPrec[1]);
 		
-		DiscLayout.putConstraint(SpringLayout.WEST, Back, 5, SpringLayout.EAST, Save);
-		DiscLayout.putConstraint(SpringLayout.NORTH, Back, 0, SpringLayout.NORTH, Save);
+		discLayout.putConstraint(SpringLayout.WEST, back, 5, SpringLayout.EAST, save);
+		discLayout.putConstraint(SpringLayout.NORTH, back, 0, SpringLayout.NORTH, save);
 		
-		DocumentListener SaveEnabler = new DocumentListener(){
+		////////////////////Save Enable listener//////////////////
+		
+		DocumentListener saveEnabler = new DocumentListener(){
 
 			@Override
 			public void changedUpdate(DocumentEvent e) {
-				SaveEnable();
+				saveEnable();
 				
 			}
 
 			@Override
 			public void insertUpdate(DocumentEvent e) {
-				SaveEnable();
+				saveEnable();
 				
 			}
 
 			@Override
 			public void removeUpdate(DocumentEvent e) {
-				SaveEnable();
+				saveEnable();
 				
 			}
-			public void SaveEnable(){
-				if (!DiscPrec[0].getText().isEmpty()
-						&& !DiscPrec[1].getText().isEmpty())
-					Save.setEnabled(true);
+			public void saveEnable(){
+				if (!discPrec[0].getText().isEmpty()
+						&& !discPrec[1].getText().isEmpty())
+					save.setEnabled(true);
 				else
-					Save.setEnabled(false);
+					save.setEnabled(false);
 				}
 			
 		};
 		
-		DiscPrec[0].getDocument().addDocumentListener(SaveEnabler);
-		DiscPrec[1].getDocument().addDocumentListener(SaveEnabler);
+		////////////////////End of Save Enable listener//////////////////
 		
-		Back.addActionListener(new ActionListener() {
+		discPrec[0].getDocument().addDocumentListener(saveEnabler);
+		discPrec[1].getDocument().addDocumentListener(saveEnabler);
+		
+		////////////////////back button listener//////////////////
+		
+		back.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				
-				DiscMenu.dispose();
+				discMenu.dispose();
 				new StoreManagment(clientSideConnection);
 			}
 		});
+		////////////////////end of back button listener//////////////////
 		
 		
-		
-		Save.addActionListener(new ActionListener() {
+		////////////////////save button listener//////////////////
+		save.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				clientSideConnection.setDiscount(Double.parseDouble(DiscPrec[0].getText()), Double.parseDouble(DiscPrec[1].getText()));
-				Save.setEnabled(false);
+				clientSideConnection.setDiscount(Double.parseDouble(discPrec[0].getText()), Double.parseDouble(discPrec[1].getText()));
+				save.setEnabled(false);
 			}
 		});
+		////////////////////end of save button listener//////////////////
 		
 		
-		
-		DiscMenu.setPreferredSize(new Dimension(340,160));
-		DiscMenu.add(DiscMain);
-		DiscMenu.pack();
-		DiscMenu.setVisible(true);
+		discMenu.setPreferredSize(new Dimension(340,160));
+		discMenu.add(discMain);
+		discMenu.pack();
+		discMenu.setVisible(true);
 		
 		
 	}

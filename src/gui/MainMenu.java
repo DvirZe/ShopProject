@@ -21,25 +21,26 @@ import clientSide.ClientSideConnection;
 public class MainMenu {
 	public MainMenu(ClientSideConnection clientSideConnection) {
 		Font font2 = new Font("Ariel",Font.BOLD,20);
-		JFrame Main = new JFrame();
-		Main.setTitle("Store Managment");
-		Main.setSize(800, 420);
-		Main.setLocationRelativeTo(null);
+		JFrame main = new JFrame();
+		main.setTitle("Store Managment");
+		main.setSize(800, 420);
+		main.setLocationRelativeTo(null);
 		Image img = Toolkit.getDefaultToolkit().getImage("./files/store_icon.jpg");
-		Main.setIconImage(img);
-		Main.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		GridLayout Layout = new GridLayout(3,2);
-		Main.setLayout(Layout);
+		main.setIconImage(img);
+		main.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		GridLayout layout = new GridLayout(3,2);
+		main.setLayout(layout);
 
 		
 	
 	
-		JButton BuySell = new JButton("Sell items");
-		Main.add(BuySell);
-		BuySell.setFont(font2);
-		BuySell.addActionListener(new ActionListener() {
+		JButton buySell = new JButton("Sell items");
+		main.add(buySell);
+		buySell.setFont(font2);
+////////////////////////ActionListener For buySell/////////////////////////		
+		buySell.addActionListener(new ActionListener() {
 			public void actionPerformed (ActionEvent ae) {
-				try {
+				try {//request from the server the  variables that are necessary for the menu
 					clientSideConnection.updateInventory();
 					clientSideConnection.updateDicounts();
 					clientSideConnection.updatePrices();
@@ -47,56 +48,65 @@ public class MainMenu {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				Main.dispose();
+				main.dispose();
 				new	SellMain(clientSideConnection);
 			}
 		});
+////////////////////////End of ActionListener For buySell////////////////////		
 		
-		JButton StoreMgr = new JButton("Store Managment");
-		Main.add(StoreMgr);
-		StoreMgr.setFont(font2);
-		StoreMgr.addActionListener(new ActionListener() {
+		JButton storeMgr = new JButton("Store Managment");
+		main.add(storeMgr);
+		storeMgr.setFont(font2);
+////////////////////////ActionListener For store management/////////////////////////		
+		storeMgr.addActionListener(new ActionListener() {
 			public void actionPerformed (ActionEvent ae) {
-				Main.dispose();
+				main.dispose();
 				new	StoreManagment(clientSideConnection);
 			}
 		});
+////////////////////////End of ActionListener For store management//////////////////
 		
-		JButton Customer = new JButton("Manage customers");
-		Main.add(Customer);
-		Customer.setFont(font2);
-		Customer.addActionListener(new ActionListener() {
+		JButton customer = new JButton("Manage customers");
+		main.add(customer);
+		customer.setFont(font2);
+////////////////////////ActionListener For customer/////////////////////////	
+		customer.addActionListener(new ActionListener() {
 			public void actionPerformed (ActionEvent ae) {
-				Main.dispose();
+				main.dispose();
 				new	AddCus(clientSideConnection);
 			}
 		});
+////////////////////////End of ActionListener For customer//////////////////
 		
-		JButton Employee = new JButton("Manage Employees");
-		Main.add(Employee);
-		Employee.setFont(font2);
-		Employee.addActionListener(new ActionListener() {
+		JButton employee = new JButton("Manage employees");
+		main.add(employee);
+		employee.setFont(font2);
+////////////////////////ActionListener For employee/////////////////////////	
+		employee.addActionListener(new ActionListener() {
 			public void actionPerformed (ActionEvent ae) {
-				Main.dispose();
+				main.dispose();
 				new	Employee(clientSideConnection);
 			}
 		}); 
+////////////////////////End of ActionListener For employee//////////////////
 		
-		
-		JButton Reports = new JButton("Generate reports");
-		Main.add(Reports);
-		Reports.setFont(font2);	
-		Reports.addActionListener(new ActionListener() {
+		JButton reports = new JButton("Generate reports");
+		main.add(reports);
+		reports.setFont(font2);	
+////////////////////////ActionListener For reports/////////////////////////	
+		reports.addActionListener(new ActionListener() {
 			public void actionPerformed (ActionEvent ae) {
-				Main.dispose();
+				main.dispose();
 				new	Reports(clientSideConnection);
 			}
 		});
+////////////////////////End of ActionListener For reports//////////////////
 		
-		JButton Chat = new JButton("Start Chat with other branch");
-		Main.add(Chat);
-		Chat.setFont(font2);
-		Chat.addActionListener(new ActionListener() {
+		JButton chat = new JButton("Start chat with other branch");
+		main.add(chat);
+		chat.setFont(font2);
+////////////////////////ActionListener For Chat/////////////////////////	
+		chat.addActionListener(new ActionListener() {
 			public void actionPerformed (ActionEvent ae) {
 				try {
 					new ChatGui(clientSideConnection, false);
@@ -105,6 +115,7 @@ public class MainMenu {
 				}
 			}
 		});
-		Main.setVisible(true);
+////////////////////////End of ActionListener For Chat//////////////////
+		main.setVisible(true);
 	}
 }
