@@ -8,6 +8,8 @@ import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -69,6 +71,20 @@ public class SupplyManagment {
 			quantity[i-1] = new JTextField("" + clientSideConnection.getShop().getInventory(i), 4);
 			quantityMain.add(quantity[i-1]);
 			quantity[i-1].setEnabled(true);
+			int place = i-1;
+			quantity[i-1].addFocusListener(new FocusListener() { //Can't be less than 0 items to sell.
+				
+				@Override
+				public void focusLost(FocusEvent arg0) {
+					if (quantity[place].getText().contains("-"))
+					{
+						quantity[place].setText("0");
+					}
+				}
+				
+				@Override
+				public void focusGained(FocusEvent arg0) {}
+			});
 			item[i-1] = new JLabel("Item Quantity:");
 			quantityMain.add(item[i-1]);
 		}
@@ -125,24 +141,21 @@ public class SupplyManagment {
 		discLayout.putConstraint(SpringLayout.WEST, back, 5, SpringLayout.EAST, save);
 		discLayout.putConstraint(SpringLayout.NORTH, back, 0, SpringLayout.NORTH, save);
 		
-		DocumentListener saveEnabler = new DocumentListener(){
+		DocumentListener saveEnabler = new DocumentListener(){ //Save enable only if nothing empty
 	
 			@Override
 			public void changedUpdate(DocumentEvent e) {
-				saveEnable();
-				
+				saveEnable();	
 			}
 	
 			@Override
 			public void insertUpdate(DocumentEvent e) {
-				saveEnable();
-				
+				saveEnable();	
 			}
 	
 			@Override
 			public void removeUpdate(DocumentEvent e) {
-				saveEnable();
-				
+				saveEnable();			
 			}
 			public void saveEnable(){
 				if (!quantity[0].getText().isEmpty()
@@ -173,7 +186,7 @@ public class SupplyManagment {
 		
 		
 		
-		save.addActionListener(new ActionListener() {
+		save.addActionListener(new ActionListener() { //Send the correct status
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {

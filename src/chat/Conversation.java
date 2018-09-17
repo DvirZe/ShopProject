@@ -1,6 +1,9 @@
 package chat;
 
+import java.util.ArrayList;
+
 public interface Conversation { //Mediator
-	public abstract void sendMessage(String message, ChatUser chatUser);
+	public abstract Boolean isThisUserInChat(int id);
 	public abstract void addUser(ChatUser chatUser);
+	public abstract ArrayList<ChatUser> getChatUsers();
 }

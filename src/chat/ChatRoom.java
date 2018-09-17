@@ -7,17 +7,22 @@ public class ChatRoom implements Conversation {
 	private ArrayList<ChatUser> chatUsers = new ArrayList<ChatUser>();
 	
 	@Override
-	public void sendMessage(String message, ChatUser chatUser) {
-		for(ChatUser u : chatUsers){
-			if(u != chatUser){
-				//u.receiveMessage(message);
-			}
-		}
+	public void addUser(ChatUser chatUser) {
+		chatUsers.add(chatUser);
 	}
 
 	@Override
-	public void addUser(ChatUser chatUser) {
-		chatUsers.add(chatUser);
+	public Boolean isThisUserInChat(int id) {
+		for (ChatUser user : chatUsers)
+		{
+			if (user.getId() == id)
+				return true;
+		}
+		return false;
+	}
+	
+	public ArrayList<ChatUser> getChatUsers() {
+		return chatUsers;
 	}
 	
 }

@@ -31,4 +31,9 @@ public class Actions { //to organized
 	public int getStats() { return 14; }
 
 	public int setInventory() { return 15; }
+	
+	public int leftTheChat() { return 16; }
+	
+	public int joinChat() { return 17; }
+	
 }

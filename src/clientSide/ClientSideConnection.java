@@ -363,6 +363,19 @@ public class ClientSideConnection extends Thread {
 		
 	}
 	
+	public String joinChat() throws IOException, ParseException {
+		JSONObject json = new JSONObject();
+		json.put("Action", action.joinChat());
+		SendToServer(json);
+		JSONObject details = getFromServer();
+		if (details.containsKey("User2Port")) {
+			return details.get("User2Port").toString();
+			
+		} else return "0";
+		
+	}
+	
+	
 	public void agreeChat() throws IOException {
 		ServerSocket chatAgree = new ServerSocket(socket.getPort());
 		System.out.println("Ready for connaction...");
@@ -400,7 +413,15 @@ public class ClientSideConnection extends Thread {
 
 	public void setInventory(JSONObject json) {
 		json.put("Action", action.setInventory());
+		json.put("shopName", shop.getShopName());
 		SendToServer(json);
 	}
+	
+	public void leftTheChat() {
+		JSONObject json = new JSONObject();
+		json.put("Action", action.leftTheChat());
+		SendToServer(json);
+	}
+	
 }
 

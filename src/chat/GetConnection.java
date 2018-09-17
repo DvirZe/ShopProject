@@ -23,6 +23,7 @@ public class GetConnection extends Thread {
 	PrintWriter printWriter;
 	Socket curSocket;
 	private User chatUser;
+	boolean popOnce = false;
 	
 	
 	public GetConnection (int port, ClientSideConnection clientSideConnection)
@@ -30,6 +31,7 @@ public class GetConnection extends Thread {
 		this.port = port;
 		sockets = new LinkedList<Socket>();
 		this.clientSideConnection = clientSideConnection;
+		chatUser = null;
 	}
 	
 	public void run() {
@@ -46,7 +48,7 @@ public class GetConnection extends Thread {
 					while (true)
 					{
 						Thread.sleep(0);
-						if (!sockets.isEmpty() && clientSideConnection.isFreeToChat())
+						if (!sockets.isEmpty()/* && clientSideConnection.isFreeToChat()*/)
 						{
 							chatAlert();
 						}
@@ -67,21 +69,32 @@ public class GetConnection extends Thread {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			System.out.println(sockets.size());
 		}
 	}
 	
 	public void chatAlert() throws InterruptedException, IOException {
-		clientSideConnection.freeToChatStatusChange(false);		
+		clientSideConnection.freeToChatStatusChange(false);
 		Socket socket = sockets.removeFirst();
+		if (chatUser == null)
+		{
+			chatUser = new User(clientSideConnection.getWorkerOnline().get("personalID").toString(), clientSideConnection.getWorkerOnline().get("name").toString(), "" + port);
+			System.out.println("Create new User");
+		}
 		curSocket = socket;
-		System.out.println(socket);
 		if (curSocket.isConnected())
 		{
-			bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-			printWriter = new PrintWriter(socket.getOutputStream(),true);
+			chatUser.addToBufferedReader(new BufferedReader(new InputStreamReader(socket.getInputStream())));
+			chatUser.addToPrintWriter(new PrintWriter(socket.getOutputStream(),true));
+			//bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			//printWriter = new PrintWriter(socket.getOutputStream(),true);
 			System.out.println("Start chat with: " + socket.getPort());
-			PopupIncomingChat newChat = new PopupIncomingChat(this);
+			if (!popOnce)
+			{
+				new PopupIncomingChat(this);
+				popOnce = true;
+			}
+			else
+				chatUser.sendMessage2("Chat Accepted.");
 		}
 		else clientSideConnection.freeToChatStatusChange(true);	
 	}
@@ -93,14 +106,18 @@ public class GetConnection extends Thread {
 	}
 	
 	public void newChatAccpet() {
-		printWriter.println("Chat Accepted.");
-		chatUser = new User(clientSideConnection.getWorkerOnline().get("name"), printWriter, bufferedReader);
-		System.out.println(chatUser);
+		//printWriter.println("Chat Accepted.");
+		//chatUser = new User(clientSideConnection.getWorkerOnline().get("personalID"),clientSideConnection.getWorkerOnline().get("name"), printWriter, bufferedReader);
+		chatUser.sendMessage2("Chat Accepted.");
 		try {
 			new ChatGui(clientSideConnection, true);
 		} catch (IOException e) {
 			System.out.println("Chat Screen is close now.");
 		}
+	}
+	
+	public void chatRefuse() {
+		printWriter.println("Busy, Can\'t talk");
 	}
 	
 	public ClientSideConnection getClientSideConnection() { return clientSideConnection; }

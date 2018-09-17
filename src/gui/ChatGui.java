@@ -79,8 +79,8 @@ public class ChatGui extends JPanel{
 			public void windowClosing(WindowEvent e) {
 				if (!clientSideConnection.isFreeToChat())
 				{
-					chatUser.sendMessage("Leaved the chat.");
-					chatUser.stopReceive();
+					chatUser.sendMessage("left the chat.");
+					chatUser.stopReceive(clientSideConnection);
 				}
 				clientSideConnection.freeToChatStatusChange(true);
 				chatFrame.dispose();
@@ -186,6 +186,33 @@ public class ChatGui extends JPanel{
 			}
 		});
 		
+		join.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int port = 0;
+				try {
+					chatLog.setText("Looking for chat to join..");
+					String answer = clientSideConnection.joinChat();
+					if (!answer.equals("0"))
+					{
+						clientSideConnection.freeToChatStatusChange(false);
+						port = Integer.parseInt(answer);
+						connection = new OpenConnection(port, clientSideConnection);
+						clientSideConnection.setChatSocket(connection.getSocket());
+						socket = connection.getSocket();
+						chatUser = connection.getUser();
+						System.out.println(chatUser);
+						chatUser.receiveMessage(chatLog,true);
+						searchChat.setEnabled(false);
+						sendMessage.setEnabled(true);
+						send.setEnabled(true);
+						join.setEnabled(false);
+					} else chatLog.append("\nNo chat is on.");
+				} catch (ParseException | IOException e1) {e1.printStackTrace(); }
+			}
+		});
+		
 		//if its the worker who get the chat
 		if (isConnectToChatAlready)
 		{
@@ -199,18 +226,18 @@ public class ChatGui extends JPanel{
 		
 		leave.addActionListener(new ActionListener() {
 					
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						if (!clientSideConnection.isFreeToChat())
-						{
-							chatUser.sendMessage("Leaved the chat.");
-							chatUser.stopReceive();
-						}
-						clientSideConnection.freeToChatStatusChange(true);
-						chatFrame.dispose();
-					}
-				});
-				
+				@Override
+			public void actionPerformed(ActionEvent e) {
+				if (!clientSideConnection.isFreeToChat())
+				{
+					chatUser.sendMessage("left the chat.");
+					chatUser.stopReceive(clientSideConnection);
+				}
+				clientSideConnection.freeToChatStatusChange(true);
+				chatFrame.dispose();
+			}
+		});
+		
 		
 		ActionListener sendActions = new ActionListener() {
 			
@@ -219,8 +246,10 @@ public class ChatGui extends JPanel{
 				if(isConnectToChatAlready)
 				{
 					chatLog.append("\n"+ clientSideConnection.getWorkerOnline().get("name") + " >> " +sendMessage.getText().toString());
-				}
-				chatUser.sendMessage(sendMessage.getText().toString());
+					chatUser.sendMessage2(sendMessage.getText().toString());
+				} 
+				else
+					chatUser.sendMessage(sendMessage.getText().toString());
 				sendMessage.setText("");
 			}
 		};

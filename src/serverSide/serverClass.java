@@ -2,27 +2,18 @@ package serverSide;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 import java.util.Set;
-import java.util.function.Function;
-
-import javax.swing.JComboBox.KeySelectionManager;
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-
 import chat.ChatRoom;
+import chat.ChatUser;
 import chat.User;
 
 
@@ -42,7 +33,7 @@ public class serverClass extends Thread {
 		workers = serverConnection.getWorkers();
 		customers = serverConnection.getCustomers();
 		logs = new Logs();
-		rooms = new ArrayList<ChatRoom>();
+		rooms = serverConnection.getRooms();
 	}
 	
 	public void actionChoose(JSONObject json) throws IOException, ParseException
@@ -92,6 +83,12 @@ public class serverClass extends Thread {
 			break;
 		case "15":
 			updateInventory(json);
+			break;
+		case "16":
+			removeChatRoom();
+			break;
+		case "17":
+			findChatToJoin();
 			break;
 		default:
 			break;
@@ -260,6 +257,11 @@ public class serverClass extends Thread {
 		updatedInventory.add(json.get("pants1").toString());
 		updatedInventory.add(json.get("pants2").toString());
 		shop.replace("Inventory", updatedInventory);
+		try {
+			logs.updateInventoryLog(json);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void updateDiscounts(JSONObject json)
@@ -296,18 +298,6 @@ public class serverClass extends Thread {
 		stats.put("sellesHistory",sellesHistory);
 		sendToClient(stats);
 	}
-	
-	public void logout() throws IOException {
-		 JSONArray workerDetails = new JSONArray();
-		 workerDetails = (JSONArray) workers.get(""+logedInUserID);
-		 workerDetails.set(7, 0); //Set user as logged out 
-		 workerDetails.set(8, 0); //Set user port as 0 (offline)
-		 JSONObject logout = new JSONObject();
-		 logout.put("shopName", workerDetails.get(4));
-		 logout.put("personalID", logedInUserID);
-		 logs.logoutsLog(logout);
-		 workers.replace(logedInUserID, workerDetails);
-	}
 
 	public void sendToClient(JSONObject json) throws IOException
 	{
@@ -330,17 +320,49 @@ public class serverClass extends Thread {
 			if ((Integer.parseInt(worker.get(7).toString()) == 1) && (Integer.parseInt(worker.get(9).toString()) == 0) && !(worker.equals(loginWorker)) && !(worker.get(4).equals(loginWorker.get(4)))) {
 				answer.put("User2Port", worker.get(8));
 				ChatRoom room = new ChatRoom();
-				User tryUser = new User(room, loginWorker.get(0).toString(), loginWorker.get(8).toString());
-				User connectUser = new User(room, worker.get(0).toString(), worker.get(8).toString());
+				User tryUser = new User(id,loginWorker.get(0).toString(), loginWorker.get(8).toString());
+				User connectUser = new User(id,worker.get(0).toString(), worker.get(8).toString());
 				room.addUser(tryUser);
 				room.addUser(connectUser);
 				rooms.add(room);
+				JSONObject toLog = new JSONObject();
+				toLog.put("openUser", loginWorker.get(0));
+				toLog.put("with",worker.get(0));
+				logs.chatConncetion(toLog);
 				break;
 			}
 		}
 		if (!answer.isEmpty()) answer.put("notFound", 1);
 		sendToClient(answer);
 	}
+	
+	public void findChatToJoin() throws IOException {
+		JSONObject answer = new JSONObject();
+		if (!rooms.isEmpty())
+		{
+			ArrayList<ChatUser> users = rooms.get(0).getChatUsers();
+			JSONArray hostUser = (JSONArray) workers.get(""+users.get(1).getId());
+			answer.put("User2Port", hostUser.get(8).toString());
+		}
+		else {
+			answer.put("notFound", 1);
+		}
+		sendToClient(answer);
+	}
+	
+	public void removeChatRoom()
+	{
+		for (int i = 0; i< rooms.size() ; ++i)
+		{
+			if (rooms.get(i).isThisUserInChat(logedInUserID))
+			{
+				rooms.remove(i);
+				System.out.println(rooms.size());
+				break;
+			}
+		}
+	}
+	
 	
 	public void run() {
 		JSONParser parser = new JSONParser();
@@ -360,12 +382,22 @@ public class serverClass extends Thread {
 			try {
 				endOfWork();
 			} catch (IOException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			System.out.println("End.");
-			//e.printStackTrace();
 		}
+	}
+	
+	public void logout() throws IOException {
+		 JSONArray workerDetails = new JSONArray();
+		 workerDetails = (JSONArray) workers.get(""+logedInUserID);
+		 workerDetails.set(7, 0); //Set user as logged out 
+		 workerDetails.set(8, 0); //Set user port as 0 (offline)
+		 JSONObject logout = new JSONObject();
+		 logout.put("shopName", workerDetails.get(4));
+		 logout.put("personalID", logedInUserID);
+		 logs.logoutsLog(logout);
+		 workers.replace(logedInUserID, workerDetails);
 	}
 	
 	public void endOfWork() throws IOException {

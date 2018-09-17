@@ -71,4 +71,30 @@ public class Logs {
 		log.close();
 	}
 	
+	public void updateInventoryLog(JSONObject json) throws IOException
+	{
+		FileWriter log = new FileWriter("./files/sells.log",true);
+		log.write("#Update Inventory - "+json.get("shopName") +" - "+
+				"Shirt 1: " + json.get("shirt1") + ", " +
+				"Shirt 2: " + json.get("shirt2") + ", " +
+				"Pants 1: " + json.get("pants1") + ", " +
+				"Pants 2: " + json.get("pants2") + " " +
+				 new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date())
+				 + "\n");
+		log.close();
+	}
+	
+	public void chatConncetion(JSONObject json) throws IOException {
+		FileWriter log = new FileWriter("./files/chats.log",true);
+		if (json.containsValue("Save"))
+		{
+			log.write("#Chat log save:\n" + json.get("chatLog") + "\n" + 
+					 new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date()) + "\n");
+		} else {
+			log.write("#Open chat - " + json.get("openUser") + " open connection with " + json.get("with")
+					 + " " + new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date()) + "\n");
+		}
+		log.close();
+	}
+	
 }

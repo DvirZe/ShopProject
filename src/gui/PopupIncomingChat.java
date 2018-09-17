@@ -84,6 +84,7 @@ public class PopupIncomingChat extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				connection.newChatClose(popupFrame);
+				connection.chatRefuse();
 			}
 		});
 		

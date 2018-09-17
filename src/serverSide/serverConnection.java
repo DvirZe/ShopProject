@@ -5,17 +5,22 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.ArrayList;
+import java.util.Set;
 
 import javax.net.ssl.SSLServerSocketFactory;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+
+import chat.ChatRoom;
 
 public class serverConnection {
 	
 	JSONObject workers, customers, shop1, shop2;
 	ArrayList<serverClass> connections;
+	private ArrayList<ChatRoom> rooms;
 	
 	private serverConnection() throws IOException, ParseException {
 		System.setProperty("javax.net.ssl.keyStore", "sp.store");
@@ -31,6 +36,7 @@ public class serverConnection {
 		obj = parser.parse(new FileReader("./files/shop2.json"));
 		shop2 = (JSONObject) obj;
 		connections = new ArrayList<serverClass>();
+		rooms = new ArrayList<ChatRoom>();
 	}
 	
 	public void saveData(serverClass sc) throws IOException {
@@ -54,6 +60,10 @@ public class serverConnection {
 	
 	public ArrayList<serverClass> getConnections() {
 		return connections;
+	}
+	
+	public ArrayList<ChatRoom> getRooms() {
+		return rooms;
 	}
 	
 	public JSONObject getWorkers() {
