@@ -202,8 +202,8 @@ public class ChatGui extends JPanel{
 						clientSideConnection.setChatSocket(connection.getSocket());
 						socket = connection.getSocket();
 						chatUser = connection.getUser();
-						System.out.println("205: " + chatUser);
-						chatUser.receiveMessage(chatLog/*,connection.getBufferedReader(),connection.getPrintWriter()*/);
+						clientSideConnection.updateJoinChatListAfterOpenSocket(port, socket.getLocalPort());
+						chatUser.receiveMessage(chatLog);
 						searchChat.setEnabled(false);
 						sendMessage.setEnabled(true);
 						send.setEnabled(true);
@@ -218,7 +218,6 @@ public class ChatGui extends JPanel{
 		if (isConnectToChatAlready)
 		{
 			chatUser = clientSideConnection.getConnection().getUser();
-			System.out.println("196: " + clientSideConnection.getConnection().getUser().getLastBufferedReader());
 			chatUser.receiveMessage(chatLog/*,clientSideConnection.getConnection().getUser().getLastBufferedReader(),clientSideConnection.getConnection().getUser().getLastPrintWriter()*/);
 			chatLog.setText("Start to chat..");
 			sendMessage.setEnabled(true);

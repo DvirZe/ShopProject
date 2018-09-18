@@ -24,6 +24,7 @@ public class OpenConnection {
 		socketBufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 		printWriter = new PrintWriter(socket.getOutputStream(),true);
 		chatUser = new User(clientSideConnection.getWorkerOnline().get("personalID"),clientSideConnection.getWorkerOnline().get("name"), printWriter, socketBufferedReader);
+		
 	}
 	
 	public User getUser() {

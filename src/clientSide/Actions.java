@@ -38,4 +38,6 @@ public class Actions { //to organized
 	
 	public int managerPortToJoinChat() { return 18; }
 	
+	public int updateJoinChatListAfterOpenSocket() { return 19; }
+	
 }

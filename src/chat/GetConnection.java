@@ -71,7 +71,7 @@ public class GetConnection extends Thread {
 		}
 	}
 	
-	public void chatAlert() throws InterruptedException, IOException {
+	public synchronized void chatAlert() throws InterruptedException, IOException {
 		
 		Socket socket = null; 
 		
@@ -80,7 +80,6 @@ public class GetConnection extends Thread {
 			chatUser = new User(clientSideConnection.getWorkerOnline().get("personalID").toString(), clientSideConnection.getWorkerOnline().get("name").toString(), "" + port);
 			chatUser.setIsHost(true);
 		}
-		
 		
 		if (clientSideConnection.isFreeToChat()) {
 			socket = sockets.removeFirst();
@@ -105,6 +104,7 @@ public class GetConnection extends Thread {
 				{
 					if (sockets.get(i).getPort() == managerPort)
 					{
+
 						socket = sockets.remove(i);
 						chatUser.addToBufferedReader(new BufferedReader(new InputStreamReader(socket.getInputStream())));
 						chatUser.addToPrintWriter(new PrintWriter(socket.getOutputStream(),true));
@@ -136,6 +136,10 @@ public class GetConnection extends Thread {
 	
 	public User getUser() {
 		return chatUser;
+	}
+	
+	public int getPort() {
+		return port;
 	}
 	
 	

@@ -41,13 +41,10 @@ public class User implements ChatUser {
 	
 	public void addToPrintWriter(PrintWriter printWriter) {
 		printWriter_.add(printWriter);
-		System.out.println(printWriter_.size());
 	}
 	
 	public void addToBufferedReader(BufferedReader bufferedReader) {
 		socketBufferedReader_.add(bufferedReader);
-		System.out.println(socketBufferedReader_.size());
-
 	}
 	
 	@Override

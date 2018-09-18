@@ -375,7 +375,6 @@ public class ClientSideConnection extends Thread {
 		
 	}
 	
-	
 	public void agreeChat() throws IOException {
 		ServerSocket chatAgree = new ServerSocket(socket.getPort());
 		System.out.println("Ready for connaction...");
@@ -426,12 +425,21 @@ public class ClientSideConnection extends Thread {
 	public int managerPortToJoinChat() throws IOException, ParseException {
 		JSONObject json = new JSONObject();
 		json.put("Action", action.managerPortToJoinChat());
+		json.put("myPort", getConnection.getPort());
 		SendToServer(json);
 		JSONObject details = getFromServer();
-		if (details.containsKey("managerPort")) {
-			return Integer.parseInt(details.get("managerPort").toString());
+		if (details.containsKey("portToCheck")) {
+			return Integer.parseInt(details.get("portToCheck").toString());
 			
 		} else return 0;
+	}
+	
+	public void updateJoinChatListAfterOpenSocket(int hostPort, int myPort) {
+		JSONObject json = new JSONObject();
+		json.put("Action", action.updateJoinChatListAfterOpenSocket());
+		json.put("hostPort", hostPort);
+		json.put("myPort", myPort);
+		SendToServer(json);
 	}
 	
 }

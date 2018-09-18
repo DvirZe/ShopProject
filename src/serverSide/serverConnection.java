@@ -5,11 +5,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.ArrayList;
-import java.util.Set;
-
+import java.util.HashMap;
+import java.util.Map;
 import javax.net.ssl.SSLServerSocketFactory;
-
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -18,9 +16,10 @@ import chat.ChatRoom;
 
 public class serverConnection {
 	
-	JSONObject workers, customers, shop1, shop2;
-	ArrayList<serverClass> connections;
+	private JSONObject workers, customers, shop1, shop2;
+	private ArrayList<serverClass> connections;
 	private ArrayList<ChatRoom> rooms;
+	private Map<String, String> joinChatList = new HashMap<String, String>();
 	
 	private serverConnection() throws IOException, ParseException {
 		System.setProperty("javax.net.ssl.keyStore", "sp.store");
@@ -80,6 +79,10 @@ public class serverConnection {
 	
 	public JSONObject getShop2() {
 		return shop2;
+	}
+	
+	public Map<String, String> getJoinChatList() {
+		return joinChatList;
 	}
 	
 	public static void main(String[] args) throws IOException, ParseException  {
