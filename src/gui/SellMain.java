@@ -21,6 +21,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.xml.bind.Marshaller.Listener;
 
 import org.json.simple.parser.ParseException;
@@ -105,6 +107,7 @@ public class SellMain {
 	
 		JButton searchCus = new JButton("Search Customer");
 		searchCus.setFont(font2);
+		searchCus.setEnabled(false);
 		sellButtons.add(searchCus);
 		sellLayout.putConstraint(SpringLayout.WEST,searchCus , 50, SpringLayout.EAST, cusIDText);
 		sellLayout.putConstraint(SpringLayout.NORTH, searchCus, 10, SpringLayout.NORTH, sellButtons);
@@ -335,6 +338,32 @@ public class SellMain {
 		
 		//////////////////////End of sellActionListener/////////////////////////
 		
+		///////////////////search Enable Action/////////////////////////
+		DocumentListener searchEnabler = new DocumentListener(){
+		
+		@Override
+		public void changedUpdate(DocumentEvent e) {
+		searchEnable();
+		
+		}
+		
+		@Override
+		public void insertUpdate(DocumentEvent e) {
+		searchEnable();
+		
+		}
+		
+		@Override
+		public void removeUpdate(DocumentEvent e) {
+		searchEnable();
+		
+		}
+		public void searchEnable(){
+		searchCus.setEnabled(true);
+		}
+		};
+		///////////////////End of search Enable Action///////////////////
+		cusIDText.getDocument().addDocumentListener(searchEnabler);
 		sell.addActionListener(sellActionListener);
 		
 		sellMenu.add(sellButtons);

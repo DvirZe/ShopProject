@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Map;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -17,6 +18,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
 import clientSide.ClientSideConnection;
+import clientSide.Worker;
 
 public class MainMenu {
 	public MainMenu(ClientSideConnection clientSideConnection) {
@@ -30,10 +32,6 @@ public class MainMenu {
 		main.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		GridLayout layout = new GridLayout(3,2);
 		main.setLayout(layout);
-
-		
-	
-	
 		JButton buySell = new JButton("Sell items");
 		main.add(buySell);
 		buySell.setFont(font2);
@@ -115,7 +113,31 @@ public class MainMenu {
 				}
 			}
 		});
-////////////////////////End of ActionListener For Chat//////////////////
+		////////////////////////End of ActionListener For Chat//////////////////
+		
+		////////////////////////Check the employee position to set permissions//////////////////
+		Worker worker = null;
+		try {
+			worker = clientSideConnection.findWorker(clientSideConnection.getWorkerOnline().get("personalID")); //getting the workers id.
+			
+		} catch (ParseException | IOException e) {
+			e.printStackTrace();
+		}
+		
+		if (worker.getJob().equals("Seller"))
+		{
+		storeMgr.setEnabled(false);
+		customer.setEnabled(false);
+		employee.setEnabled(false);
+		reports.setEnabled(false);
+		}
+		else if (worker.getJob().equals("Cashier")) {
+			storeMgr.setEnabled(false);
+			employee.setEnabled(false);
+			reports.setEnabled(false);
+		}
+		////////////////////////End of Check the employee position to set permissions//////////////////
+		
 		main.setVisible(true);
 	}
 }
