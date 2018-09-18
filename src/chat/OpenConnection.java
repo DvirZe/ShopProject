@@ -40,4 +40,9 @@ public class OpenConnection {
 	public Socket getSocket() {
 		return socket;
 	}
+	
+	public PrintWriter getPrintWriter() { return printWriter; }
+	
+	public BufferedReader getBufferedReader() { return socketBufferedReader; }
+
 }

@@ -22,9 +22,7 @@ public class GetConnection extends Thread {
 	BufferedReader bufferedReader;
 	PrintWriter printWriter;
 	Socket curSocket;
-	private User chatUser;
-	boolean popOnce = false;
-	
+	private User chatUser;	
 	
 	public GetConnection (int port, ClientSideConnection clientSideConnection)
 	{
@@ -51,6 +49,7 @@ public class GetConnection extends Thread {
 						if (!sockets.isEmpty()/* && clientSideConnection.isFreeToChat()*/)
 						{
 							chatAlert();
+							Thread.sleep(1000);
 						}
 					}
 				} catch (InterruptedException e) {
@@ -73,28 +72,29 @@ public class GetConnection extends Thread {
 	}
 	
 	public void chatAlert() throws InterruptedException, IOException {
-		clientSideConnection.freeToChatStatusChange(false);
 		Socket socket = sockets.removeFirst();
 		if (chatUser == null)
 		{
 			chatUser = new User(clientSideConnection.getWorkerOnline().get("personalID").toString(), clientSideConnection.getWorkerOnline().get("name").toString(), "" + port);
-			System.out.println("Create new User");
+			chatUser.setIsServer(true);
+			System.out.println("Client Created");
 		}
 		curSocket = socket;
+		System.out.println("curSocket = socket");
 		if (curSocket.isConnected())
 		{
 			chatUser.addToBufferedReader(new BufferedReader(new InputStreamReader(socket.getInputStream())));
 			chatUser.addToPrintWriter(new PrintWriter(socket.getOutputStream(),true));
 			//bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			//printWriter = new PrintWriter(socket.getOutputStream(),true);
-			System.out.println("Start chat with: " + socket.getPort());
-			if (!popOnce)
+			if (clientSideConnection.isFreeToChat())
 			{
 				new PopupIncomingChat(this);
-				popOnce = true;
+				clientSideConnection.freeToChatStatusChange(false);
 			}
 			else
-				chatUser.sendMessage2("Chat Accepted.");
+				chatUser.sendMessage("Chat Accepted.");
+			System.out.println("Take care of: " + socket);
 		}
 		else clientSideConnection.freeToChatStatusChange(true);	
 	}
@@ -106,9 +106,8 @@ public class GetConnection extends Thread {
 	}
 	
 	public void newChatAccpet() {
-		//printWriter.println("Chat Accepted.");
 		//chatUser = new User(clientSideConnection.getWorkerOnline().get("personalID"),clientSideConnection.getWorkerOnline().get("name"), printWriter, bufferedReader);
-		chatUser.sendMessage2("Chat Accepted.");
+		chatUser.sendMessage("Chat Accepted.");
 		try {
 			new ChatGui(clientSideConnection, true);
 		} catch (IOException e) {
@@ -126,9 +125,5 @@ public class GetConnection extends Thread {
 		return chatUser;
 	}
 	
-	public void sendMessege(String message)
-	{
-		chatUser.sendMessage(message);
-	}
 	
 }

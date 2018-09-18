@@ -8,35 +8,32 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.Socket;
-
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollBar;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.SpringLayout;
 import javax.swing.WindowConstants;
 import javax.swing.text.DefaultCaret;
-
 import org.json.simple.parser.ParseException;
-
 import chat.OpenConnection;
 import chat.User;
 import clientSide.ClientSideConnection;
-import clientSide.CustomerTypeReturn;
 
 public class ChatGui extends JPanel{
 	
 	private static final long serialVersionUID = 4188117811193390502L;
 	private OpenConnection connection;
 	private Socket socket;
-	private BufferedReader bufferedReader;
+	//private BufferedReader bufferedReader;
 	private User chatUser = null;
 	
 	public ChatGui(ClientSideConnection clientSideConnection, Boolean isConnectToChatAlready) throws IOException{
@@ -52,28 +49,16 @@ public class ChatGui extends JPanel{
 		chatFrame.addWindowListener(new WindowListener() {
 			
 			@Override
-			public void windowOpened(WindowEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
+			public void windowOpened(WindowEvent e) {}
 			
 			@Override
-			public void windowIconified(WindowEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
+			public void windowIconified(WindowEvent e) {}
 			
 			@Override
-			public void windowDeiconified(WindowEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
+			public void windowDeiconified(WindowEvent e) {}
 			
 			@Override
-			public void windowDeactivated(WindowEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
+			public void windowDeactivated(WindowEvent e) {}
 			
 			@Override
 			public void windowClosing(WindowEvent e) {
@@ -87,16 +72,10 @@ public class ChatGui extends JPanel{
 			}
 			
 			@Override
-			public void windowClosed(WindowEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
+			public void windowClosed(WindowEvent e) {}
 			
 			@Override
-			public void windowActivated(WindowEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
+			public void windowActivated(WindowEvent e) {}
 		});
 		
 		
@@ -159,6 +138,21 @@ public class ChatGui extends JPanel{
 		imcomingChatLayout.putConstraint(SpringLayout.EAST, leave, 0, SpringLayout.EAST, chatPanel);
 		imcomingChatLayout.putConstraint(SpringLayout.SOUTH, leave, 0, SpringLayout.SOUTH, chatPanel);
 		
+		Thread sendingRefresh = new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				while (true) {
+					chatUser.sendMessage("");
+					try {
+						Thread.sleep(500);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+		});
 		
 		searchChat.addActionListener(new ActionListener() {
 			
@@ -176,11 +170,12 @@ public class ChatGui extends JPanel{
 						clientSideConnection.setChatSocket(connection.getSocket());
 						socket = connection.getSocket();
 						chatUser = connection.getUser();
-						chatUser.receiveMessage(chatLog,true);
+						chatUser.receiveMessage(chatLog,true,connection.getBufferedReader(),connection.getPrintWriter());
 						searchChat.setEnabled(false);
 						sendMessage.setEnabled(true);
 						send.setEnabled(true);
 						join.setEnabled(false);
+						sendingRefresh.start();
 					} else chatLog.append("\nNo one available.");
 				} catch (ParseException | IOException e1) {e1.printStackTrace(); }
 			}
@@ -202,12 +197,13 @@ public class ChatGui extends JPanel{
 						clientSideConnection.setChatSocket(connection.getSocket());
 						socket = connection.getSocket();
 						chatUser = connection.getUser();
-						System.out.println(chatUser);
-						chatUser.receiveMessage(chatLog,true);
+						System.out.println("205: " + chatUser);
+						chatUser.receiveMessage(chatLog,true,connection.getBufferedReader(),connection.getPrintWriter());
 						searchChat.setEnabled(false);
 						sendMessage.setEnabled(true);
 						send.setEnabled(true);
 						join.setEnabled(false);
+						sendingRefresh.start();
 					} else chatLog.append("\nNo chat is on.");
 				} catch (ParseException | IOException e1) {e1.printStackTrace(); }
 			}
@@ -217,11 +213,13 @@ public class ChatGui extends JPanel{
 		if (isConnectToChatAlready)
 		{
 			chatUser = clientSideConnection.getConnection().getUser();
-			chatUser.receiveMessage(chatLog, false);
+			System.out.println("196: " + clientSideConnection.getConnection().getUser().getLastBufferedReader());
+			chatUser.receiveMessage(chatLog, false,clientSideConnection.getConnection().getUser().getLastBufferedReader(),clientSideConnection.getConnection().getUser().getLastPrintWriter());
 			chatLog.setText("Start to chat..");
 			sendMessage.setEnabled(true);
 			send.setEnabled(true);
 			join.setEnabled(false);
+			sendingRefresh.start();
 		}
 		
 		leave.addActionListener(new ActionListener() {
@@ -246,7 +244,7 @@ public class ChatGui extends JPanel{
 				if(isConnectToChatAlready)
 				{
 					chatLog.append("\n"+ clientSideConnection.getWorkerOnline().get("name") + " >> " +sendMessage.getText().toString());
-					chatUser.sendMessage2(sendMessage.getText().toString());
+					chatUser.sendMessage(sendMessage.getText().toString());
 				} 
 				else
 					chatUser.sendMessage(sendMessage.getText().toString());
@@ -257,14 +255,6 @@ public class ChatGui extends JPanel{
 		send.addActionListener(sendActions);
 		sendMessage.addActionListener(sendActions);
 		
-		join.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				//TODO
-				
-			}
-		});
 		
 		chatFrame.add(chatPanel);
 		chatFrame.pack();
