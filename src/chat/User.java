@@ -3,20 +3,9 @@ package chat;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.net.Socket;
 import java.util.ArrayList;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
-import javax.naming.TimeLimitExceededException;
 import javax.swing.JTextArea;
-import org.junit.rules.Timeout;
-
-import com.google.common.util.concurrent.SimpleTimeLimiter;
-import com.google.common.util.concurrent.TimeLimiter;
 
 import clientSide.ClientSideConnection;
 
@@ -29,6 +18,7 @@ public class User implements ChatUser {
 	private ArrayList<PrintWriter> printWriter_;
 	private ArrayList<BufferedReader> socketBufferedReader_;
 	private Thread inMessage;
+	private Boolean isHost = false;
 
 	public User(String id, String userName, String port)
 	{
@@ -51,33 +41,50 @@ public class User implements ChatUser {
 	
 	public void addToPrintWriter(PrintWriter printWriter) {
 		printWriter_.add(printWriter);
+		System.out.println(printWriter_.size());
 	}
 	
 	public void addToBufferedReader(BufferedReader bufferedReader) {
 		socketBufferedReader_.add(bufferedReader);
+		System.out.println(socketBufferedReader_.size());
+
 	}
 	
 	@Override
 	public void sendMessage(String message) {
-		printWriter.println(userName + " >> " + message);
-		
-	}
-	
-	public void sendMessage2(String message) {
-		for (int i = 0; i < socketBufferedReader_.size() ; ++i)
-		{	
-			printWriter_.get(i).println(userName + " >> " + message);
+		if (!message.equals(""))
+		{
+			if (isHost)
+			{
+				for (int i = 0; i < socketBufferedReader_.size() ; ++i)
+				{	
+					printWriter_.get(i).println(userName + " >> " + message);
+				}
+			}
+			else
+				printWriter.println(userName + " >> " + message);	
+		} else {
+			if (isHost)
+			{
+				for (int i = 0; i < socketBufferedReader_.size() ; ++i)
+				{	
+					printWriter_.get(i).println("");
+				}
+			}
+			else
+				printWriter.println("");	
 		}
 	}	
 	
 	@Override
-	public void receiveMessage(JTextArea chatLog, Boolean firstUser) {
+	public void receiveMessage(JTextArea chatLog) {
 		inMessage = new Thread(new Runnable() {
+
 			@Override
 			public void run() {
+				String msg = "";
 				try {
-					String msg="";
-					if (!firstUser)
+					if (isHost)
 					{
 						for (int i = 0; i < socketBufferedReader_.size() ; ++i)
 						{
@@ -85,8 +92,9 @@ public class User implements ChatUser {
 							if (!str.equals(""))
 								msg=msg + "\n" + str;
 						}
+					} else {
+					msg = socketBufferedReader.readLine();
 					}
-					else msg = socketBufferedReader.readLine();
 					try {
 						Thread.sleep(0);
 					} catch (InterruptedException e1) {
@@ -96,7 +104,7 @@ public class User implements ChatUser {
 						if (!msg.equals(""))
 							{
 								chatLog.append("\n"+msg);
-								if (!firstUser)
+								if (isHost)
 								{
 									for (int i = 0; i < socketBufferedReader_.size() ; ++i)
 									{	
@@ -104,20 +112,22 @@ public class User implements ChatUser {
 									}
 								}
 							}
-						if (!firstUser) {
-							msg = "";
-							System.out.println(msg);
-								while (msg.equals("")) {
-									for (int i = 0; i < socketBufferedReader_.size() ; ++i)
-									{
-										String str = socketBufferedReader_.get(i).readLine();
-										if (!str.equals(""))
-											msg=msg + "\n" + str;
-									}
+						msg="";
+						while (msg.equals("")) {		
+							if (isHost)
+							{
+								for (int i = 0; i < socketBufferedReader_.size() ; ++i)
+								{
+									String str = socketBufferedReader_.get(i).readLine();
+									if (!str.equals(""))
+										if (msg.equals(""))
+											msg = str;
+										else
+											msg = msg + "\n" + str;
 								}
-							}
-						 else {
-							while ((msg = socketBufferedReader.readLine()) == null) {}
+							} else {
+							msg = socketBufferedReader.readLine();
+							}	
 						}
 					}
 				} catch (IOException e) {
@@ -127,44 +137,6 @@ public class User implements ChatUser {
 		});
 		inMessage.start();
 	}
-	
-	
-	
-	
-	
-/*	@Override
-	public void receiveMessage(JTextArea chatLog, Boolean firstUser) {
-		// TODO Auto-generated method stub
-		inMessage = new Thread(new Runnable() {
-
-			@Override
-			public void run() {
-				try {
-					System.out.println(socketBufferedReader.readLine());
-					String msg = socketBufferedReader.readLine();
-					try {
-						Thread.sleep(0);
-					} catch (InterruptedException e1) {
-						new Exception("Chat stoppet");
-					}
-					while(true) {
-						if (!msg.equals(""))
-							{
-								chatLog.append("\n"+msg);
-								if (!firstUser)
-								{
-									printWriter.println(msg);
-								}
-							}
-						while ((msg = socketBufferedReader.readLine()) == null) {}
-					}
-				} catch (IOException e) {
-					System.out.println("Socket is close.");
-				}
-			}
-		});
-		inMessage.start();
-	}*/
 
 	public void stopReceive(ClientSideConnection clientSideConnection) { 
 		inMessage.interrupt();
@@ -176,4 +148,15 @@ public class User implements ChatUser {
 		return Integer.parseInt(id);
 	}
 	
+	public PrintWriter getLastPrintWriter() { return printWriter_.get(printWriter_.size()-1); }
+	public BufferedReader getLastBufferedReader() { return socketBufferedReader_.get(socketBufferedReader_.size()-1); }
+	public void setIsHost(Boolean bool) { isHost = bool; }
+	
+	public void hostDisconnect() {
+		printWriter_.clear();
+		socketBufferedReader_.clear();
+	}
+	
+	@Override
+	public boolean isHost() { return isHost; }
 }

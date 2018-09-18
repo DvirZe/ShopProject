@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.nio.file.attribute.UserPrincipalLookupService;
 import java.util.ArrayList;
 import java.util.Set;
 import org.json.simple.JSONArray;
@@ -24,9 +25,7 @@ public class serverClass extends Thread {
 	private int logedInUserID;
 	private Logs logs;
 	private ArrayList<ChatRoom> rooms;
-	
-	public serverClass() {}
-	
+		
 	public serverClass(Socket socket, serverConnection serverConnection) throws FileNotFoundException, IOException, ParseException {
 		this.socket = socket;
 		this.serverConnection = serverConnection;
@@ -85,7 +84,7 @@ public class serverClass extends Thread {
 			updateInventory(json);
 			break;
 		case "16":
-			removeChatRoom();
+			workerLeftChat();
 			break;
 		case "17":
 			findChatToJoin();
@@ -311,7 +310,7 @@ public class serverClass extends Thread {
 		gr.createSellReport(this, shop.get("shopName").toString(), json);
 	}
 	
-	public void chatLookup() throws IOException {
+	public synchronized void chatLookup() throws IOException {
 		Set<String> keys = workers.keySet();
 		JSONObject answer = new JSONObject();
 		JSONArray loginWorker = (JSONArray) workers.get(""+logedInUserID);
@@ -320,8 +319,9 @@ public class serverClass extends Thread {
 			if ((Integer.parseInt(worker.get(7).toString()) == 1) && (Integer.parseInt(worker.get(9).toString()) == 0) && !(worker.equals(loginWorker)) && !(worker.get(4).equals(loginWorker.get(4)))) {
 				answer.put("User2Port", worker.get(8));
 				ChatRoom room = new ChatRoom();
-				User tryUser = new User(id,loginWorker.get(0).toString(), loginWorker.get(8).toString());
+				User tryUser = new User(""+logedInUserID,loginWorker.get(0).toString(), loginWorker.get(8).toString());
 				User connectUser = new User(id,worker.get(0).toString(), worker.get(8).toString());
+				connectUser.setIsHost(true);
 				room.addUser(tryUser);
 				room.addUser(connectUser);
 				rooms.add(room);
@@ -329,6 +329,13 @@ public class serverClass extends Thread {
 				toLog.put("openUser", loginWorker.get(0));
 				toLog.put("with",worker.get(0));
 				logs.chatConncetion(toLog);
+				////////////////////////////////////////////////////
+				//Set the 2 members of the chat as "Not free to chat"
+				worker.set(9, 1);
+				loginWorker.set(9, 1);
+				workers.replace(id, worker);
+				workers.replace(logedInUserID, loginWorker);
+				///////////////////////////////////////////////////
 				break;
 			}
 		}
@@ -340,9 +347,26 @@ public class serverClass extends Thread {
 		JSONObject answer = new JSONObject();
 		if (!rooms.isEmpty())
 		{
-			ArrayList<ChatUser> users = rooms.get(0).getChatUsers();
-			JSONArray hostUser = (JSONArray) workers.get(""+users.get(1).getId());
-			answer.put("User2Port", hostUser.get(8).toString());
+			for (ChatRoom room : rooms)
+			{
+				if (room.isHostStillOnChat() && room.getChatUsers().size() == 2)
+				{
+					ArrayList<ChatUser> users = rooms.get(0).getChatUsers();
+					JSONArray hostUser = (JSONArray) workers.get(""+users.get(1).getId());
+					System.out.println(hostUser);
+					answer.put("User2Port", hostUser.get(8).toString());
+					JSONArray loginWorker = (JSONArray) workers.get(""+logedInUserID);
+					User joinUser = new User(""+logedInUserID,loginWorker.get(0).toString(), loginWorker.get(8).toString());
+					rooms.get(0).addUser(joinUser);
+					////////////////////////////////////////////////////
+					//Set the member as "Not free to chat"
+					loginWorker.set(9, 1);
+					workers.replace(logedInUserID, loginWorker);
+					////////////////////////////////////////////////////
+				}
+				else answer.put("notFound", 1);
+			}
+
 		}
 		else {
 			answer.put("notFound", 1);
@@ -350,17 +374,39 @@ public class serverClass extends Thread {
 		sendToClient(answer);
 	}
 	
-	public void removeChatRoom()
+	public synchronized void workerLeftChat()
 	{
+		int x=0,y=0;
 		for (int i = 0; i< rooms.size() ; ++i)
 		{
 			if (rooms.get(i).isThisUserInChat(logedInUserID))
 			{
-				rooms.remove(i);
-				System.out.println(rooms.size());
+				int userWhoLeftPlace = rooms.get(i).getPlaceOfUser(logedInUserID);
+				ChatUser user = rooms.get(i).getChatUsers().remove(userWhoLeftPlace);
+				if (rooms.get(i).getChatUsers().isEmpty())
+				{
+					x = rooms.get(i).getChatUsers().size();
+					y = rooms.get(i).getLeftChatUsers().size();
+					rooms.remove(i);
+				}
+				else {
+					rooms.get(i).addLeftUser(user);
+					x = rooms.get(i).getChatUsers().size();
+					y = rooms.get(i).getLeftChatUsers().size();
+				}
+				System.out.println("On chat: " + x);
+				System.out.println("Left chat: " + y);
 				break;
 			}
 		}
+		////////////////////////////////////////////////////
+		//Set the member as "free to chat"
+		JSONArray loginWorker = (JSONArray) workers.get(""+logedInUserID);
+		loginWorker.set(9, 0);
+		workers.replace(logedInUserID, loginWorker);
+		System.out.println("Left worker: " + loginWorker);
+		System.out.println("workers: " + workers);
+		////////////////////////////////////////////////////
 	}
 	
 	
@@ -393,6 +439,7 @@ public class serverClass extends Thread {
 		 workerDetails = (JSONArray) workers.get(""+logedInUserID);
 		 workerDetails.set(7, 0); //Set user as logged out 
 		 workerDetails.set(8, 0); //Set user port as 0 (offline)
+		 workerDetails.set(9, 0); //Set user chat as free for next time
 		 JSONObject logout = new JSONObject();
 		 logout.put("shopName", workerDetails.get(4));
 		 logout.put("personalID", logedInUserID);

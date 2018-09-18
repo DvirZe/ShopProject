@@ -423,5 +423,16 @@ public class ClientSideConnection extends Thread {
 		SendToServer(json);
 	}
 	
+	public int managerPortToJoinChat() throws IOException, ParseException {
+		JSONObject json = new JSONObject();
+		json.put("Action", action.managerPortToJoinChat());
+		SendToServer(json);
+		JSONObject details = getFromServer();
+		if (details.containsKey("managerPort")) {
+			return Integer.parseInt(details.get("managerPort").toString());
+			
+		} else return 0;
+	}
+	
 }
 

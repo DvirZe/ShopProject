@@ -62,10 +62,15 @@ public class ChatGui extends JPanel{
 			
 			@Override
 			public void windowClosing(WindowEvent e) {
-				if (!clientSideConnection.isFreeToChat())
+				if (chatUser != null)
 				{
 					chatUser.sendMessage("left the chat.");
 					chatUser.stopReceive(clientSideConnection);
+					if (chatUser.isHost())
+					{
+						chatUser.hostDisconnect();
+					}
+					clientSideConnection.leftTheChat();
 				}
 				clientSideConnection.freeToChatStatusChange(true);
 				chatFrame.dispose();
@@ -145,7 +150,7 @@ public class ChatGui extends JPanel{
 				while (true) {
 					chatUser.sendMessage("");
 					try {
-						Thread.sleep(500);
+						Thread.sleep(100);
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -170,7 +175,7 @@ public class ChatGui extends JPanel{
 						clientSideConnection.setChatSocket(connection.getSocket());
 						socket = connection.getSocket();
 						chatUser = connection.getUser();
-						chatUser.receiveMessage(chatLog,true,connection.getBufferedReader(),connection.getPrintWriter());
+						chatUser.receiveMessage(chatLog/*,connection.getBufferedReader(),connection.getPrintWriter()*/);
 						searchChat.setEnabled(false);
 						sendMessage.setEnabled(true);
 						send.setEnabled(true);
@@ -198,7 +203,7 @@ public class ChatGui extends JPanel{
 						socket = connection.getSocket();
 						chatUser = connection.getUser();
 						System.out.println("205: " + chatUser);
-						chatUser.receiveMessage(chatLog,true,connection.getBufferedReader(),connection.getPrintWriter());
+						chatUser.receiveMessage(chatLog/*,connection.getBufferedReader(),connection.getPrintWriter()*/);
 						searchChat.setEnabled(false);
 						sendMessage.setEnabled(true);
 						send.setEnabled(true);
@@ -214,7 +219,7 @@ public class ChatGui extends JPanel{
 		{
 			chatUser = clientSideConnection.getConnection().getUser();
 			System.out.println("196: " + clientSideConnection.getConnection().getUser().getLastBufferedReader());
-			chatUser.receiveMessage(chatLog, false,clientSideConnection.getConnection().getUser().getLastBufferedReader(),clientSideConnection.getConnection().getUser().getLastPrintWriter());
+			chatUser.receiveMessage(chatLog/*,clientSideConnection.getConnection().getUser().getLastBufferedReader(),clientSideConnection.getConnection().getUser().getLastPrintWriter()*/);
 			chatLog.setText("Start to chat..");
 			sendMessage.setEnabled(true);
 			send.setEnabled(true);
@@ -224,12 +229,13 @@ public class ChatGui extends JPanel{
 		
 		leave.addActionListener(new ActionListener() {
 					
-				@Override
+			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (!clientSideConnection.isFreeToChat())
+				if (chatUser != null)
 				{
 					chatUser.sendMessage("left the chat.");
 					chatUser.stopReceive(clientSideConnection);
+					clientSideConnection.leftTheChat();
 				}
 				clientSideConnection.freeToChatStatusChange(true);
 				chatFrame.dispose();
@@ -243,7 +249,7 @@ public class ChatGui extends JPanel{
 			public void actionPerformed(ActionEvent e) {
 				if(isConnectToChatAlready)
 				{
-					chatLog.append("\n"+ clientSideConnection.getWorkerOnline().get("name") + " >> " +sendMessage.getText().toString());
+					chatLog.append("\n" + clientSideConnection.getWorkerOnline().get("name") + " >> " +sendMessage.getText().toString());
 					chatUser.sendMessage(sendMessage.getText().toString());
 				} 
 				else

@@ -36,4 +36,6 @@ public class Actions { //to organized
 	
 	public int joinChat() { return 17; }
 	
+	public int managerPortToJoinChat() { return 18; }
+	
 }

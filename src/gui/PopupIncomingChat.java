@@ -45,7 +45,8 @@ public class PopupIncomingChat extends JPanel {
 			
 			@Override
 			public void windowClosing(WindowEvent arg0) {
-				connection.newChatClose(popupFrame);				
+				connection.chatRefuse();
+				popupFrame.dispose();
 			}
 			
 			@Override
@@ -83,8 +84,8 @@ public class PopupIncomingChat extends JPanel {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				connection.newChatClose(popupFrame);
 				connection.chatRefuse();
+				popupFrame.dispose();
 			}
 		});
 		
