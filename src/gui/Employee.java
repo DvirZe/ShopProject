@@ -312,7 +312,6 @@ passText.addFocusListener(new FocusListener() {
 	@Override
 	public void focusLost(FocusEvent e) {
 		String pattern = "(?=.*[0-9])(?=.*[A-Z])(?=.*[@#$%^&+!=])(?=\\S+$).{8,16}"; //determine the policy of the password
-		System.out.println(new String(passText.getPassword()));
 		String password = new String(passText.getPassword());
 		if (password.matches(pattern) == false)
 		{
@@ -380,6 +379,7 @@ passText.addFocusListener(new FocusListener() {
 				passText.setText("");
 				phnNumText.setText("");
 				accNumText.setText("");
+				passText.setBackground(null);
 				positionText.setSelectedItem("Seller");
 			}
 		});

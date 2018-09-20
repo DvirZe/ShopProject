@@ -5,7 +5,6 @@ import java.util.ArrayList;
 public class ChatRoom implements Conversation {
 
 	private ArrayList<ChatUser> chatUsers = new ArrayList<ChatUser>();
-	private ArrayList<ChatUser> leftChatUsers = new ArrayList<ChatUser>();
 	
 	@Override
 	public void addUser(ChatUser chatUser) {
@@ -32,14 +31,6 @@ public class ChatRoom implements Conversation {
 	
 	public ArrayList<ChatUser> getChatUsers() {
 		return chatUsers;
-	}
-	
-	public void addLeftUser(ChatUser chatUser) {
-		leftChatUsers.add(chatUser);
-	}
-	
-	public ArrayList<ChatUser> getLeftChatUsers() {
-		return leftChatUsers;
 	}
 	
 	public boolean isHostStillOnChat() {

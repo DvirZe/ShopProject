@@ -12,9 +12,6 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-
-import com.google.common.base.Functions;
-
 import chat.ChatRoom;
 import chat.ChatUser;
 import chat.User;
@@ -23,6 +20,7 @@ public class serverClass extends Thread {
 	private Socket socket;
 	private JSONObject workers, shop, customers;
 	private serverConnection serverConnection;
+	private PrintWriter printWriter;
 	private int logedInUserID;
 	private Logs logs;
 	private ArrayList<ChatRoom> rooms;
@@ -34,10 +32,12 @@ public class serverClass extends Thread {
 		customers = serverConnection.getCustomers();
 		logs = new Logs();
 		rooms = serverConnection.getRooms();
+		printWriter = new PrintWriter(socket.getOutputStream(),true);
+
 	}
 	
-	public void actionChoose(JSONObject json) throws IOException, ParseException
-	{ //Action menu for client requests
+	public void actionChoose(JSONObject json) throws IOException, ParseException {
+		//Action menu for client requests
 		switch (json.get("Action").toString()) {
 		case "1":
 			loginToApp(json);
@@ -104,8 +104,7 @@ public class serverClass extends Thread {
 		}
 	}
 	
-	public void loginToApp(JSONObject json) throws IOException, ParseException
-	{
+	public void loginToApp(JSONObject json) throws IOException, ParseException	{
 		 JSONArray workerDetails = new JSONArray(); 
 		 JSONObject answer = new JSONObject();
 		 workerDetails = (JSONArray) workers.get(json.get("personalID"));
@@ -138,8 +137,8 @@ public class serverClass extends Thread {
 		 logs.loginsLog(answer);
 	}
 	
-	public void findWorker(JSONObject json) throws IOException
-	{
+	public void findWorker(JSONObject json) throws IOException {
+		//if worker on the workers list (file) return the worker details
 		if (workers.containsKey(json.get("personalID")))
 		{
 			JSONArray workerDetails = new JSONArray();
@@ -154,14 +153,14 @@ public class serverClass extends Thread {
 			json.put("login", workerDetails.get(7));
 		}
 		else
-		{
+		{ //if worker not found, return how many workers on the file to get new workerID
 			json.put("workersNumber",workers.size());
 		}
 		sendToClient(json);
 	}
 	
-	public void findCustomer(JSONObject json) throws IOException
-	{
+	public void findCustomer(JSONObject json) throws IOException {
+		//if customer on the customers list (file) return the customer details
 		if (customers.containsKey(json.get("customerId")))
 		{
 			JSONArray customersDetails = new JSONArray();
@@ -177,8 +176,7 @@ public class serverClass extends Thread {
 		sendToClient(json);
 	}
 	
-	public void updateWorker(JSONObject json) throws IOException
-	{
+	public void updateWorker(JSONObject json) throws IOException	{
 		JSONArray workerDetails = new JSONArray();
 		workerDetails.add(0, json.get("name"));
 		workerDetails.add(1, json.get("workerID"));
@@ -205,8 +203,7 @@ public class serverClass extends Thread {
 		logs.workersLog(json);
 	}
 	
-	public void updateCustomer(JSONObject json) throws IOException
-	{
+	public void updateCustomer(JSONObject json) throws IOException	{
 		JSONArray customerDetails = new JSONArray();
 		customerDetails.add(0, json.get("name"));
 		customerDetails.add(1, json.get("phoneNr"));
@@ -231,25 +228,26 @@ public class serverClass extends Thread {
 		newInventory.add(Integer.parseInt(curInventory.get(1).toString())-Integer.parseInt(json.get("shirt2").toString()));
 		newInventory.add(Integer.parseInt(curInventory.get(2).toString())-Integer.parseInt(json.get("pants1").toString()));
 		newInventory.add(Integer.parseInt(curInventory.get(3).toString())-Integer.parseInt(json.get("pants2").toString()));
-		shop.replace("Inventory", newInventory);
+		shop.replace("Inventory", newInventory); //Update shop inventory
 		curInventory = newInventory;
-		logs.selesLog(json);
+		logs.selesLog(json); //Save sell log
 		shop.replace("TotalSelles", Integer.parseInt(shop.get("TotalSelles").toString())+1);
 		JSONArray sellesHistoryTmp =  (JSONArray) shop.get("sellesHistory");
 		sellesHistoryTmp.set(0, Integer.parseInt(sellesHistoryTmp.get(0).toString()) + Integer.parseInt(json.get("shirt1").toString()));
 		sellesHistoryTmp.set(1, Integer.parseInt(sellesHistoryTmp.get(1).toString()) + Integer.parseInt(json.get("shirt2").toString()));
 		sellesHistoryTmp.set(2, Integer.parseInt(sellesHistoryTmp.get(2).toString()) + Integer.parseInt(json.get("pants1").toString()));
 		sellesHistoryTmp.set(3, Integer.parseInt(sellesHistoryTmp.get(3).toString()) + Integer.parseInt(json.get("pants2").toString()));
-		shop.replace("sellesHistory",sellesHistoryTmp);
+		shop.replace("sellesHistory",sellesHistoryTmp); //Update sells history
 		JSONArray coustomer = (JSONArray) customers.get(json.get("customerId"));
-		if (coustomer != null && coustomer.get(2).equals("New")) //Change coustomer Type from new to return after the first buy
+		if (coustomer != null && coustomer.get(2).equals("New")) //Change customer Type from new to return after the first buy
 		{
 			coustomer.set(2, "Return");
 			customers.replace("customerId", coustomer);
 		}
 	}
 
-	public void sendInventory() throws IOException {	
+	public void sendInventory() throws IOException { 	
+		//Send Updated inventory to client
 		JSONObject json = new JSONObject();
 		JSONArray curInventory = (JSONArray) shop.get("Inventory");
 		json.put("shirt1", curInventory.get(0));
@@ -260,6 +258,7 @@ public class serverClass extends Thread {
 	}
 	
 	public void updateInventory(JSONObject json) {
+		//Update inventory after update at client side (not by sell)
 		JSONArray updatedInventory = new JSONArray();
 		updatedInventory.add(json.get("shirt1").toString());
 		updatedInventory.add(json.get("shirt2").toString());
@@ -273,34 +272,30 @@ public class serverClass extends Thread {
 		}
 	}
 	
-	public void updateDiscounts(JSONObject json)
-	{
+	public void updateDiscounts(JSONObject json) {
 		shop.replace("customerTypeReturn", json.get("Return"));
 		shop.replace("customerTypeVip", json.get("VIP"));
 	}
 	
-	public void sendDiscounts() throws IOException
-	{
+	public void sendDiscounts() throws IOException {
 		JSONObject discounts = new JSONObject();
 		discounts.put("VIP", shop.get("customerTypeVip"));
 		discounts.put("Return", shop.get("customerTypeReturn"));
 		sendToClient(discounts);
 	}
 	
-	public void updatePrices(JSONObject json)
-	{
+	public void updatePrices(JSONObject json) {
+		//After update price action at client side
 		shop.replace("Price", json.get("newPrices"));
 	}
 	
-	public void sendPrices() throws IOException
-	{
+	public void sendPrices() throws IOException {
 		JSONObject prices = new JSONObject();
 		prices.put("Prices", shop.get("Price"));
 		sendToClient(prices);
 	}
 	
-	public void sendStats() throws IOException
-	{
+	public void sendStats() throws IOException {
 		JSONObject stats = new JSONObject();
 		stats.put("TotalSelles", shop.get("TotalSelles").toString());
 		JSONArray sellesHistory = (JSONArray)shop.get("sellesHistory");
@@ -308,39 +303,36 @@ public class serverClass extends Thread {
 		sendToClient(stats);
 	}
 
-	public void sendToClient(JSONObject json) throws IOException
-	{
-		PrintWriter printWriter = new PrintWriter(socket.getOutputStream(),true);
-		printWriter.println(json);
-	}
-	
-	public void sendSellsRepoet(JSONObject json) throws FileNotFoundException, IOException, ParseException
-	{
-		GenerateReports gr = new GenerateReports();
-		gr.createSellReport(this, shop.get("shopName").toString(), json);
+	public void sendSellsRepoet(JSONObject json) throws FileNotFoundException, IOException, ParseException {
+		//Get what report to create and send it to client
+		GenerateReports report = new GenerateReports();
+		report.createSellReport(this, shop.get("shopName").toString(), json);
 	}
 	
 	public synchronized void chatLookup() throws IOException {
-		Set<String> keys = workers.keySet();
+		Set<String> keys = workers.keySet(); //get all workers personal ID
 		ArrayList<String> workersToCheck = new ArrayList<String>();
 		JSONObject answer = new JSONObject();
 		JSONArray loginWorker = (JSONArray) workers.get(""+logedInUserID);
 		String sentToWorker = null;
+		ArrayList<String> unableToChat = new ArrayList<String>();
 		
 		for  (String id : keys) { //find relevant users to chat with
 			JSONArray worker = (JSONArray) workers.get(id);
-			System.out.println(worker);
-			if ((Integer.parseInt(worker.get(7).toString()) == 1) //Worker is online
-					&& !(worker.get(4).equals(loginWorker.get(4)))) //Different shop 
-			{
-				workersToCheck.add(id);
+			if (!(worker.get(4).equals(loginWorker.get(4)))) { //Different shop 
+				if (Integer.parseInt(worker.get(7).toString()) == 1) //Worker is online
+				{
+					workersToCheck.add(id);
+				} else { //Potential workers who can't talk 
+					unableToChat.add(worker.get(0).toString());
+				}
 			}
 		}
-		System.out.println("workersToCheck.size()" + workersToCheck.size());
 		if (workersToCheck.size() == 0)
 		{
 			answer.put("notFound", 1);
-		} else {
+			logs.noAvaliableToChat(unableToChat, loginWorker.get(0).toString());
+		} else { //if no one free to chat return the first worker
 			sentToWorker = workersToCheck.remove(0);
 			if (Integer.parseInt(((JSONArray)workers.get(sentToWorker)).get(9).toString()) != 0) //if not free to chat
 			{
@@ -354,16 +346,16 @@ public class serverClass extends Thread {
 			}
 		}
 		
-		if (sentToWorker != null) {
+		if (sentToWorker != null) { //return worker to chat with
 			JSONArray workerForChat = (JSONArray) workers.get(sentToWorker);
 			answer.put("User2Port", workerForChat.get(8));
-			ChatRoom room = new ChatRoom();
+			ChatRoom room = new ChatRoom(); //Create and update chat room to track users
 			User tryUser = new User(""+logedInUserID,loginWorker.get(0).toString(), loginWorker.get(8).toString());
 			User connectUser = new User(sentToWorker,workerForChat.get(0).toString(), workerForChat.get(8).toString());
 			connectUser.setIsHost(true);
 			room.addUser(tryUser);
 			room.addUser(connectUser);
-			rooms.add(room);
+			rooms.add(room); //Add to rooms list
 			JSONObject toLog = new JSONObject();
 			toLog.put("Action", "Open");
 			toLog.put("openUser", loginWorker.get(0));
@@ -382,45 +374,44 @@ public class serverClass extends Thread {
 	
 	public void findChatToJoin() throws IOException {
 		JSONObject answer = new JSONObject();
-		if (!rooms.isEmpty())
+		if (!rooms.isEmpty()) //if any chats on
 		{
 			for (ChatRoom room : rooms)
 			{
-				if (room.isHostStillOnChat() && room.getChatUsers().size() == 2)
+				if (room.isHostStillOnChat() && room.getChatUsers().size() == 2) //Host = the user that accept the first chat request
 				{
 					ArrayList<ChatUser> users = room.getChatUsers();
 					JSONArray hostUser = (JSONArray) workers.get(""+users.get(1).getId());
 					answer.put("User2Port", hostUser.get(8).toString());
 					JSONArray loginWorker = (JSONArray) workers.get(""+logedInUserID);
 					User joinUser = new User(""+logedInUserID,loginWorker.get(0).toString(), loginWorker.get(8).toString());
-					room.addUser(joinUser);
+					room.addUser(joinUser); //Update chat room with the new member
 					////////////////////////////////////////////////////
 					//Set the member as "Not free to chat"
 					loginWorker.set(9, 1);
 					workers.replace(logedInUserID, loginWorker);
 					////////////////////////////////////////////////////
-					
 					JSONObject toLog = new JSONObject();
 					toLog.put("openUser", loginWorker.get(0));
 					toLog.put("with",users.get(0).getUsername() + " and " + users.get(1).getUsername());
 					logs.chatConncetion(toLog);
 					
 				}
-				else answer.put("notFound", 1);
+				else answer.put("notFound", 1); //if not free rooms
 			}
-
 		}
 		else {
-			answer.put("notFound", 1);
+			answer.put("notFound", 1); //if not rooms available at all
 		}
 		sendToClient(answer);
 	}
 	
-	public void updateJoinChatList(JSONObject json) {
+	public void updateJoinChatList(JSONObject json) { //update the local port of the join request socket for chat host to recognize
 		serverConnection.getJoinChatList().put(json.get("hostPort").toString(), json.get("myPort").toString());
 	}
 	
 	public void joinManagerToChat(JSONObject json) throws IOException {
+		//return to chat host the port of the joined manager (for accepting the request without queue) 
 		JSONObject answer = new JSONObject();
 		if (serverConnection.getJoinChatList().containsKey(json.get("myPort").toString()))
 		{
@@ -431,20 +422,16 @@ public class serverClass extends Thread {
 		sendToClient(answer);
 	}
 	
-	public synchronized void workerLeftChat()
-	{
+	public synchronized void workerLeftChat() { //update the members on the chat room
 		for (int i = 0; i< rooms.size() ; ++i)
 		{
-			if (rooms.get(i).isThisUserInChat(logedInUserID))
+			if (rooms.get(i).isThisUserInChat(logedInUserID)) //if the user on this char room
 			{
 				int userWhoLeftPlace = rooms.get(i).getPlaceOfUser(logedInUserID);
 				ChatUser user = rooms.get(i).getChatUsers().remove(userWhoLeftPlace);
 				if (rooms.get(i).getChatUsers().isEmpty())
 				{
-					rooms.remove(i);
-				}
-				else {
-					rooms.get(i).addLeftUser(user);
+					rooms.remove(i); //remove chat room if everyone left
 				}
 				break;
 			}
@@ -461,6 +448,10 @@ public class serverClass extends Thread {
 		logs.chatConncetion(log);
 	}
 	
+	public void sendToClient(JSONObject json) throws IOException {
+		//Send data beck to client
+		printWriter.println(json);
+	}
 	
 	public void run() {
 		JSONParser parser = new JSONParser();
@@ -472,13 +463,13 @@ public class serverClass extends Thread {
 				if (!msg.equals(""))
 					{
 						JSONObject messageIn = (JSONObject)parser.parse(msg);
-						actionChoose(messageIn);
+						actionChoose(messageIn); //Get requests from client and send it to functions menu
 					}
 				while ((msg = bufferedReader.readLine()) == null) {}
 			}
 		} catch (IOException | ParseException e) {
 			try {
-				endOfWork();
+				endOfWork(); //When connection ends.
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
