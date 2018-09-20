@@ -75,12 +75,14 @@ public class Employee {
 		empMgr.add(back);
 		empLayout.putConstraint(SpringLayout.WEST,back , 12, SpringLayout.EAST, save);
 		empLayout.putConstraint(SpringLayout.NORTH, back, 540, SpringLayout.NORTH, empMgr);
+		/////////Back ActionListener//////////
 		back.addActionListener(new ActionListener() {
 			public void actionPerformed (ActionEvent ae) {
 				empMenu.dispose();
 				new	MainMenu(clientSideConnection);
 			}
 		});
+		/////////End of Back ActionListener//////////
 		
 		JButton search = new JButton("search employee");
 		search.setFont(font2);
@@ -183,157 +185,157 @@ public class Employee {
 		empLayout.putConstraint(SpringLayout.NORTH, positionText, 60, SpringLayout.SOUTH, empNumText);
 		
 		isWorkerfound = false;
-////////////////////////ActionListener For finding worker/////////////////////////		
-ActionListener findWorkerAction = new ActionListener() {
-	public void actionPerformed (ActionEvent ae) {
-		Worker worker = null;
-		try {
-			worker = clientSideConnection.findWorker(idNum.getText()); //getting the workers id.
+		////////////////////////ActionListener For finding worker/////////////////////////		
+		ActionListener findWorkerAction = new ActionListener() {
+			public void actionPerformed (ActionEvent ae) {
+				Worker worker = null;
+				try {
+					worker = clientSideConnection.findWorker(idNum.getText()); //getting the workers id.
+					
+				} catch (ParseException | IOException e) {
+					e.printStackTrace();
+				}
+				
+				if (worker != null)	//if an id was typed get the employee details
+				{
+					fnText.setText(worker.getName());
+					passText.setText(worker.getPassword());
+					phnNumText.setText(worker.getPhoneNr());
+					accNumText.setText(worker.getBankAcc());
+					String workerId = Integer.toString(worker.getWorkerId());
+					empNumText.setText(workerId);
+					positionText.setSelectedItem(worker.getJob());
+					isWorkerfound = true;
+					workerFound = worker;
+					passwordValidation = true;
+				}
+				else // if an id was'nt typed or employee was'nt found erase all of the text fields in the form.
+				{
+					empNumText.setText("");
+					empNumText.setText(""+clientSideConnection.getNewWorkerID());
+					fnText.setText("");
+					passText.setText("");
+					phnNumText.setText("");
+					accNumText.setText("");
+					positionText.setSelectedItem("Seller");
+				}
+			}
+		};
+
+	////////////////////End of ActionListener For login panel/////////////////////						
+	
+	
+	
+	///////////////////save Enable Action/////////////////////////
+	DocumentListener saveEnabler = new DocumentListener(){
+	
+		@Override
+		public void changedUpdate(DocumentEvent e) {
+			saveEnable();
 			
-		} catch (ParseException | IOException e) {
-			e.printStackTrace();
-		}
-		
-		if (worker != null)	//if an id was typed get the employee data
-		{
-			fnText.setText(worker.getName());
-			passText.setText(worker.getPassword());
-			phnNumText.setText(worker.getPhoneNr());
-			accNumText.setText(worker.getBankAcc());
-			String workerId = Integer.toString(worker.getWorkerId());
-			empNumText.setText(workerId);
-			positionText.setSelectedItem(worker.getJob());
-			isWorkerfound = true;
-			workerFound = worker;
-			passwordValidation = true;
-		}
-		else // if an id was'nt typed or employee was'nt found erase all of the text fields in the form.
-		{
-			empNumText.setText("");
-			empNumText.setText(""+clientSideConnection.getNewWorkerID());
-			fnText.setText("");
-			passText.setText("");
-			phnNumText.setText("");
-			accNumText.setText("");
-			positionText.setSelectedItem("Seller");
-		}
-	}
-};
-
-////////////////////End of ActionListener For login panel/////////////////////						
-
-
-
-///////////////////save Enable Action/////////////////////////
-DocumentListener saveEnabler = new DocumentListener(){
-
-	@Override
-	public void changedUpdate(DocumentEvent e) {
-		saveEnable();
-		
-	}
-
-	@Override
-	public void insertUpdate(DocumentEvent e) {
-		saveEnable();
-		
-	}
-
-	@Override
-	public void removeUpdate(DocumentEvent e) {
-		saveEnable();
-		
-	}
-	public void saveEnable(){ //checks if all of the following fields contains data.
-		if (!idNum.getText().isEmpty()
-				&& !fnText.getText().isEmpty()
-				&& (passText.getPassword().length != 0)
-				&& !phnNumText.getText().isEmpty()
-				&& !accNumText.getText().isEmpty()
-				&& passwordValidation)
-			save.setEnabled(true);
-		else
-			save.setEnabled(false);
 		}
 	
-};
-///////////////////End of save Enable Action///////////////////
-
-///////////////////search Enable Action/////////////////////////
-DocumentListener searchEnabler = new DocumentListener(){
-
-	@Override
-	public void changedUpdate(DocumentEvent e) {
-		searchEnable();
-		
-	}
-
-	@Override
-	public void insertUpdate(DocumentEvent e) {
-		searchEnable();
-		
-	}
-
-	@Override
-	public void removeUpdate(DocumentEvent e) {
-		searchEnable();
-		
-	}
-	public void searchEnable(){
-		search.setEnabled(true);
-	}
-};
-///////////////////End of search Enable Action///////////////////
-
-
-////////////password Rules///////////////////
-
-passwordValidation = false;
-
-JLabel[] passwordRules = new JLabel[3];
-passwordRules[0] = new JLabel(new String("<html><u>password Rules:</u></html>"));
-passwordRules[1] = new JLabel(new String("Length of 8 to 16 characters"));
-passwordRules[2] = new JLabel(new String("At least 1 number, big letter and spacial character."));
-
-empMgr.add(passwordRules[0]);
-empLayout.putConstraint(SpringLayout.WEST, passwordRules[0], 150, SpringLayout.WEST, fn);
-empLayout.putConstraint(SpringLayout.NORTH, passwordRules[0], 0, SpringLayout.SOUTH, passText);
-empMgr.add(passwordRules[1]);
-empLayout.putConstraint(SpringLayout.WEST, passwordRules[1], 150, SpringLayout.WEST, fn);
-empLayout.putConstraint(SpringLayout.NORTH, passwordRules[1], 0, SpringLayout.SOUTH, passwordRules[0]);
-empMgr.add(passwordRules[2]);
-empLayout.putConstraint(SpringLayout.WEST, passwordRules[2], 150, SpringLayout.WEST, fn);
-empLayout.putConstraint(SpringLayout.NORTH, passwordRules[2], 0, SpringLayout.SOUTH, passwordRules[1]);
-
-
-
-passText.addFocusListener(new FocusListener() {
-	
-	@Override
-	public void focusLost(FocusEvent e) {
-		String pattern = "(?=.*[0-9])(?=.*[A-Z])(?=.*[@#$%^&+!=])(?=\\S+$).{8,16}"; //determine the policy of the password
-		String password = new String(passText.getPassword());
-		if (password.matches(pattern) == false)
-		{
-			passText.setBackground(Color.red);
-			save.setEnabled(false);
-			passwordValidation = false;
+		@Override
+		public void insertUpdate(DocumentEvent e) {
+			saveEnable();
+			
 		}
-		else
-		{
-			passText.setBackground(Color.green);
-			passwordValidation = true;
-		}
-		
-	}
 	
-	@Override
-	public void focusGained(FocusEvent e) {}
-});
-
-
-
-//////////End password Rules////////////////
+		@Override
+		public void removeUpdate(DocumentEvent e) {
+			saveEnable();
+			
+		}
+		public void saveEnable(){ //checks if all of the following fields contains data.
+			if (!idNum.getText().isEmpty()
+					&& !fnText.getText().isEmpty()
+					&& (passText.getPassword().length != 0)
+					&& !phnNumText.getText().isEmpty()
+					&& !accNumText.getText().isEmpty()
+					&& passwordValidation)
+				save.setEnabled(true);
+			else
+				save.setEnabled(false);
+			}
+		
+	};
+	///////////////////End of save Enable Action///////////////////
+	
+	///////////////////search Enable Action/////////////////////////
+	DocumentListener searchEnabler = new DocumentListener(){
+	
+		@Override
+		public void changedUpdate(DocumentEvent e) {
+			searchEnable();
+			
+		}
+	
+		@Override
+		public void insertUpdate(DocumentEvent e) {
+			searchEnable();
+			
+		}
+	
+		@Override
+		public void removeUpdate(DocumentEvent e) {
+			searchEnable();
+			
+		}
+		public void searchEnable(){
+			search.setEnabled(true);
+		}
+	};
+		///////////////////End of search Enable Action///////////////////
+		
+		
+		////////////password Rules///////////////////
+		
+		passwordValidation = false;
+		
+		JLabel[] passwordRules = new JLabel[3];
+		passwordRules[0] = new JLabel(new String("<html><u>password Rules:</u></html>"));
+		passwordRules[1] = new JLabel(new String("Length of 8 to 16 characters"));
+		passwordRules[2] = new JLabel(new String("At least 1 number, big letter and spacial character."));
+		
+		empMgr.add(passwordRules[0]);
+		empLayout.putConstraint(SpringLayout.WEST, passwordRules[0], 150, SpringLayout.WEST, fn);
+		empLayout.putConstraint(SpringLayout.NORTH, passwordRules[0], 0, SpringLayout.SOUTH, passText);
+		empMgr.add(passwordRules[1]);
+		empLayout.putConstraint(SpringLayout.WEST, passwordRules[1], 150, SpringLayout.WEST, fn);
+		empLayout.putConstraint(SpringLayout.NORTH, passwordRules[1], 0, SpringLayout.SOUTH, passwordRules[0]);
+		empMgr.add(passwordRules[2]);
+		empLayout.putConstraint(SpringLayout.WEST, passwordRules[2], 150, SpringLayout.WEST, fn);
+		empLayout.putConstraint(SpringLayout.NORTH, passwordRules[2], 0, SpringLayout.SOUTH, passwordRules[1]);
+		
+		
+		
+		passText.addFocusListener(new FocusListener() {
+			
+			@Override
+			public void focusLost(FocusEvent e) {
+				String pattern = "(?=.*[0-9])(?=.*[A-Z])(?=.*[@#$%^&+!=])(?=\\S+$).{8,16}"; //determine the password policy
+				String password = new String(passText.getPassword());
+				if (password.matches(pattern) == false)
+				{
+					passText.setBackground(Color.red);
+					save.setEnabled(false);
+					passwordValidation = false;
+				}
+				else
+				{
+					passText.setBackground(Color.green);
+					passwordValidation = true;
+				}
+				
+			}
+			
+			@Override
+			public void focusGained(FocusEvent e) {}
+		});
+		
+		
+		
+		//////////End password Rules////////////////
 
 
 		/////////////adding save and search enabler to the relevant text fields/////////////

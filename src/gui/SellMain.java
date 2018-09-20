@@ -57,6 +57,7 @@ public class SellMain {
 		SpringLayout sellLayout = new SpringLayout();
 		sellButtons.setLayout(sellLayout);			
 		
+		//creates 4 combo boxes for the menu
 		for (int i = 0; i<4 ; ++i)
 		{
 			itemQuantity[i] = new JComboBox<>();
@@ -65,6 +66,7 @@ public class SellMain {
 		}
 		
 		Shop shop = clientSideConnection.getShop();
+		//creates 4 textfields for the menu
 		for (int i = 1; i<=4 ; ++i)
 		{
 			itemprice[i-1] = new JTextField(""+shop.getPrices(i), 5);//gets the list of the prices

@@ -33,7 +33,6 @@ public class ShopTest {
 		array.clear();
 		json.put("customerTypeVip", "0.15");
 		json.put("customerTypeReturn", "0.05");
-		json.put("totalSales", "0");
 		json.put("shopName", "HIT-Shirt");
 		json.put("customerTypeNew", "0");
 		json.put("personalID", "1");
@@ -65,7 +64,6 @@ public class ShopTest {
 		array.clear();
 		json.put("customerTypeVip", "0.15");
 		json.put("customerTypeReturn", "0.05");
-		json.put("totalSales", "0");
 		json.put("shopName", "HIT-Shirt");
 		json.put("customerTypeNew", "0");
 		json.put("personalID", "201070620");

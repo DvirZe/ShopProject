@@ -24,11 +24,12 @@ public class PopupIncomingChat extends JPanel {
 	
 	public PopupIncomingChat(GetConnection connection) {
 		JFrame popupFrame = new JFrame();
-		popupFrame.setTitle("Store managment login");
+		popupFrame.setTitle("Incoming chat");
 		popupFrame.setSize(580, 220);
 		popupFrame.setLocationRelativeTo(null);
 		popupFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-				
+			
+		///////////Pop up window Listener//////////
 		popupFrame.addWindowListener(new WindowListener() {
 			
 			@Override
@@ -43,7 +44,7 @@ public class PopupIncomingChat extends JPanel {
 			@Override
 			public void windowDeactivated(WindowEvent arg0) {}
 			
-			@Override
+			@Override//rejects the chat if the x button pressed
 			public void windowClosing(WindowEvent arg0) {
 				connection.chatRefuse();
 				popupFrame.dispose();
@@ -55,12 +56,13 @@ public class PopupIncomingChat extends JPanel {
 			@Override
 			public void windowActivated(WindowEvent arg0) {}
 		});
+		///////////End of Pop up window Listener//////////
 		
 		
 		JPanel incomingChat = new JPanel();
 		incomingChat.setBorder(BorderFactory.createTitledBorder("Incoming Chat"));
 		incomingChat.setBackground(Color.WHITE);
-		incomingChat.setPreferredSize(new Dimension (400 , 260));
+		incomingChat.setPreferredSize(new Dimension (250 , 70));
 		incomingChat.setLayout(new BoxLayout(incomingChat, BoxLayout.Y_AXIS));
 		
 		SpringLayout imcomingChatLayout = new SpringLayout();
@@ -68,7 +70,7 @@ public class PopupIncomingChat extends JPanel {
 		
 		JButton getChat = new JButton("Answer Chat");
 		incomingChat.add(getChat);
-		
+		///////get chat actionListener////////
 		getChat.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -76,10 +78,11 @@ public class PopupIncomingChat extends JPanel {
 				connection.newChatAccpet();
 			}
 		});
+		///////End of get chat actionListener////////
 		
 		JButton refuseChat = new JButton("Refuse Chat");
 		incomingChat.add(refuseChat);
-		
+		///////refuse chat actionListener////////
 		refuseChat.addActionListener(new ActionListener() {
 			
 			@Override
@@ -88,12 +91,13 @@ public class PopupIncomingChat extends JPanel {
 				popupFrame.dispose();
 			}
 		});
+		///////End of refuse chat actionListener////////
 		
 		imcomingChatLayout.putConstraint(SpringLayout.WEST, getChat, 10, SpringLayout.WEST, incomingChat);
 		imcomingChatLayout.putConstraint(SpringLayout.NORTH, getChat, 10, SpringLayout.NORTH, incomingChat);
 		
-		imcomingChatLayout.putConstraint(SpringLayout.WEST, refuseChat, 0, SpringLayout.WEST, getChat);
-		imcomingChatLayout.putConstraint(SpringLayout.NORTH, refuseChat, 10, SpringLayout.SOUTH, getChat);
+		imcomingChatLayout.putConstraint(SpringLayout.WEST, refuseChat, 10, SpringLayout.EAST, getChat);
+		imcomingChatLayout.putConstraint(SpringLayout.NORTH, refuseChat, 0, SpringLayout.NORTH, getChat);
 		
 		
 		popupFrame.add(incomingChat);

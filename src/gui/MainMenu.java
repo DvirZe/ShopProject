@@ -47,7 +47,7 @@ public class MainMenu {
 ////////////////////////ActionListener For buySell/////////////////////////		
 		buySell.addActionListener(new ActionListener() {
 			public void actionPerformed (ActionEvent ae) {
-				try {//request from the server the  variables that are necessary for the menu
+				try {//request from the server the  variables that are necessary for the sell menu
 					clientSideConnection.updateInventory();
 					clientSideConnection.updateDicounts();
 					clientSideConnection.updatePrices();
@@ -63,7 +63,7 @@ public class MainMenu {
 		
 		JButton storeMgr = new JButton("Store Managment");
 		main.add(storeMgr);
-		storeMgr.setEnabled(clientSideConnection.isManager());
+		storeMgr.setEnabled(clientSideConnection.isManager());//enabling the Button only for managers 
 		storeMgr.setFont(font2);
 ////////////////////////ActionListener For store management/////////////////////////		
 		storeMgr.addActionListener(new ActionListener() {
@@ -75,7 +75,7 @@ public class MainMenu {
 ////////////////////////End of ActionListener For store management//////////////////
 		
 		JButton customer = new JButton("Manage customers");
-		customer.setEnabled(!clientSideConnection.isSeller());
+		customer.setEnabled(!clientSideConnection.isSeller());//enabling the Button only for managers or cashiers
 		main.add(customer);
 		customer.setFont(font2);
 ////////////////////////ActionListener For customer/////////////////////////	
@@ -88,7 +88,7 @@ public class MainMenu {
 ////////////////////////End of ActionListener For customer//////////////////
 		
 		JButton employee = new JButton("Manage employees");
-		employee.setEnabled(clientSideConnection.isManager());
+		employee.setEnabled(clientSideConnection.isManager());//enabling the Button only for managers 
 		main.add(employee);
 		employee.setFont(font2);
 ////////////////////////ActionListener For employee/////////////////////////	
@@ -101,7 +101,7 @@ public class MainMenu {
 ////////////////////////End of ActionListener For employee//////////////////
 		
 		JButton reports = new JButton("Generate reports");
-		reports.setEnabled(clientSideConnection.isManager());
+		reports.setEnabled(clientSideConnection.isManager());//enabling the Button only for managers 
 		main.add(reports);
 		reports.setFont(font2);	
 ////////////////////////ActionListener For reports/////////////////////////	

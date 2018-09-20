@@ -63,10 +63,10 @@ public class PriceManagment {
 		JLabel pants2 = new JLabel();
 		pants2.setIcon(new ImageIcon("./files/blackpants.jpg"));
 		priceMain.add(pants2);
-
+		//creates 4 text fields for the menu
 		for (int i = 1; i<=4 ; ++i)
 		{
-			price[i-1] = new JTextField(""+ClientSideConnection.getShop().getPrices(i), 5);
+			price[i-1] = new JTextField(""+ClientSideConnection.getShop().getPrices(i), 5);//gets each items price from the server
 			priceMain.add(price[i-1]);
 			item[i-1] = new JLabel("Item Price:");
 			priceMain.add(item[i-1]);

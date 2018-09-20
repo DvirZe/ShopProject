@@ -7,7 +7,7 @@ public class Cart {
 	private String customer;
 	private double totalPrice;
 	
-	public Cart() { 
+	public Cart() { //creates cart for a new customer
 		cart = new int[4];
 		customer = new String("New Customer - ID not saved");
 	}

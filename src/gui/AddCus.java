@@ -146,7 +146,7 @@ public class AddCus {
 				new SellMain(clientSideConnection);
 			}
 		});
-		///////////back to sell ActionListener///////////
+		///////////end of back to sell ActionListener///////////
 		
 	////////////////////////ActionListener For finding customer/////////////////////////		
 	ActionListener findCustomererAction = new ActionListener() {
@@ -185,7 +185,7 @@ public class AddCus {
 			
 		}
 	});
-	///////////idNum ActionListener//////////
+	///////////end of idNum ActionListener//////////
 	
 		search.addActionListener(findCustomererAction);
 		idNum.addActionListener(findCustomererAction);
@@ -219,7 +219,7 @@ public class AddCus {
 		}
 	
 	};
-	///////////////////End save Enable Action///////////////////
+	///////////////////End of save Enable Action///////////////////
 	
 	
 	///////////////////Enable Search button/////////////////////////
@@ -247,10 +247,10 @@ public class AddCus {
 		}
 	};
 	
-	///////////////////End search Enable Action///////////////////
+	///////////////////End of search Enable Action///////////////////
 	
 	
-	////////////////////save//////////////////
+	////////////////////save ActionListener//////////////////
 	
 	save.addActionListener(new ActionListener() {
 		
@@ -268,7 +268,7 @@ public class AddCus {
 			cusTypeText.setSelectedIndex(0);
 		}
 	});
-	//////////////////End save//////////////////
+	//////////////////End of save ActionListener//////////////////
 	
 	idNum.getDocument().addDocumentListener(SearchEnabler);
 	fnText.getDocument().addDocumentListener(saveEnabler);

@@ -26,8 +26,6 @@ public class Worker extends Person {
 	
 	public void setJob(String job) { this.job = job; }
 	
-	public void changeLogin() { login = !login; }
-	
 	public boolean isLogin() { return login; }
 	
 	public String getShopName() {return shop; }
