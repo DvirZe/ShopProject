@@ -15,11 +15,8 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JScrollBar;
-import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.ScrollPaneConstants;
 import javax.swing.SpringLayout;
 import javax.swing.WindowConstants;
 import javax.swing.event.CaretEvent;
@@ -63,7 +60,7 @@ public class ChatGui extends JPanel{
 			
 			@Override
 			public void windowClosing(WindowEvent e) {
-				if (chatUser != null)
+				if (chatUser != null) //if the chat not connect do nothing
 				{
 					chatUser.sendMessage("left the chat.");
 					chatUser.stopReceive(clientSideConnection);
@@ -161,7 +158,6 @@ public class ChatGui extends JPanel{
 					try {
 						Thread.sleep(100);
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
@@ -175,16 +171,16 @@ public class ChatGui extends JPanel{
 				int port = 0;
 				try {
 					chatLog.setText("Try to connect..");
-					String answer = clientSideConnection.startChat();
+					String answer = clientSideConnection.startChat(); //Ask for port of available worker for chat connection
 					if (!answer.equals("0"))
-					{
+					{ //Create chat user and send request to open chat with worker
 						clientSideConnection.freeToChatStatusChange(false);
 						port = Integer.parseInt(answer);
 						connection = new OpenConnection(port, clientSideConnection);
 						clientSideConnection.setChatSocket(connection.getSocket());
 						socket = connection.getSocket();
 						chatUser = connection.getUser();
-						chatUser.receiveMessage(chatLog);
+						chatUser.receiveMessage(chatLog); //Open new thread for receive messages 
 						searchChat.setEnabled(false);
 						sendMessage.setEnabled(true);
 						send.setEnabled(true);
@@ -205,16 +201,16 @@ public class ChatGui extends JPanel{
 				int port = 0;
 				try {
 					chatLog.setText("Looking for chat to join..");
-					String answer = clientSideConnection.joinChat();
+					String answer = clientSideConnection.joinChat(); //Ask for port of available chat host to join
 					if (!answer.equals("0"))
-					{
+					{ //Create chat user and send request to join exists chat
 						clientSideConnection.freeToChatStatusChange(false);
 						port = Integer.parseInt(answer);
 						connection = new OpenConnection(port, clientSideConnection);
 						clientSideConnection.setChatSocket(connection.getSocket());
 						socket = connection.getSocket();
 						chatUser = connection.getUser();
-						clientSideConnection.updateJoinChatListAfterOpenSocket(port, socket.getLocalPort());
+						clientSideConnection.updateJoinChatListAfterOpenSocket(port, socket.getLocalPort()); //Let the server know he is ready to join
 						chatUser.receiveMessage(chatLog);
 						searchChat.setEnabled(false);
 						sendMessage.setEnabled(true);
@@ -229,9 +225,8 @@ public class ChatGui extends JPanel{
 		});	
 		///////////////////End of join chat ActionListener/////////////////
 		
-		//if its the worker who get the chat
-		if (isConnectToChatAlready)
-		{
+		//if its the worker who accept the chat (the host)
+		if (isConnectToChatAlready) {
 			chatUser = clientSideConnection.getConnection().getUser();
 			chatUser.receiveMessage(chatLog);
 			chatLog.setText("Start to chat..");
@@ -245,13 +240,13 @@ public class ChatGui extends JPanel{
 					
 			@Override
 			public void actionPerformed(ActionEvent e) {			
-				if (chatUser != null)
+				if (chatUser != null) //if the chat not connect do nothing
 				{
 					chatUser.sendMessage("left the chat.");
 					chatUser.stopReceive(clientSideConnection);
 					if (chatUser.isHost())
 					{
-						chatUser.hostDisconnect();
+						chatUser.hostDisconnect(); //if the host exit, close all connections
 					}
 					clientSideConnection.leftTheChat();
 				}

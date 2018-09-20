@@ -47,22 +47,17 @@ public class User implements ChatUser {
 	
 	@Override
 	public void sendMessage(String message) {
-		if (!message.equals(""))
-		{
-			if (isHost)
-			{
-				for (int i = 0; i < socketBufferedReaderArray.size() ; ++i)
-				{	
-					printWriterArray.get(i).println(userName + " >> " + message);
+		if (!message.equals("")) {
+			if (isHost) {
+				for (int i = 0; i < socketBufferedReaderArray.size() ; ++i) {	
+					printWriterArray.get(i).println(userName + " >> " + message); //host sent to all users
 				}
 			}
 			else
-				printWriter.println(userName + " >> " + message);	
+				printWriter.println(userName + " >> " + message); //client sent only to host
 		} else {
-			if (isHost)
-			{
-				for (int i = 0; i < socketBufferedReaderArray.size() ; ++i)
-				{	
+			if (isHost) { //in empty message receive do nothing (send to buffer but not to print)
+				for (int i = 0; i < socketBufferedReaderArray.size() ; ++i) {	
 					printWriterArray.get(i).println("");
 				}
 			}
@@ -85,10 +80,10 @@ public class User implements ChatUser {
 						{
 							String str = socketBufferedReaderArray.get(i).readLine();
 							if (!str.equals(""))
-								msg=msg + "\n" + str;
+								msg=msg + "\n" + str; //get the full message on buffer from all chat users
 						}
 					} else {
-					msg = socketBufferedReader.readLine();
+					msg = socketBufferedReader.readLine(); //if not host, read the message sent to the client
 					}
 					try {
 						Thread.sleep(0);
@@ -133,6 +128,7 @@ public class User implements ChatUser {
 		inMessage.start();
 	}
 
+	@Override
 	public void stopReceive(ClientSideConnection clientSideConnection) { 
 		inMessage.interrupt();
 		clientSideConnection.leftTheChat();

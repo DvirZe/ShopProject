@@ -87,7 +87,7 @@ public class serverConnection {
 	public static void main(String[] args) throws IOException, ParseException  {
 		serverConnection serverConnection = new serverConnection();
 		ServerSocket serverSocket = SSLServerSocketFactory.getDefault().createServerSocket(7000);
-		System.out.println("Ready for connaction...");
+		System.out.println("Ready for connection...");
 		while (true) new serverClass(serverSocket.accept(), serverConnection).start(); //open new Thread for any client connection
 	}
 }

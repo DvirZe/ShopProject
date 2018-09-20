@@ -428,12 +428,15 @@ public class serverClass extends Thread {
 			if (rooms.get(i).isThisUserInChat(logedInUserID)) //if the user on this char room
 			{
 				int userWhoLeftPlace = rooms.get(i).getPlaceOfUser(logedInUserID);
-				ChatUser user = rooms.get(i).getChatUsers().remove(userWhoLeftPlace);
-				if (rooms.get(i).getChatUsers().isEmpty())
+				if (userWhoLeftPlace != Integer.MAX_VALUE)
 				{
-					rooms.remove(i); //remove chat room if everyone left
+					rooms.get(i).getChatUsers().remove(userWhoLeftPlace);
+					if (rooms.get(i).getChatUsers().isEmpty())
+					{
+						rooms.remove(i); //remove chat room if everyone left
+					}
+					break;
 				}
-				break;
 			}
 		}
 		////////////////////////////////////////////////////

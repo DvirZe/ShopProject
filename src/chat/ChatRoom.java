@@ -21,6 +21,7 @@ public class ChatRoom implements Conversation {
 		return false;
 	}
 	
+	@Override
 	public int getPlaceOfUser(int idToFind) { //on chatUsers list
 		for (int i = 0 ; i < chatUsers.size() ; ++i) {
 			if (chatUsers.get(i).getId() == idToFind)
@@ -29,10 +30,12 @@ public class ChatRoom implements Conversation {
 		return Integer.MAX_VALUE;
 	}
 	
+	@Override
 	public ArrayList<ChatUser> getChatUsers() {
 		return chatUsers;
 	}
 	
+	@Override
 	public boolean isHostStillOnChat() {
 		for (ChatUser user : chatUsers)
 		{
