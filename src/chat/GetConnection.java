@@ -108,7 +108,6 @@ public class GetConnection extends Thread {
 						socket = sockets.remove(i);
 						chatUser.addToBufferedReader(new BufferedReader(new InputStreamReader(socket.getInputStream())));
 						chatUser.addToPrintWriter(new PrintWriter(socket.getOutputStream(),true));
-						chatUser.sendMessage("Chat Accepted.");
 						break;
 					}
 				}

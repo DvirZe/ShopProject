@@ -99,6 +99,7 @@ public class ClientSideConnection extends Thread {
 			workerOnline = new HashMap<String,String>();
 			workerOnline.put("personalID", id);
 			workerOnline.put("name", json.get("name").toString());
+			workerOnline.put("Job", json.get("Job").toString());
 		}
 		
 		return Integer.parseInt(json.get("Status").toString());
@@ -440,6 +441,29 @@ public class ClientSideConnection extends Thread {
 		json.put("hostPort", hostPort);
 		json.put("myPort", myPort);
 		SendToServer(json);
+	}
+	
+	public void saveChatLog(String log)
+	{
+		JSONObject json = new JSONObject();
+		json.put("Action", action.saveChatLog());
+		json.put("chatAction", "Save");
+		json.put("chatLog", log);
+		SendToServer(json);
+	}
+	
+	public boolean isManager() {
+		if (workerOnline.get("Job").equals("Manager"))
+			return true;
+		else
+			return false;
+	}
+	
+	public boolean isSeller() {
+		if (workerOnline.get("Job").equals("Seller"))
+			return true;
+		else
+			return false;
 	}
 	
 }

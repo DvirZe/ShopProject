@@ -54,6 +54,7 @@ public class MainMenu {
 		
 		JButton storeMgr = new JButton("Store Managment");
 		main.add(storeMgr);
+		storeMgr.setEnabled(clientSideConnection.isManager());
 		storeMgr.setFont(font2);
 ////////////////////////ActionListener For store management/////////////////////////		
 		storeMgr.addActionListener(new ActionListener() {
@@ -65,6 +66,7 @@ public class MainMenu {
 ////////////////////////End of ActionListener For store management//////////////////
 		
 		JButton customer = new JButton("Manage customers");
+		customer.setEnabled(!clientSideConnection.isSeller());
 		main.add(customer);
 		customer.setFont(font2);
 ////////////////////////ActionListener For customer/////////////////////////	
@@ -77,6 +79,7 @@ public class MainMenu {
 ////////////////////////End of ActionListener For customer//////////////////
 		
 		JButton employee = new JButton("Manage employees");
+		employee.setEnabled(clientSideConnection.isManager());
 		main.add(employee);
 		employee.setFont(font2);
 ////////////////////////ActionListener For employee/////////////////////////	
@@ -89,6 +92,7 @@ public class MainMenu {
 ////////////////////////End of ActionListener For employee//////////////////
 		
 		JButton reports = new JButton("Generate reports");
+		reports.setEnabled(clientSideConnection.isManager());
 		main.add(reports);
 		reports.setFont(font2);	
 ////////////////////////ActionListener For reports/////////////////////////	
@@ -116,7 +120,7 @@ public class MainMenu {
 		////////////////////////End of ActionListener For Chat//////////////////
 		
 		////////////////////////Check the employee position to set permissions//////////////////
-		Worker worker = null;
+		/*Worker worker = null;
 		try {
 			worker = clientSideConnection.findWorker(clientSideConnection.getWorkerOnline().get("personalID")); //getting the workers id.
 			
@@ -135,7 +139,7 @@ public class MainMenu {
 			storeMgr.setEnabled(false);
 			employee.setEnabled(false);
 			reports.setEnabled(false);
-		}
+		}*/
 		////////////////////////End of Check the employee position to set permissions//////////////////
 		
 		main.setVisible(true);

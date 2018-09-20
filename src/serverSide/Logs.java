@@ -90,9 +90,12 @@ public class Logs {
 		{
 			log.write("#Chat log save:\n" + json.get("chatLog") + "\n" + 
 					 new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date()) + "\n");
-		} else {
+		} else if (json.containsValue("Open")) {
 			log.write("#Open chat - " + json.get("openUser") + " open connection with " + json.get("with")
 					 + " " + new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date()) + "\n");
+		} else {
+			log.write("#Join chat - " + json.get("openUser") + " Join to chat with " + json.get("with")
+			 + " " + new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date()) + "\n");
 		}
 		log.close();
 	}

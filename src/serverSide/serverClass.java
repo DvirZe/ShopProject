@@ -97,6 +97,10 @@ public class serverClass extends Thread {
 			break;
 		case "19":
 			updateJoinChatList(json);
+			break;
+		case "20":
+			saveLogChat(json);
+			break;
 		default:
 			break;
 		}
@@ -363,6 +367,7 @@ public class serverClass extends Thread {
 			room.addUser(connectUser);
 			rooms.add(room);
 			JSONObject toLog = new JSONObject();
+			toLog.put("Action", "Open");
 			toLog.put("openUser", loginWorker.get(0));
 			toLog.put("with",workerForChat.get(0));
 			logs.chatConncetion(toLog);
@@ -396,6 +401,12 @@ public class serverClass extends Thread {
 					loginWorker.set(9, 1);
 					workers.replace(logedInUserID, loginWorker);
 					////////////////////////////////////////////////////
+					
+					JSONObject toLog = new JSONObject();
+					toLog.put("openUser", loginWorker.get(0));
+					toLog.put("with",users.get(0).getUsername() + " and " + users.get(1).getUsername());
+					logs.chatConncetion(toLog);
+					
 				}
 				else answer.put("notFound", 1);
 			}
@@ -446,6 +457,10 @@ public class serverClass extends Thread {
 		loginWorker.set(9, 0);
 		workers.replace(logedInUserID, loginWorker);
 		////////////////////////////////////////////////////
+	}
+	
+	public void saveLogChat(JSONObject log) throws IOException {
+		logs.chatConncetion(log);
 	}
 	
 	

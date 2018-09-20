@@ -35,15 +35,7 @@ public class Worker extends Person {
 	public int getLoginStatus() { return login?1:0; }
 	
 	public String getJob() {
-		switch (job)
-		{
-			case "1": 
-				return "Manager";
-			case "2":
-				return "Cashier";
-			default:
-				return "Seller";
-		}
+		return job;
 	}
 
 }

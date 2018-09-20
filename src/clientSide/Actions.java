@@ -40,4 +40,6 @@ public class Actions { //to organized
 	
 	public int updateJoinChatListAfterOpenSocket() { return 19; }
 	
+	public int saveChatLog() { return 20; }
+	
 }

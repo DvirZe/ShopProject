@@ -8,4 +8,5 @@ public interface ChatUser {
 	public abstract void receiveMessage(JTextArea chatLog);
 	public abstract int getId();
 	public abstract boolean isHost();
+	public abstract String getUsername();
 }

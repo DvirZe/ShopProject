@@ -15,8 +15,8 @@ public class User implements ChatUser {
 	private int port;
 	private PrintWriter printWriter;
 	private BufferedReader socketBufferedReader;
-	private ArrayList<PrintWriter> printWriter_;
-	private ArrayList<BufferedReader> socketBufferedReader_;
+	private ArrayList<PrintWriter> printWriterArray;
+	private ArrayList<BufferedReader> socketBufferedReaderArray;
 	private Thread inMessage;
 	private Boolean isHost = false;
 
@@ -25,14 +25,14 @@ public class User implements ChatUser {
 		this.id = id;
 		this.userName = userName;
 		this.port = Integer.parseInt(port);
-		printWriter_ = new ArrayList<PrintWriter>();
-		socketBufferedReader_ = new ArrayList<BufferedReader>();
+		printWriterArray = new ArrayList<PrintWriter>();
+		socketBufferedReaderArray = new ArrayList<BufferedReader>();
 	}
 	
 	public User(String id, String userName, PrintWriter printWriter, BufferedReader socketBufferedReader)
 	{
-		printWriter_ = new ArrayList<PrintWriter>();
-		socketBufferedReader_ = new ArrayList<BufferedReader>();
+		//printWriterArray = new ArrayList<PrintWriter>();
+		//socketBufferedReaderArray = new ArrayList<BufferedReader>();
 		this.id = id;
 		this.userName = userName;
 		this.printWriter = printWriter;
@@ -40,11 +40,11 @@ public class User implements ChatUser {
 	}
 	
 	public void addToPrintWriter(PrintWriter printWriter) {
-		printWriter_.add(printWriter);
+		printWriterArray.add(printWriter);
 	}
 	
 	public void addToBufferedReader(BufferedReader bufferedReader) {
-		socketBufferedReader_.add(bufferedReader);
+		socketBufferedReaderArray.add(bufferedReader);
 	}
 	
 	@Override
@@ -53,9 +53,9 @@ public class User implements ChatUser {
 		{
 			if (isHost)
 			{
-				for (int i = 0; i < socketBufferedReader_.size() ; ++i)
+				for (int i = 0; i < socketBufferedReaderArray.size() ; ++i)
 				{	
-					printWriter_.get(i).println(userName + " >> " + message);
+					printWriterArray.get(i).println(userName + " >> " + message);
 				}
 			}
 			else
@@ -63,9 +63,9 @@ public class User implements ChatUser {
 		} else {
 			if (isHost)
 			{
-				for (int i = 0; i < socketBufferedReader_.size() ; ++i)
+				for (int i = 0; i < socketBufferedReaderArray.size() ; ++i)
 				{	
-					printWriter_.get(i).println("");
+					printWriterArray.get(i).println("");
 				}
 			}
 			else
@@ -83,9 +83,9 @@ public class User implements ChatUser {
 				try {
 					if (isHost)
 					{
-						for (int i = 0; i < socketBufferedReader_.size() ; ++i)
+						for (int i = 0; i < socketBufferedReaderArray.size() ; ++i)
 						{
-							String str = socketBufferedReader_.get(i).readLine();
+							String str = socketBufferedReaderArray.get(i).readLine();
 							if (!str.equals(""))
 								msg=msg + "\n" + str;
 						}
@@ -103,9 +103,9 @@ public class User implements ChatUser {
 								chatLog.append("\n"+msg);
 								if (isHost)
 								{
-									for (int i = 0; i < socketBufferedReader_.size() ; ++i)
+									for (int i = 0; i < socketBufferedReaderArray.size() ; ++i)
 									{	
-										printWriter_.get(i).println(msg);
+										printWriterArray.get(i).println(msg);
 									}
 								}
 							}
@@ -113,9 +113,9 @@ public class User implements ChatUser {
 						while (msg.equals("")) {		
 							if (isHost)
 							{
-								for (int i = 0; i < socketBufferedReader_.size() ; ++i)
+								for (int i = 0; i < socketBufferedReaderArray.size() ; ++i)
 								{
-									String str = socketBufferedReader_.get(i).readLine();
+									String str = socketBufferedReaderArray.get(i).readLine();
 									if (!str.equals(""))
 										if (msg.equals(""))
 											msg = str;
@@ -145,15 +145,20 @@ public class User implements ChatUser {
 		return Integer.parseInt(id);
 	}
 	
-	public PrintWriter getLastPrintWriter() { return printWriter_.get(printWriter_.size()-1); }
-	public BufferedReader getLastBufferedReader() { return socketBufferedReader_.get(socketBufferedReader_.size()-1); }
+	public PrintWriter getLastPrintWriter() { return printWriterArray.get(printWriterArray.size()-1); }
+	public BufferedReader getLastBufferedReader() { return socketBufferedReaderArray.get(socketBufferedReaderArray.size()-1); }
 	public void setIsHost(Boolean bool) { isHost = bool; }
 	
 	public void hostDisconnect() {
-		printWriter_.clear();
-		socketBufferedReader_.clear();
+		printWriterArray.clear();
+		socketBufferedReaderArray.clear();
 	}
 	
 	@Override
 	public boolean isHost() { return isHost; }
+
+	@Override
+	public String getUsername() {
+		return userName;
+	}
 }

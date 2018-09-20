@@ -119,7 +119,7 @@ public class Employee {
 		
 
 		
-		JLabel pass = new JLabel("password:");
+		JLabel pass = new JLabel("Password:");
 		pass.setFont(font2);
 		empMgr.add(pass);
 		empLayout.putConstraint(SpringLayout.WEST, pass, 20, SpringLayout.WEST, empMgr);
@@ -169,7 +169,7 @@ public class Employee {
 		
 		
 		
-		JLabel position = new JLabel("position:");
+		JLabel position = new JLabel("Position:");
 		position.setFont(font2);
 		empMgr.add(position);
 		empLayout.putConstraint(SpringLayout.WEST, position, 20, SpringLayout.WEST, empMgr);
@@ -286,22 +286,6 @@ DocumentListener searchEnabler = new DocumentListener(){
 ///////////////////End of search Enable Action///////////////////
 
 
-////////////////////Clear fields on save//////////////////
-
-save.addActionListener(new ActionListener() {
-	public void actionPerformed (ActionEvent ae) {//clears all of the text fields after search button was pressed
-		idNum.setText("");
-		empNumText.setText("");
-		fnText.setText("");
-		passText.setText("");
-		phnNumText.setText("");
-		accNumText.setText("");
-		positionText.setSelectedItem("Seller");
-	}
-});
-//////////////////End Clear fields on save//////////////////
-
-
 ////////////password Rules///////////////////
 
 passwordValidation = false;
@@ -359,6 +343,19 @@ passText.addFocusListener(new FocusListener() {
 		empNumText.getDocument().addDocumentListener(saveEnabler);
 		accNumText.getDocument().addDocumentListener(saveEnabler);
 		phnNumText.getDocument().addDocumentListener(saveEnabler);
+		positionText.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				if (!idNum.getText().isEmpty()
+						&& !fnText.getText().isEmpty()
+						&& (passText.getPassword().length != 0)
+						&& !phnNumText.getText().isEmpty()
+						&& !accNumText.getText().isEmpty()
+						&& passwordValidation)
+					save.setEnabled(true);
+			}
+		});
 		idNum.getDocument().addDocumentListener(searchEnabler);
 		/////////////End of adding save and search enabler to the relevant text fields/////////////
 
@@ -376,8 +373,18 @@ passText.addFocusListener(new FocusListener() {
 						positionText.getSelectedItem().toString(),
 						new String(passText.getPassword()));
 				clientSideConnection.saveWorker(worker);
+				//Clear all fields
+				idNum.setText("");
+				empNumText.setText("");
+				fnText.setText("");
+				passText.setText("");
+				phnNumText.setText("");
+				accNumText.setText("");
+				positionText.setSelectedItem("Seller");
 			}
 		});
+		
+		
 		////////////End of save button listener///////////////////
 
 		idNum.addActionListener(findWorkerAction);

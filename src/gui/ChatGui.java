@@ -22,6 +22,8 @@ import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SpringLayout;
 import javax.swing.WindowConstants;
+import javax.swing.event.CaretEvent;
+import javax.swing.event.CaretListener;
 import javax.swing.text.DefaultCaret;
 import org.json.simple.parser.ParseException;
 import chat.OpenConnection;
@@ -33,7 +35,6 @@ public class ChatGui extends JPanel{
 	private static final long serialVersionUID = 4188117811193390502L;
 	private OpenConnection connection;
 	private Socket socket;
-	//private BufferedReader bufferedReader;
 	private User chatUser = null;
 	
 	public ChatGui(ClientSideConnection clientSideConnection, Boolean isConnectToChatAlready) throws IOException{
@@ -94,7 +95,12 @@ public class ChatGui extends JPanel{
 		chatPanel.setLayout(imcomingChatLayout);
 				
 		JButton join = new JButton("Join ongoing chat");
+		join.setEnabled(clientSideConnection.isManager());
 		chatPanel.add(join);
+		
+		JButton saveLog = new JButton("Save chat log");
+		saveLog.setEnabled(false);
+		chatPanel.add(saveLog);
 		
 		JButton searchChat = new JButton("Start new chat");
 		searchChat.setPreferredSize(new Dimension(join.getPreferredSize()));
@@ -130,6 +136,9 @@ public class ChatGui extends JPanel{
 		
 		imcomingChatLayout.putConstraint(SpringLayout.WEST, join, 0, SpringLayout.WEST, searchChat);
 		imcomingChatLayout.putConstraint(SpringLayout.NORTH, join, 10, SpringLayout.SOUTH, searchChat);
+
+		imcomingChatLayout.putConstraint(SpringLayout.WEST, saveLog, 0, SpringLayout.WEST, join);
+		imcomingChatLayout.putConstraint(SpringLayout.NORTH, saveLog, 10, SpringLayout.SOUTH, join);
 		
 		imcomingChatLayout.putConstraint(SpringLayout.WEST, chatLog, 0, SpringLayout.WEST, chatFrame);
 		imcomingChatLayout.putConstraint(SpringLayout.NORTH, chatLog, 10, SpringLayout.NORTH, chatFrame);
@@ -175,7 +184,7 @@ public class ChatGui extends JPanel{
 						clientSideConnection.setChatSocket(connection.getSocket());
 						socket = connection.getSocket();
 						chatUser = connection.getUser();
-						chatUser.receiveMessage(chatLog/*,connection.getBufferedReader(),connection.getPrintWriter()*/);
+						chatUser.receiveMessage(chatLog);
 						searchChat.setEnabled(false);
 						sendMessage.setEnabled(true);
 						send.setEnabled(true);
@@ -209,6 +218,8 @@ public class ChatGui extends JPanel{
 						send.setEnabled(true);
 						join.setEnabled(false);
 						sendingRefresh.start();
+						chatUser.sendMessage("Manager join the chat.");
+						chatLog.append("\nManager join the chat.");
 					} else chatLog.append("\nNo chat is on.");
 				} catch (ParseException | IOException e1) {e1.printStackTrace(); }
 			}
@@ -218,7 +229,7 @@ public class ChatGui extends JPanel{
 		if (isConnectToChatAlready)
 		{
 			chatUser = clientSideConnection.getConnection().getUser();
-			chatUser.receiveMessage(chatLog/*,clientSideConnection.getConnection().getUser().getLastBufferedReader(),clientSideConnection.getConnection().getUser().getLastPrintWriter()*/);
+			chatUser.receiveMessage(chatLog);
 			chatLog.setText("Start to chat..");
 			sendMessage.setEnabled(true);
 			send.setEnabled(true);
@@ -256,6 +267,23 @@ public class ChatGui extends JPanel{
 				sendMessage.setText("");
 			}
 		};
+		
+		saveLog.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				clientSideConnection.saveChatLog(chatLog.getText());
+				saveLog.setEnabled(false);
+			}
+		});
+		
+		chatLog.addCaretListener(new CaretListener() {
+			
+			@Override
+			public void caretUpdate(CaretEvent arg0) {
+				saveLog.setEnabled(true);
+			}
+		});
 		
 		send.addActionListener(sendActions);
 		sendMessage.addActionListener(sendActions);
