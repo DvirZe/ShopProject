@@ -240,15 +240,20 @@ public class ChatGui extends JPanel{
 		leave.addActionListener(new ActionListener() {
 					
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e) {			
 				if (chatUser != null)
 				{
 					chatUser.sendMessage("left the chat.");
 					chatUser.stopReceive(clientSideConnection);
+					if (chatUser.isHost())
+					{
+						chatUser.hostDisconnect();
+					}
 					clientSideConnection.leftTheChat();
 				}
 				clientSideConnection.freeToChatStatusChange(true);
 				chatFrame.dispose();
+				
 			}
 		});
 		

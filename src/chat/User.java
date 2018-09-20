@@ -31,8 +31,6 @@ public class User implements ChatUser {
 	
 	public User(String id, String userName, PrintWriter printWriter, BufferedReader socketBufferedReader)
 	{
-		//printWriterArray = new ArrayList<PrintWriter>();
-		//socketBufferedReaderArray = new ArrayList<BufferedReader>();
 		this.id = id;
 		this.userName = userName;
 		this.printWriter = printWriter;

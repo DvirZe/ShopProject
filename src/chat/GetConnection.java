@@ -7,7 +7,6 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.LinkedList;
-import javax.swing.JFrame;
 
 import org.json.simple.parser.ParseException;
 

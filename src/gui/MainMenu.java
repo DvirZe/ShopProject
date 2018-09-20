@@ -6,12 +6,21 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowFocusListener;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.event.AncestorEvent;
+import javax.swing.event.AncestorListener;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.text.DefaultCaret;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -105,6 +114,21 @@ public class MainMenu {
 ////////////////////////End of ActionListener For reports//////////////////
 		
 		JButton chat = new JButton("Start chat with other branch");
+		
+		main.addWindowFocusListener(new WindowFocusListener() {
+			
+			@Override
+			public void windowLostFocus(WindowEvent arg0) {
+				// TODO Auto-generated method stub
+				chat.setEnabled(clientSideConnection.isFreeToChat());
+			}
+			
+			@Override
+			public void windowGainedFocus(WindowEvent arg0) {
+				// TODO Auto-generated method stub
+				chat.setEnabled(clientSideConnection.isFreeToChat());
+			}
+		});
 		main.add(chat);
 		chat.setFont(font2);
 ////////////////////////ActionListener For Chat/////////////////////////	
@@ -118,29 +142,6 @@ public class MainMenu {
 			}
 		});
 		////////////////////////End of ActionListener For Chat//////////////////
-		
-		////////////////////////Check the employee position to set permissions//////////////////
-		/*Worker worker = null;
-		try {
-			worker = clientSideConnection.findWorker(clientSideConnection.getWorkerOnline().get("personalID")); //getting the workers id.
-			
-		} catch (ParseException | IOException e) {
-			e.printStackTrace();
-		}
-		
-		if (worker.getJob().equals("Seller"))
-		{
-		storeMgr.setEnabled(false);
-		customer.setEnabled(false);
-		employee.setEnabled(false);
-		reports.setEnabled(false);
-		}
-		else if (worker.getJob().equals("Cashier")) {
-			storeMgr.setEnabled(false);
-			employee.setEnabled(false);
-			reports.setEnabled(false);
-		}*/
-		////////////////////////End of Check the employee position to set permissions//////////////////
 		
 		main.setVisible(true);
 	}

@@ -11,20 +11,21 @@ import javax.net.ssl.SSLServerSocketFactory;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-
 import chat.ChatRoom;
 
 public class serverConnection {
 	
 	private JSONObject workers, customers, shop1, shop2;
 	private ArrayList<serverClass> connections;
-	private ArrayList<ChatRoom> rooms;
+	private ArrayList<ChatRoom> rooms  = new ArrayList<ChatRoom>();
 	private Map<String, String> joinChatList = new HashMap<String, String>();
 	
 	private serverConnection() throws IOException, ParseException {
+		//Load certificate
 		System.setProperty("javax.net.ssl.keyStore", "sp.store");
 		System.setProperty("javax.net.ssl.keyStorePassword", "password");
 		
+		//Load Data files
 		JSONParser parser = new JSONParser();
 		Object obj = parser.parse(new FileReader("./files/Workers.json"));
 		workers = (JSONObject) obj;
@@ -34,11 +35,9 @@ public class serverConnection {
 		shop1 = (JSONObject) obj;
 		obj = parser.parse(new FileReader("./files/shop2.json"));
 		shop2 = (JSONObject) obj;
-		connections = new ArrayList<serverClass>();
-		rooms = new ArrayList<ChatRoom>();
 	}
 	
-	public void saveData(serverClass sc) throws IOException {
+	public void saveData(serverClass sc) throws IOException { //At the end of any connection
 		synchronized(sc)
 		{
 			FileWriter workersFile = new FileWriter("./files/Workers.json",false);
@@ -89,6 +88,6 @@ public class serverConnection {
 		serverConnection serverConnection = new serverConnection();
 		ServerSocket serverSocket = SSLServerSocketFactory.getDefault().createServerSocket(7000);
 		System.out.println("Ready for connaction...");
-		while (true) new serverClass(serverSocket.accept(), serverConnection).start();
+		while (true) new serverClass(serverSocket.accept(), serverConnection).start(); //open new Thread for any client connection
 	}
 }

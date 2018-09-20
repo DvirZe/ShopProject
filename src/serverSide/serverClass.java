@@ -6,20 +6,18 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.nio.file.attribute.UserPrincipalLookupService;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+
+import com.google.common.base.Functions;
+
 import chat.ChatRoom;
 import chat.ChatUser;
 import chat.User;
-
 
 public class serverClass extends Thread {
 	private Socket socket;
@@ -39,7 +37,7 @@ public class serverClass extends Thread {
 	}
 	
 	public void actionChoose(JSONObject json) throws IOException, ParseException
-	{
+	{ //Action menu for client requests
 		switch (json.get("Action").toString()) {
 		case "1":
 			loginToApp(json);
@@ -108,12 +106,12 @@ public class serverClass extends Thread {
 	
 	public void loginToApp(JSONObject json) throws IOException, ParseException
 	{
-		 JSONArray workerDetails = new JSONArray();
+		 JSONArray workerDetails = new JSONArray(); 
 		 JSONObject answer = new JSONObject();
 		 workerDetails = (JSONArray) workers.get(json.get("personalID"));
 		 answer.put("personalID", json.get("personalID"));
 		 if ((workerDetails != null) && (workerDetails.get(6).equals(json.get("password"))) && (Integer.parseInt(workerDetails.get(7).toString()) == 0))
-		 {
+		 { //if user exist, not online already and input the right password.
 			 answer.put("Status", 1);
 			 answer.put("name",workerDetails.get(0));
 			 answer.put("Shop", workerDetails.get(4));
@@ -124,7 +122,7 @@ public class serverClass extends Thread {
 			 workers.get(json.get("personalID"));
 			 JSONParser parser = new JSONParser();
 			 String shopName = workerDetails.get(4).toString();
-			 if (shopName.equals("Shop1"))
+			 if (shopName.equals("Shop1")) //load the correct shop for the logged in user
 				 shop = serverConnection.getShop1();
 			 else
 				 shop = serverConnection.getShop2();
@@ -136,7 +134,7 @@ public class serverClass extends Thread {
 			 answer.put("Status", "0");
 			 System.out.println("Fail!");
 		 }
-		 sendToClient(answer);
+		 sendToClient(answer); //Send answer to client
 		 logs.loginsLog(answer);
 	}
 	
