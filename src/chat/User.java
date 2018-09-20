@@ -14,9 +14,9 @@ public class User implements ChatUser {
 	private String userName;
 	private int port;
 	private PrintWriter printWriter;
-	private BufferedReader socketBufferedReader;
+	private BufferedReader bufferedReader;
 	private ArrayList<PrintWriter> printWriterArray;
-	private ArrayList<BufferedReader> socketBufferedReaderArray;
+	private ArrayList<BufferedReader> bufferedReaderArray;
 	private Thread inMessage;
 	private Boolean isHost = false;
 
@@ -26,7 +26,7 @@ public class User implements ChatUser {
 		this.userName = userName;
 		this.port = Integer.parseInt(port);
 		printWriterArray = new ArrayList<PrintWriter>();
-		socketBufferedReaderArray = new ArrayList<BufferedReader>();
+		bufferedReaderArray = new ArrayList<BufferedReader>();
 	}
 	
 	public User(String id, String userName, PrintWriter printWriter, BufferedReader socketBufferedReader)
@@ -34,7 +34,7 @@ public class User implements ChatUser {
 		this.id = id;
 		this.userName = userName;
 		this.printWriter = printWriter;
-		this.socketBufferedReader = socketBufferedReader;
+		this.bufferedReader = socketBufferedReader;
 	}
 	
 	public void addToPrintWriter(PrintWriter printWriter) {
@@ -42,14 +42,14 @@ public class User implements ChatUser {
 	}
 	
 	public void addToBufferedReader(BufferedReader bufferedReader) {
-		socketBufferedReaderArray.add(bufferedReader);
+		bufferedReaderArray.add(bufferedReader);
 	}
 	
 	@Override
 	public void sendMessage(String message) {
 		if (!message.equals("")) {
 			if (isHost) {
-				for (int i = 0; i < socketBufferedReaderArray.size() ; ++i) {	
+				for (int i = 0; i < bufferedReaderArray.size() ; ++i) {	
 					printWriterArray.get(i).println(userName + " >> " + message); //host sent to all users
 				}
 			}
@@ -57,7 +57,7 @@ public class User implements ChatUser {
 				printWriter.println(userName + " >> " + message); //client sent only to host
 		} else {
 			if (isHost) { //in empty message receive do nothing (send to buffer but not to print)
-				for (int i = 0; i < socketBufferedReaderArray.size() ; ++i) {	
+				for (int i = 0; i < bufferedReaderArray.size() ; ++i) {	
 					printWriterArray.get(i).println("");
 				}
 			}
@@ -76,14 +76,14 @@ public class User implements ChatUser {
 				try {
 					if (isHost)
 					{
-						for (int i = 0; i < socketBufferedReaderArray.size() ; ++i)
+						for (int i = 0; i < bufferedReaderArray.size() ; ++i)
 						{
-							String str = socketBufferedReaderArray.get(i).readLine();
+							String str = bufferedReaderArray.get(i).readLine();
 							if (!str.equals(""))
 								msg=msg + "\n" + str; //get the full message on buffer from all chat users
 						}
 					} else {
-					msg = socketBufferedReader.readLine(); //if not host, read the message sent to the client
+					msg = bufferedReader.readLine(); //if not host, read the message sent to the client
 					}
 					try {
 						Thread.sleep(0);
@@ -93,12 +93,12 @@ public class User implements ChatUser {
 					while(true) {
 						if (!msg.equals(""))
 							{
-								chatLog.append("\n"+msg);
+								chatLog.append("\n"+msg); //Update chat log on screen
 								if (isHost)
 								{
-									for (int i = 0; i < socketBufferedReaderArray.size() ; ++i)
+									for (int i = 0; i < bufferedReaderArray.size() ; ++i)
 									{	
-										printWriterArray.get(i).println(msg);
+										printWriterArray.get(i).println(msg); //host receive message and send it to all clients
 									}
 								}
 							}
@@ -106,9 +106,9 @@ public class User implements ChatUser {
 						while (msg.equals("")) {		
 							if (isHost)
 							{
-								for (int i = 0; i < socketBufferedReaderArray.size() ; ++i)
-								{
-									String str = socketBufferedReaderArray.get(i).readLine();
+								for (int i = 0; i < bufferedReaderArray.size() ; ++i)
+								{ //Get the next messages
+									String str = bufferedReaderArray.get(i).readLine();
 									if (!str.equals(""))
 										if (msg.equals(""))
 											msg = str;
@@ -116,7 +116,7 @@ public class User implements ChatUser {
 											msg = msg + "\n" + str;
 								}
 							} else {
-							msg = socketBufferedReader.readLine();
+							msg = bufferedReader.readLine();
 							}	
 						}
 					}
@@ -140,12 +140,12 @@ public class User implements ChatUser {
 	}
 	
 	public PrintWriter getLastPrintWriter() { return printWriterArray.get(printWriterArray.size()-1); }
-	public BufferedReader getLastBufferedReader() { return socketBufferedReaderArray.get(socketBufferedReaderArray.size()-1); }
+	public BufferedReader getLastBufferedReader() { return bufferedReaderArray.get(bufferedReaderArray.size()-1); }
 	public void setIsHost(Boolean bool) { isHost = bool; }
 	
 	public void hostDisconnect() {
 		printWriterArray.clear();
-		socketBufferedReaderArray.clear();
+		bufferedReaderArray.clear();
 	}
 	
 	@Override

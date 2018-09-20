@@ -177,7 +177,6 @@ public class ChatGui extends JPanel{
 						clientSideConnection.freeToChatStatusChange(false);
 						port = Integer.parseInt(answer);
 						connection = new OpenConnection(port, clientSideConnection);
-						clientSideConnection.setChatSocket(connection.getSocket());
 						socket = connection.getSocket();
 						chatUser = connection.getUser();
 						chatUser.receiveMessage(chatLog); //Open new thread for receive messages 
@@ -207,7 +206,6 @@ public class ChatGui extends JPanel{
 						clientSideConnection.freeToChatStatusChange(false);
 						port = Integer.parseInt(answer);
 						connection = new OpenConnection(port, clientSideConnection);
-						clientSideConnection.setChatSocket(connection.getSocket());
 						socket = connection.getSocket();
 						chatUser = connection.getUser();
 						clientSideConnection.updateJoinChatListAfterOpenSocket(port, socket.getLocalPort()); //Let the server know he is ready to join

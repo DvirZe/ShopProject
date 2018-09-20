@@ -25,7 +25,7 @@ public class GetConnection extends Thread {
 	private User chatUser;	
 	
 	public GetConnection (int port, ClientSideConnection clientSideConnection)
-	{
+	{ //Created after login to application
 		this.port = port;
 		sockets = new LinkedList<Socket>();
 		this.clientSideConnection = clientSideConnection;
@@ -44,7 +44,7 @@ public class GetConnection extends Thread {
 			public void run() {
 				try {
 					while (true)
-					{
+					{ //Open chat incoming screen if have chat request on queue
 						Thread.sleep(0);
 						if (!sockets.isEmpty())
 						{
@@ -62,7 +62,7 @@ public class GetConnection extends Thread {
 		
 		while (true)
 		{
-			try {
+			try { //receive every chat request and insert a queue
 				sockets.add(serverSocket.accept());
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -80,7 +80,7 @@ public class GetConnection extends Thread {
 			chatUser.setIsHost(true);
 		}
 		
-		if (clientSideConnection.isFreeToChat()) {
+		if (clientSideConnection.isFreeToChat()) { //if not on chat, open the chat incoming message
 			socket = sockets.removeFirst();
 			if (socket.isConnected())
 			{
@@ -102,8 +102,7 @@ public class GetConnection extends Thread {
 				for (int i = 0; i< sockets.size(); ++i)
 				{
 					if (sockets.get(i).getPort() == managerPort)
-					{
-
+					{ //remove the waiting request from socket array and add to chat message exchanges process
 						socket = sockets.remove(i);
 						chatUser.addToBufferedReader(new BufferedReader(new InputStreamReader(socket.getInputStream())));
 						chatUser.addToPrintWriter(new PrintWriter(socket.getOutputStream(),true));
@@ -126,7 +125,8 @@ public class GetConnection extends Thread {
 	
 	public void chatRefuse() {
 		chatUser.sendMessage("Busy, Can\'t talk");
-		clientSideConnection.leftTheChat();
+		chatUser.hostDisconnect(); //Clear connection
+		clientSideConnection.leftTheChat(); //remove this worker from the chat room on server side
 		clientSideConnection.freeToChatStatusChange(true);
 	}
 	

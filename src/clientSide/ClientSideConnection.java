@@ -32,13 +32,10 @@ public class ClientSideConnection extends Thread {
 	private Socket socket;
 	private BufferedReader socketBufferedReader;
 	private PrintWriter printWriter;
-	private BufferedReader commandBufferedReader;
 	private Actions action;
-	private Login shopGui;
 	private Shop shop;
-	public int NextWorkerCounter;
+	public int nextWorkerCounter;
 	private Map<String, String> workerOnline;
-	private Socket chatSocket = null;
 	private GetConnection getConnection;
 	private Boolean freeToChat = true;
 	
@@ -46,15 +43,14 @@ public class ClientSideConnection extends Thread {
 		socket = null;
 		socketBufferedReader = null;
 		printWriter = null;
-		commandBufferedReader = null;
 		action = new Actions();
 	}
 	
 	@Override
-	public void run()  {
-		System.setProperty("javax.net.ssl.trustStore", "sp.store");
+	public void run()  { //every client connection get new thread
+		System.setProperty("javax.net.ssl.trustStore", "sp.store"); //use certificate
 		try {
-			socket = ((SSLSocketFactory)SSLSocketFactory.getDefault()).createSocket("localhost", 7000);
+			socket = ((SSLSocketFactory)SSLSocketFactory.getDefault()).createSocket("localhost", 7000); //open ssl connection with the server
 			socketBufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			printWriter = new PrintWriter(socket.getOutputStream(),true);
 		} catch (UnknownHostException e) {
@@ -62,11 +58,9 @@ public class ClientSideConnection extends Thread {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		commandBufferedReader = new BufferedReader(new InputStreamReader(System.in));
-		shopGui = new Login(this);	
+		new Login(this); //open first screen - login
 	}
 	
-	@SuppressWarnings("unchecked")
 	public int login(String id, String password) throws ParseException, IOException
 	{
 		JSONObject json = new JSONObject();
@@ -74,7 +68,7 @@ public class ClientSideConnection extends Thread {
 		json.put("personalID", id);
 		json.put("password", password);
 		
-		try {
+		try { //get random free port for chat
 			ServerSocket newPort = new ServerSocket(0);
 			int portForChat = newPort.getLocalPort()+2000;
 			while (portForChat >= 65535) // make sure keep the port below the max port
@@ -82,14 +76,13 @@ public class ClientSideConnection extends Thread {
 				portForChat-= 1500; 
 			}
 			getConnection = new GetConnection(portForChat, this); //Get new Random free port for chat
-			getConnection.start();
 			json.put("portForChat", portForChat);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		
-		SendToServer(json);
-		String msg = socketBufferedReader.readLine();
+		sendToServer(json);
+		String msg = socketBufferedReader.readLine(); //wait for answer if user allow to enter
 		JSONParser parser = new JSONParser();
 		json = (JSONObject)parser.parse(msg);
 		int status = Integer.parseInt(json.get("Status").toString());
@@ -100,12 +93,13 @@ public class ClientSideConnection extends Thread {
 			workerOnline.put("personalID", id);
 			workerOnline.put("name", json.get("name").toString());
 			workerOnline.put("Job", json.get("Job").toString());
+			getConnection.start(); //start thread to wait for incoming chat requests
 		}
 		
 		return Integer.parseInt(json.get("Status").toString());
 	}
 	
-	public void SendToServer(JSONObject json)
+	public void sendToServer(JSONObject json)
 	{
 		printWriter.println(json);
 	}
@@ -128,13 +122,13 @@ public class ClientSideConnection extends Thread {
 		JSONObject json = new JSONObject();
 		json.put("personalID", id);
 		json.put("Action",action.findWorkerAction());
-		SendToServer(json);
+		sendToServer(json);
 		json = getFromServer();
 		if (json.containsKey("workersNumber"))
-		{
-			NextWorkerCounter = (Integer.parseInt(json.get("workersNumber").toString()) + 1);
+		{ //worker nor found
+			nextWorkerCounter = (Integer.parseInt(json.get("workersNumber").toString()) + 1);
 			return null;
-		}
+		} //worker found
 		return new Worker(json.get("workerID").toString(),
 						  Integer.parseInt(id),
 						  json.get("name").toString(),
@@ -150,12 +144,12 @@ public class ClientSideConnection extends Thread {
 		JSONObject json = new JSONObject();
 		json.put("customerId", id);
 		json.put("Action",action.findCustomerAction());
-		SendToServer(json);
+		sendToServer(json);
 		json = getFromServer();
 		if (!json.containsKey("name"))
-		{
+		{ //customer not found
 			return null;
-		}
+		} //customer found
 		return new Customer(id,
 						  json.get("name").toString(),
 						  json.get("phoneNr").toString(),
@@ -163,10 +157,10 @@ public class ClientSideConnection extends Thread {
 	}
 
 	public int getNewWorkerID() {
-		return NextWorkerCounter;
+		return nextWorkerCounter;
 	}
 	
-	public void saveWorker(Worker worker) {
+	public void saveWorker(Worker worker) { //convert to json and send to server
 		JSONObject workerJson = new JSONObject();
 		workerJson.put("Action", action.saveWorkerAction());
 		workerJson.put("personalID", worker.getId());
@@ -178,51 +172,48 @@ public class ClientSideConnection extends Thread {
 		workerJson.put("job", worker.getJob());
 		workerJson.put("password", worker.getPassword());
 		workerJson.put("login", worker.getLoginStatus());
-		SendToServer(workerJson);
+		sendToServer(workerJson);
 	}
 	
-	public void saveCustomer(Customer customer) {
+	public void saveCustomer(Customer customer) { //convert to json and send to server
 		JSONObject customerJson = new JSONObject();
 		customerJson.put("Action", action.saveCustomerAction());
 		customerJson.put("customerId", customer.getId());
 		customerJson.put("name", customer.getName());
 		customerJson.put("phoneNr", customer.getPhoneNr());
 		customerJson.put("customerType", customer.getType());
-		SendToServer(customerJson);
+		sendToServer(customerJson);
 	}
 	
-	public void updateInventory() throws IOException, ParseException {
+	public void updateInventory() throws IOException, ParseException { //convert to json and send to server
 		JSONObject json = new JSONObject();
 		json.put("Action", action.updateInventory());
-		SendToServer(json);
+		sendToServer(json);
 		JSONObject newInventory = getFromServer();
-		shop.UpdateInventory(1, Integer.parseInt(newInventory.get("shirt1").toString()));
-		shop.UpdateInventory(2, Integer.parseInt(newInventory.get("shirt2").toString()));
-		shop.UpdateInventory(3, Integer.parseInt(newInventory.get("pants1").toString()));
-		shop.UpdateInventory(4, Integer.parseInt(newInventory.get("pants2").toString()));
+		shop.updateInventory(1, Integer.parseInt(newInventory.get("shirt1").toString()));
+		shop.updateInventory(2, Integer.parseInt(newInventory.get("shirt2").toString()));
+		shop.updateInventory(3, Integer.parseInt(newInventory.get("pants1").toString()));
+		shop.updateInventory(4, Integer.parseInt(newInventory.get("pants2").toString()));
 	}
 	
-	public void setDiscount(double vip, double returned)
-	{
+	public void setDiscount(double vip, double returned) { //convert to json and send to server
 		shop.setDiscount(vip, returned);
 		JSONObject json = new JSONObject();
 		json.put("Action", action.setDiscounts());
 		json.put("VIP", vip);
 		json.put("Return", returned);
-		SendToServer(json);
+		sendToServer(json);
 	}
-	
-	public void updateDicounts() throws IOException, ParseException
-	{
+
+	public void updateDicounts() throws IOException, ParseException { //get updated discounts from server and update shop
 		JSONObject json = new JSONObject();
 		json.put("Action", action.updateDiscounts());
-		SendToServer(json);
+		sendToServer(json); //send request for update from the server
 		JSONObject updatedDiscounts = getFromServer();
 		shop.setDiscount(Double.parseDouble(updatedDiscounts.get("VIP").toString()), Double.parseDouble(updatedDiscounts.get("Return").toString()));
 	}
 	
-	public void setPrices(int[] prices)
-	{
+	public void setPrices(int[] prices) { //convert to json and send to server
 		JSONObject json = new JSONObject();
 		json.put("Action", action.setPrices());
 		JSONArray pricesArr = new JSONArray();
@@ -231,41 +222,39 @@ public class ClientSideConnection extends Thread {
 			pricesArr.add(prices[i]);
 		}
 		json.put("newPrices", pricesArr);
-		SendToServer(json);
+		sendToServer(json);
 	}
 	
-	public void updatePrices() throws IOException, ParseException
-	{
+	public void updatePrices() throws IOException, ParseException { //get updated prices from server and update shop
 		JSONObject json = new JSONObject();
 		json.put("Action", action.updatePrices());
-		SendToServer(json);
+		sendToServer(json);
 		JSONObject updatedPrices = getFromServer();
-		JSONArray tmpJsonArr = new JSONArray();
-		tmpJsonArr = (JSONArray) updatedPrices.get("Prices");
-		int[] tmpPriceArr = new int[4];
+		JSONArray pricesJson = new JSONArray();
+		pricesJson = (JSONArray) updatedPrices.get("Prices");
+		int[] priceArr = new int[4];
 		for (int i = 0; i < 4; ++i )
 		{
-			tmpPriceArr[i] = Integer.parseInt(tmpJsonArr.get(i).toString());
+			priceArr[i] = Integer.parseInt(pricesJson.get(i).toString());
 		}
-		shop.setPrices(tmpPriceArr);
+		shop.setPrices(priceArr);
 	}
 	
-	public void saveSimpleSaveReport() throws IOException, ParseException
-	{
+	public void saveSimpleSaveReport() throws IOException, ParseException { //request from server for general shop sells report 
 		JSONObject json = new JSONObject();
 		json.put("Action", action.sellsRepoet());
-		SendToServer(json);
+		sendToServer(json);
 		JSONObject simpleReport = getFromServer();
 		simpleReport.put("fileName", "SimpleReport");
 		simpleReport.put("title", "Simple Sell Report");
 		createWordFile(simpleReport);
 	}
 
-	public LinkedHashMap<String, String> getStats() throws IOException, ParseException {
+	public LinkedHashMap<String, String> getStats() throws IOException, ParseException { //get info from server about shop sells
 		LinkedHashMap<String, String> stats = new LinkedHashMap<String, String>();
 		JSONObject request = new JSONObject();
 		request.put("Action", action.getStats());
-		SendToServer(request);
+		sendToServer(request);
 		JSONObject answer = getFromServer();
 		stats.put("TotalSelles", answer.get("TotalSelles").toString());
 		JSONArray sellesHistory = (JSONArray) answer.get("sellesHistory");
@@ -276,12 +265,11 @@ public class ClientSideConnection extends Thread {
 		return stats;
 	}
 	
-	public void saveReportByItem(String item) throws IOException, ParseException
-	{
+	public void saveReportByItem(String item) throws IOException, ParseException { //request from server for item sells records
 		JSONObject json = new JSONObject();
 		json.put("Action", action.sellsRepoet());
 		json.put("Item", item);
-		SendToServer(json);
+		sendToServer(json);
 		JSONObject Report = getFromServer();
 		Report.put("title", item + " Sell Report");
 		item = item.replace(" ", "_");
@@ -289,36 +277,33 @@ public class ClientSideConnection extends Thread {
 		createWordFile(Report);
 	}
 	
-	public void saveReportByType(String type) throws IOException, ParseException
-	{
+	public void saveReportByType(String type) throws IOException, ParseException { //request from server for sells records by type
 		JSONObject json = new JSONObject();
 		json.put("Action", action.sellsRepoet());
 		json.put("Type", type);
-		SendToServer(json);
+		sendToServer(json);
 		JSONObject Report = getFromServer();
 		Report.put("title", type + " Sell Report");
 		Report.put("fileName", type +"_Report");
 		createWordFile(Report);
 	}
 	
-	public void saveReportByDate(String date) throws IOException, ParseException
-	{
+	public void saveReportByDate(String date) throws IOException, ParseException { //request from server for sells records by date
 		JSONObject json = new JSONObject();
 		json.put("Action", action.sellsRepoet());
 		json.put("Date", date);
-		SendToServer(json);
+		sendToServer(json);
 		JSONObject Report = getFromServer();
 		Report.put("title", date + " Sell Report");
 		Report.put("fileName", date +"_Report");
 		createWordFile(Report);
 	}
 	
-	public void createWordFile(JSONObject json) throws IOException
-	{
-		String fileName = json.get("fileName").toString() + "_" + new Random().nextInt(Integer.MAX_VALUE);		
+	public void createWordFile(JSONObject json) throws IOException { //create doc report file
+		String fileName = json.get("fileName").toString() + "_" + new Random().nextInt(Integer.MAX_VALUE); //create file name with random value
 		json.remove("fileName");
 		XWPFDocument document = new XWPFDocument(); 
-		FileOutputStream out = new FileOutputStream( new File(".\\"+ fileName +".docx"));
+		FileOutputStream out = new FileOutputStream( new File(".\\"+ fileName +".docx")); //create doc file
 		
 	    XWPFParagraph title = document.createParagraph();
 	    XWPFRun titleText = title.createRun();
@@ -335,7 +320,7 @@ public class ClientSideConnection extends Thread {
 	    
 	    paragraph.setAlignment(ParagraphAlignment.RIGHT);
 
-	    for (int i = 1 ; i< json.size() ; ++i)
+	    for (int i = 1 ; i< json.size() ; ++i) //add every sell record to the file
 	    {
 	    	 run.setText("#"+ i + " - " + json.get(""+i).toString());
 	    	 run.addBreak();
@@ -344,57 +329,37 @@ public class ClientSideConnection extends Thread {
 	    document.write(out);
 	    out.close();
 	    
-	    Desktop.getDesktop().open(new File(".\\"+ fileName + ".docx"));
+	    Desktop.getDesktop().open(new File(".\\"+ fileName + ".docx")); //open the file after created
 	}
 	
-	public void endSell() {
+	public void endSell() { //send update for server for record and update inventory
 		JSONObject sell = shop.endSell();
 		sell.put("Action", action.sellAction());
-		SendToServer(sell);
+		sendToServer(sell);
 	}
 	
-	public String startChat() throws IOException, ParseException {
+	public String startChat() throws IOException, ParseException { //Sent request for server to get port of user to chat connection
 		JSONObject json = new JSONObject();
 		json.put("Action", action.startChat());
-		SendToServer(json);
+		sendToServer(json);
 		JSONObject details = getFromServer();
 		if (details.containsKey("User2Port")) {
-			return details.get("User2Port").toString();
+			return details.get("User2Port").toString(); //return port to open connection
 		} else return "0";
 		
 	}
 	
-	public String joinChat() throws IOException, ParseException {
+	public String joinChat() throws IOException, ParseException { //Sent request for server to get port of host to chat connection
 		JSONObject json = new JSONObject();
 		json.put("Action", action.joinChat());
-		SendToServer(json);
+		sendToServer(json);
 		JSONObject details = getFromServer();
-		if (details.containsKey("User2Port")) {
-			return details.get("User2Port").toString();
-			
+		if (details.containsKey("User2Port")) { 
+			return details.get("User2Port").toString(); //return port to open connection		
 		} else return "0";
 		
 	}
 	
-	public void agreeChat() throws IOException {
-		ServerSocket chatAgree = new ServerSocket(socket.getPort());
-		System.out.println("Ready for connaction...");
-	}
-	
-	public void setChatSocket(Socket socket) {
-		chatSocket = socket;
-	}
-	
-	public Socket getChatSocket() {
-		return chatSocket;
-	}
-	
-	public static void main(String[] args) throws UnknownHostException, IOException
-	{
-		ClientSideConnection clientSideConnection = new ClientSideConnection();
-		clientSideConnection.start();
-	}
-
 	public Map<String, String> getWorkerOnline() {
 		return workerOnline;
 	}
@@ -411,24 +376,24 @@ public class ClientSideConnection extends Thread {
 		return freeToChat;
 	}
 
-	public void setInventory(JSONObject json) {
+	public void setInventory(JSONObject json) { //send updated inventory to server after supply update
 		json.put("Action", action.setInventory());
 		json.put("shopName", shop.getShopName());
-		SendToServer(json);
+		sendToServer(json);
 	}
 	
-	public void leftTheChat() {
+	public void leftTheChat() { //update char room at server
 		JSONObject json = new JSONObject();
 		json.put("Action", action.leftTheChat());
-		SendToServer(json);
+		sendToServer(json);
 		freeToChat = true;
 	}
 	
-	public int managerPortToJoinChat() throws IOException, ParseException {
+	public int managerPortToJoinChat() throws IOException, ParseException { //send request to server to find if the port is port of a manager
 		JSONObject json = new JSONObject();
 		json.put("Action", action.managerPortToJoinChat());
 		json.put("myPort", getConnection.getPort());
-		SendToServer(json);
+		sendToServer(json);
 		JSONObject details = getFromServer();
 		if (details.containsKey("portToCheck")) {
 			return Integer.parseInt(details.get("portToCheck").toString());
@@ -436,35 +401,40 @@ public class ClientSideConnection extends Thread {
 		} else return 0;
 	}
 	
-	public void updateJoinChatListAfterOpenSocket(int hostPort, int myPort) {
+	public void updateJoinChatListAfterOpenSocket(int hostPort, int myPort) { //update record on join waiting list on server after open connection
 		JSONObject json = new JSONObject();
 		json.put("Action", action.updateJoinChatListAfterOpenSocket());
 		json.put("hostPort", hostPort);
 		json.put("myPort", myPort);
-		SendToServer(json);
+		sendToServer(json);
 	}
 	
-	public void saveChatLog(String log)
-	{
+	public void saveChatLog(String log) { //send logs to server to save
 		JSONObject json = new JSONObject();
 		json.put("Action", action.saveChatLog());
 		json.put("chatAction", "Save");
 		json.put("chatLog", log);
-		SendToServer(json);
+		sendToServer(json);
 	}
 	
-	public boolean isManager() {
+	public boolean isManager() { //for testing permissions to screens and buttons
 		if (workerOnline.get("Job").equals("Manager"))
 			return true;
 		else
 			return false;
 	}
 	
-	public boolean isSeller() {
+	public boolean isSeller() { //for testing permissions to screens and buttons
 		if (workerOnline.get("Job").equals("Seller"))
 			return true;
 		else
 			return false;
+	}
+	
+	public static void main(String[] args) throws UnknownHostException, IOException
+	{
+		ClientSideConnection clientSideConnection = new ClientSideConnection();
+		clientSideConnection.start(); //start new tread for each running
 	}
 	
 }
