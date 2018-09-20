@@ -48,7 +48,7 @@ public class StoreManagment {
 			}
 		});
 		//////////////////End of discount manager ActionListener///////////////
-
+		
 		JButton supply = new JButton("Manage supplys");
 		storeMgr.add(supply,BorderLayout.CENTER);
 		supply.setFont(font2);

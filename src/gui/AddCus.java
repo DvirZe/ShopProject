@@ -118,12 +118,14 @@ public class AddCus {
 		cusMgr.add(back);
 		cusLayout.putConstraint(SpringLayout.WEST,back , 12, SpringLayout.EAST, save);
 		cusLayout.putConstraint(SpringLayout.NORTH, back, 50, SpringLayout.NORTH, cusType);
+		///////////back ActionListener///////////
 		back.addActionListener(new ActionListener() {
 			public void actionPerformed (ActionEvent ae) {
 				cusMenu.dispose();
 				new	MainMenu(clientSideConnection);
 			}
 		});
+		///////////back ActionListener///////////
 		
 		JButton search = new JButton("Search Customer");
 		search.setFont(font2);
@@ -137,142 +139,148 @@ public class AddCus {
 		cusMgr.add(backToSell);
 		cusLayout.putConstraint(SpringLayout.WEST,backToSell , 12, SpringLayout.EAST, back);
 		cusLayout.putConstraint(SpringLayout.NORTH, backToSell, 50, SpringLayout.NORTH, cusType);
+		///////////back to sell ActionListener///////////
 		backToSell.addActionListener(new ActionListener() {
 			public void actionPerformed (ActionEvent ae) {
 				cusMenu.dispose();
 				new SellMain(clientSideConnection);
 			}
 		});
+		///////////back to sell ActionListener///////////
 		
-////////////////////////ActionListener For finding customer/////////////////////////		
-ActionListener findCustomererAction = new ActionListener() {
-	public void actionPerformed (ActionEvent ae) {
-		Customer customer = null;
-		try {
-			customer = clientSideConnection.findCustomer(idNum.getText());
-			search.setEnabled(false);
-		} catch ( IOException | org.json.simple.parser.ParseException e) {
-			e.printStackTrace();
+	////////////////////////ActionListener For finding customer/////////////////////////		
+	ActionListener findCustomererAction = new ActionListener() {
+		public void actionPerformed (ActionEvent ae) {
+			Customer customer = null;
+			try {
+				customer = clientSideConnection.findCustomer(idNum.getText());//gets the customer id to search
+				search.setEnabled(false);
+			} catch ( IOException | org.json.simple.parser.ParseException e) {
+				e.printStackTrace();
+			}
+			
+			if (customer != null)//if the customer exists, gets his details
+			{
+				fnText.setText(customer.getName());
+				phnNumText.setText(customer.getPhoneNr());
+				System.out.println(customer.getType());
+				cusTypeText.setSelectedItem(customer.getType());
+			}
+			else //if the customer dos'nt exists cleaning the first name and phone fields and sets the default customer type to new
+			{
+				fnText.setText("");
+				phnNumText.setText("");
+				cusTypeText.setSelectedItem("New");
+			}
 		}
+	};
+	////////////////////////End of ActionListener For finding customer/////////////////////////	
+	
+	///////////idNum ActionListener//////////
+	idNum.addActionListener(new ActionListener() {
 		
-		if (customer != null)
-		{
-			fnText.setText(customer.getName());
-			phnNumText.setText(customer.getPhoneNr());
-			System.out.println(customer.getType());
-			cusTypeText.setSelectedItem(customer.getType());
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			search.setEnabled(true);
+			
 		}
-		else 
-		{
+	});
+	///////////idNum ActionListener//////////
+	
+		search.addActionListener(findCustomererAction);
+		idNum.addActionListener(findCustomererAction);
+		
+	
+	///////////////////Enable save button/////////////////////////
+		DocumentListener saveEnabler = new DocumentListener(){
+	
+	@Override
+		public void changedUpdate(DocumentEvent e) {
+			saveEnable();
+		}
+	
+	@Override
+		public void insertUpdate(DocumentEvent e) {
+			saveEnable();
+		}
+	
+	@Override
+		public void removeUpdate(DocumentEvent e) {
+			saveEnable();
+		}
+	
+		public void saveEnable(){
+			if (!idNum.getText().isEmpty()
+				&& !fnText.getText().isEmpty()
+				&& !phnNumText.getText().isEmpty())
+			save.setEnabled(true);
+			else
+			save.setEnabled(false);
+		}
+	
+	};
+	///////////////////End save Enable Action///////////////////
+	
+	
+	///////////////////Enable Search button/////////////////////////
+		DocumentListener SearchEnabler = new DocumentListener(){
+	
+	@Override
+		public void changedUpdate(DocumentEvent e) {
+			SearchEnable();
+		
+		}
+	
+	@Override
+		public void insertUpdate(DocumentEvent e) {
+			SearchEnable();
+		
+		}
+	
+	@Override
+		public void removeUpdate(DocumentEvent e) {
+		SearchEnable();
+	
+		}
+		public void SearchEnable(){
+			search.setEnabled(true);
+		}
+	};
+	
+	///////////////////End search Enable Action///////////////////
+	
+	
+	////////////////////save//////////////////
+	
+	save.addActionListener(new ActionListener() {
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {//gets the values from the fields and saves them in the customer, then cleans the fields
+			// TODO Auto-generated method stub
+			Customer customer = new Customer(idNum.getText(),
+											fnText.getText(),
+											phnNumText.getText(),
+											cusTypeText.getSelectedItem().toString());
+			clientSideConnection.saveCustomer(customer);
+			idNum.setText("");
 			fnText.setText("");
 			phnNumText.setText("");
-			cusTypeText.setSelectedItem("New");
+			cusTypeText.setSelectedIndex(0);
 		}
-	}
-};
-
-idNum.addActionListener(new ActionListener() {
+	});
+	//////////////////End save//////////////////
 	
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		search.setEnabled(true);
-		
-	}
-});
-
-////////////////////End of ActionListener For login panel/////////////////////	
-
-	search.addActionListener(findCustomererAction);
-	idNum.addActionListener(findCustomererAction);
+	idNum.getDocument().addDocumentListener(SearchEnabler);
+	fnText.getDocument().addDocumentListener(saveEnabler);
+	phnNumText.getDocument().addDocumentListener(saveEnabler);
+	((JTextField)cusTypeText.getEditor().getEditorComponent()).getDocument().addDocumentListener(saveEnabler);
 	
-
-///////////////////Enable save button/////////////////////////
-	DocumentListener saveEnabler = new DocumentListener(){
-
-@Override
-	public void changedUpdate(DocumentEvent e) {
-		saveEnable();
-	}
-
-@Override
-	public void insertUpdate(DocumentEvent e) {
-		saveEnable();
-	}
-
-@Override
-	public void removeUpdate(DocumentEvent e) {
-		saveEnable();
-	}
-
-	public void saveEnable(){
-		if (!idNum.getText().isEmpty()
-			&& !fnText.getText().isEmpty()
-			&& !phnNumText.getText().isEmpty())
-		save.setEnabled(true);
-		else
-		save.setEnabled(false);
-	}
-
-};
-
-	DocumentListener SearchEnabler = new DocumentListener(){
-
-@Override
-	public void changedUpdate(DocumentEvent e) {
-		SearchEnable();
 	
-	}
-
-@Override
-	public void insertUpdate(DocumentEvent e) {
-		SearchEnable();
-	
-	}
-
-@Override
-	public void removeUpdate(DocumentEvent e) {
-	SearchEnable();
-
-	}
-	public void SearchEnable(){
-		search.setEnabled(true);
-	}
-};
-///////////////////End save Enable Action///////////////////
-
-
-////////////////////save//////////////////
-
-save.addActionListener(new ActionListener() {
-	
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
-		Customer customer = new Customer(idNum.getText(),
-										fnText.getText(),
-										phnNumText.getText(),
-										cusTypeText.getSelectedItem().toString());
-		clientSideConnection.saveCustomer(customer);
-		idNum.setText("");
-		fnText.setText("");
-		phnNumText.setText("");
-		cusTypeText.setSelectedIndex(0);
-	}
-});
-
-//////////////////End save//////////////////
-
-idNum.getDocument().addDocumentListener(SearchEnabler);
-fnText.getDocument().addDocumentListener(saveEnabler);
-phnNumText.getDocument().addDocumentListener(saveEnabler);
-((JTextField)cusTypeText.getEditor().getEditorComponent()).getDocument().addDocumentListener(saveEnabler);
-
-
-		idNum.addActionListener(findCustomererAction);
-		search.addActionListener(findCustomererAction);
-		
-		cusMenu.add(cusMgr);
-		cusMenu.pack();
-		cusMenu.setVisible(true);
-	}
+			idNum.addActionListener(findCustomererAction);
+			search.addActionListener(findCustomererAction);
+			
+			cusMenu.add(cusMgr);
+			cusMenu.pack();
+			cusMenu.setVisible(true);
+		}
 }

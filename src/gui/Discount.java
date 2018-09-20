@@ -41,18 +41,21 @@ public class Discount {
 		discMenu.setIconImage(img);
 		discMenu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		JTextField[] discPrec = new JTextField[4];
+		JTextField[] discPerc = new JTextField[4];
 		JPanel discMain = new JPanel();
 		SpringLayout discLayout = new SpringLayout();
 		discMain.setLayout(discLayout);
 		
+		//creates 2 text fields for the menu
 		for (int i = 1; i<=2 ; ++i)
 		{
-			discPrec[i-1] = new JTextField("", 4);
-			discMain.add(discPrec[i-1]);
+			discPerc[i-1] = new JTextField("", 4);
+			discMain.add(discPerc[i-1]);
 		}
-		discPrec[0].setText(clientSideConnection.getShop().getDiscountForCustomer("VIP").toString());
-		discPrec[1].setText(clientSideConnection.getShop().getDiscountForCustomer("Return").toString());
+		
+		//gets the discount percentage
+		discPerc[0].setText(clientSideConnection.getShop().getDiscountForCustomer("VIP").toString());
+		discPerc[1].setText(clientSideConnection.getShop().getDiscountForCustomer("Return").toString());
 
 		discMain.setBorder(BorderFactory.createTitledBorder("Discount Menu"));
 		discMain.setBackground(Color.white);
@@ -77,20 +80,19 @@ public class Discount {
 		discLayout.putConstraint(SpringLayout.WEST, vipDisc, 0, SpringLayout.WEST, discMain);
 		discLayout.putConstraint(SpringLayout.NORTH, vipDisc, 10, SpringLayout.NORTH, discMain);
 		
-		discLayout.putConstraint(SpringLayout.WEST, discPrec[1], 15, SpringLayout.EAST, returnDisc);
-		discLayout.putConstraint(SpringLayout.NORTH, discPrec[1], 0, SpringLayout.NORTH, returnDisc);
+		discLayout.putConstraint(SpringLayout.WEST, discPerc[1], 15, SpringLayout.EAST, returnDisc);
+		discLayout.putConstraint(SpringLayout.NORTH, discPerc[1], 0, SpringLayout.NORTH, returnDisc);
 		
-		discLayout.putConstraint(SpringLayout.WEST, discPrec[0], 0, SpringLayout.WEST, discPrec[1]);
-		discLayout.putConstraint(SpringLayout.NORTH, discPrec[0], 0, SpringLayout.NORTH, vipDisc);
+		discLayout.putConstraint(SpringLayout.WEST, discPerc[0], 0, SpringLayout.WEST, discPerc[1]);
+		discLayout.putConstraint(SpringLayout.NORTH, discPerc[0], 0, SpringLayout.NORTH, vipDisc);
 		
-		discLayout.putConstraint(SpringLayout.WEST, save, 0, SpringLayout.WEST, discPrec[1]);
-		discLayout.putConstraint(SpringLayout.NORTH, save, 10, SpringLayout.SOUTH, discPrec[1]);
+		discLayout.putConstraint(SpringLayout.WEST, save, 0, SpringLayout.WEST, discPerc[1]);
+		discLayout.putConstraint(SpringLayout.NORTH, save, 10, SpringLayout.SOUTH, discPerc[1]);
 		
 		discLayout.putConstraint(SpringLayout.WEST, back, 5, SpringLayout.EAST, save);
 		discLayout.putConstraint(SpringLayout.NORTH, back, 0, SpringLayout.NORTH, save);
 		
-		////////////////////Save Enable listener//////////////////
-		
+		////////////////////Save Enable listener//////////////////		
 		DocumentListener saveEnabler = new DocumentListener(){
 
 			@Override
@@ -111,22 +113,20 @@ public class Discount {
 				
 			}
 			public void saveEnable(){
-				if (!discPrec[0].getText().isEmpty()
-						&& !discPrec[1].getText().isEmpty())
+				if (!discPerc[0].getText().isEmpty()
+						&& !discPerc[1].getText().isEmpty())
 					save.setEnabled(true);
 				else
 					save.setEnabled(false);
 				}
 			
 		};
-		
 		////////////////////End of Save Enable listener//////////////////
 		
-		discPrec[0].getDocument().addDocumentListener(saveEnabler);
-		discPrec[1].getDocument().addDocumentListener(saveEnabler);
+		discPerc[0].getDocument().addDocumentListener(saveEnabler);
+		discPerc[1].getDocument().addDocumentListener(saveEnabler);
 		
 		////////////////////back button listener//////////////////
-		
 		back.addActionListener(new ActionListener() {
 			
 			@Override
@@ -144,7 +144,7 @@ public class Discount {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				clientSideConnection.setDiscount(Double.parseDouble(discPrec[0].getText()), Double.parseDouble(discPrec[1].getText()));
+				clientSideConnection.setDiscount(Double.parseDouble(discPerc[0].getText()), Double.parseDouble(discPerc[1].getText()));//saves the new discount percentage
 				save.setEnabled(false);
 			}
 		});

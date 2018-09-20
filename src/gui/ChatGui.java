@@ -46,7 +46,7 @@ public class ChatGui extends JPanel{
 		Image img = Toolkit.getDefaultToolkit().getImage("./files/ChatIcon.png");
 		chatFrame.setIconImage(img);
 		chatFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-		
+		///////////window listener for using x button to leave the chat///////////////////////////	
 		chatFrame.addWindowListener(new WindowListener() {
 			
 			@Override
@@ -83,7 +83,7 @@ public class ChatGui extends JPanel{
 			@Override
 			public void windowActivated(WindowEvent e) {}
 		});
-		
+		///////////End of window listener for using x button to leave the chat///////////////////////////
 		
 		JPanel chatPanel = new JPanel();
 		chatPanel.setBorder(BorderFactory.createTitledBorder("Chat with other branch"));
@@ -167,7 +167,7 @@ public class ChatGui extends JPanel{
 				}
 			}
 		});
-		
+		///////////////////Search chat ActionListener/////////////////	
 		searchChat.addActionListener(new ActionListener() {
 			
 			@Override
@@ -195,6 +195,9 @@ public class ChatGui extends JPanel{
 			}
 		});
 		
+		///////////////////End of Search chat ActionListener/////////////////
+		
+		///////////////////join chat ActionListener/////////////////
 		join.addActionListener(new ActionListener() {
 			
 			@Override
@@ -223,7 +226,8 @@ public class ChatGui extends JPanel{
 					} else chatLog.append("\nNo chat is on.");
 				} catch (ParseException | IOException e1) {e1.printStackTrace(); }
 			}
-		});
+		});	
+		///////////////////End of join chat ActionListener/////////////////
 		
 		//if its the worker who get the chat
 		if (isConnectToChatAlready)
@@ -236,7 +240,7 @@ public class ChatGui extends JPanel{
 			join.setEnabled(false);
 			sendingRefresh.start();
 		}
-		
+		///////////////////leave chat ActionListener/////////////////	
 		leave.addActionListener(new ActionListener() {
 					
 			@Override
@@ -256,8 +260,9 @@ public class ChatGui extends JPanel{
 				
 			}
 		});
-		
-		
+		///////////////////End of leave chat ActionListener/////////////////
+
+		///////////////////Send message ActionListener (for button and text field)/////////////////
 		ActionListener sendActions = new ActionListener() {
 			
 			@Override
@@ -272,7 +277,9 @@ public class ChatGui extends JPanel{
 				sendMessage.setText("");
 			}
 		};
+		///////////////////End of Send message ActionListener (for button and text field)/////////////////
 		
+		///////////////////Save chat log ActionListener/////////////////
 		saveLog.addActionListener(new ActionListener() {
 			
 			@Override
@@ -281,7 +288,10 @@ public class ChatGui extends JPanel{
 				saveLog.setEnabled(false);
 			}
 		});
+		///////////////////End of save chat log ActionListener/////////////////
 		
+		
+		///////////////////save log enabler/////////////////
 		chatLog.addCaretListener(new CaretListener() {
 			
 			@Override
@@ -289,6 +299,7 @@ public class ChatGui extends JPanel{
 				saveLog.setEnabled(true);
 			}
 		});
+///////////////////End of save log enabler/////////////////
 		
 		send.addActionListener(sendActions);
 		sendMessage.addActionListener(sendActions);

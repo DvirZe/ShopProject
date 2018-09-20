@@ -83,13 +83,14 @@ public class Reports {
 		RepMain.add(itemType);
 		RepMain.add(item);
 		
-		
+		//creates 7 text fields for the menu
 		for (int j =1 ; j<=7 ; ++j) {
 			DataField[j-1] = new JTextField("",4);
 			DataField[j-1].setEditable(false);
 			RepMain.add(DataField[j-1]);
 		}
 		
+		//creates 4 export buttons
 		for (int i = 1; i<=4 ; ++i)
 		{
 			RepBtn[i-1] = new JButton("Export!");
@@ -215,6 +216,8 @@ public class Reports {
 		RepLayout.putConstraint(SpringLayout.EAST, Back, 0, SpringLayout.EAST, RepMain);
 		RepLayout.putConstraint(SpringLayout.SOUTH, Back, 0, SpringLayout.SOUTH, RepMain);
 		
+		
+		/////////Back ActionListener//////////
 		Back.addActionListener(new ActionListener() {
 			
 			@Override
@@ -224,8 +227,9 @@ public class Reports {
 				new MainMenu(clientSideConnection);
 			}
 		});
+		/////////Back ActionListener//////////
 		
-		RepBtn[0].addActionListener(new ActionListener() { //General reports
+		RepBtn[0].addActionListener(new ActionListener() { //General reports ActionListener
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -239,7 +243,7 @@ public class Reports {
 			}
 		});
 		
-		RepBtn[1].addActionListener(new ActionListener() { //Report by item
+		RepBtn[1].addActionListener(new ActionListener() { //Report by item ActionListener
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -253,7 +257,7 @@ public class Reports {
 			}
 		});
 		
-		RepBtn[2].addActionListener(new ActionListener() { //Report by Type
+		RepBtn[2].addActionListener(new ActionListener() { //Report by Type ActionListener
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -267,7 +271,7 @@ public class Reports {
 			}
 		});
 		
-		RepBtn[3].addActionListener(new ActionListener() { //Report by Date
+		RepBtn[3].addActionListener(new ActionListener() { //Report by Date ActionListener
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -290,7 +294,7 @@ public class Reports {
 		DataField[5].setText(stats.get("Pants 1"));
 		DataField[6].setText(stats.get("Pants 2"));
 		
-		//Reactivate Export Button
+		/////////Reactivate Export Button/////////////
 		Date.addPropertyChangeListener(new PropertyChangeListener() { //When change date
 
 		    @Override
@@ -298,7 +302,9 @@ public class Reports {
 		        RepBtn[3].setEnabled(true); 
 		    }
 		});
+		/////////End of Reactivate Export Button/////////////
 		
+		/////////Item Button ActionListener/////////////
 		item.addActionListener(new ActionListener() {
 			
 			@Override
@@ -306,7 +312,9 @@ public class Reports {
 				RepBtn[1].setEnabled(true);
 			}
 		});
+		/////////End of item Button ActionListener/////////////
 		
+		/////////Item type Button ActionListener/////////////
 		itemType.addActionListener(new ActionListener() {
 			
 			@Override
@@ -314,6 +322,7 @@ public class Reports {
 				RepBtn[2].setEnabled(true);
 			}
 		});
+		/////////End of Item type Button ActionListener/////////////
 
 		repMenu.setPreferredSize(new Dimension(400,480));
 		repMenu.add(RepMain);

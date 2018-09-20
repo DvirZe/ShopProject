@@ -66,6 +66,7 @@ public class SupplyManagment {
 		JLabel pants2 = new JLabel();
 		pants2.setIcon(new ImageIcon("./files/blackpants.jpg"));
 		quantityMain.add(pants2);
+		//creates 4 text fields and sets the values to the quantity of each item
 		for (int i = 1; i<=4 ; ++i)
 		{
 			quantity[i-1] = new JTextField("" + clientSideConnection.getShop().getInventory(i), 4);
@@ -141,6 +142,8 @@ public class SupplyManagment {
 		discLayout.putConstraint(SpringLayout.WEST, back, 5, SpringLayout.EAST, save);
 		discLayout.putConstraint(SpringLayout.NORTH, back, 0, SpringLayout.NORTH, save);
 		
+		
+		//////////////save button enabler////////////////
 		DocumentListener saveEnabler = new DocumentListener(){ //Save enable only if nothing empty
 	
 			@Override
@@ -168,6 +171,7 @@ public class SupplyManagment {
 				}
 			
 		};
+		//////////////save button enabler////////////////
 		
 		quantity[0].getDocument().addDocumentListener(saveEnabler);
 		quantity[1].getDocument().addDocumentListener(saveEnabler);
